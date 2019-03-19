@@ -1,0 +1,202 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:cv="clr-namespace:CarouselView.FormsPlugin.Abstractions;assembly=CarouselView.FormsPlugin.Abstractions"
+             xmlns:local="clr-namespace:My9GAG.Views"
+             x:Class="My9GAG.Views.PostsPage"
+             Title="Posts"
+             BackgroundColor="Black">
+    
+    <ContentPage.Padding>
+        <OnPlatform x:TypeArguments="Thickness"
+                    iOS="0,20,0,0"/>
+    </ContentPage.Padding>
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Hot"
+                     Order="Primary"
+                     Command="{Binding GetHotPostsCommand}">
+            <ToolbarItem.Icon>
+                <OnPlatform x:TypeArguments="FileImageSource"
+                            iOS="hot.png"
+                            Android="hot.png"
+                            WinPhone="Images/hot.png"/>
+            </ToolbarItem.Icon>
+        </ToolbarItem>
+        <ToolbarItem Text="Trending"
+                     Order="Primary"
+                     Command="{Binding GetTrendingPostsCommand}">
+            <ToolbarItem.Icon>
+                <OnPlatform x:TypeArguments="FileImageSource"
+                            iOS="trending.png"
+                            Android="trending.png"
+                            WinPhone="Images/trending.png"/>
+            </ToolbarItem.Icon>
+        </ToolbarItem>
+        <ToolbarItem Text="Fresh"
+                     Order="Primary"
+                     Command="{Binding GetFreshPostsCommand}">
+            <ToolbarItem.Icon>
+                <OnPlatform x:TypeArguments="FileImageSource"
+                            iOS="fresh.png"
+                            Android="fresh.png"
+                            WinPhone="Images/fresh.png"/>
+            </ToolbarItem.Icon>
+        </ToolbarItem>
+        <ToolbarItem Text="Download"
+                     Order="Secondary"
+                     Command="{Binding DownloadCommand}"/>
+        <ToolbarItem Text="Comments"
+                     Order="Secondary"
+                     Command="{Binding CommentsCommand}"/>
+        <ToolbarItem Text="Log in"
+                     Order="Secondary"
+                     Command="{Binding ReLogInCommand}"/>
+    </ContentPage.ToolbarItems>
+    
+    <AbsoluteLayout HorizontalOptions="FillAndExpand"
+                    VerticalOptions="FillAndExpand">
+        <cv:CarouselViewControl x:Name="carousel"
+                                AbsoluteLayout.LayoutBounds="0,0,1,1"
+                                AbsoluteLayout.LayoutFlags="All"
+                                ItemsSource="{Binding Posts}"
+                                Position="{Binding Position}"
+                                HorizontalOptions="FillAndExpand"
+                                VerticalOptions="FillAndExpand"
+                                AnimateTransition="True"
+                                ShowIndicators="False"
+                                BackgroundColor="Black"
+                                InterPageSpacing="0"
+                                Orientation="Horizontal">
+            <cv:CarouselViewControl.ItemTemplate>
+                <DataTemplate>
+                    <ContentView>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="40"/>
+                            </Grid.RowDefinitions>
+
+                            <Label Text="{Binding Title}"
+                                   Margin="5"
+                                   VerticalOptions="Center"
+                                   HorizontalOptions="Center"
+                                   VerticalTextAlignment="Center"
+                                   HorizontalTextAlignment="Center"
+                                   TextColor="White"/>
+                            <ContentView x:Name="mediaView"
+                                         Content="{Binding MediaView}"
+                                         Grid.Row="1"/>
+                            <StackLayout Orientation="Horizontal"
+                                         Grid.Row="2"
+                                         VerticalOptions="Center"
+                                         Padding="10,5,0,5">
+                                <Image VerticalOptions="Center">
+                                    <Image.Source>
+                                        <OnPlatform x:TypeArguments="ImageSource"
+                                                    iOS="likes.png"
+                                                    Android="likes.png"
+                                                    WinPhone="Images/likes.png"/>
+                                    </Image.Source>
+                                </Image>
+                                <Label Text="{Binding UpvoteCount}"
+                                       VerticalTextAlignment="Center"
+                                       HorizontalTextAlignment="Start"
+                                       Margin="2,0,5,0"
+                                       TextColor="White"/>
+                                <Image VerticalOptions="Center">
+                                    <Image.Source>
+                                        <OnPlatform x:TypeArguments="ImageSource"
+                                                    iOS="comments.png"
+                                                    Android="comments.png"
+                                                    WinPhone="Images/comments.png"/>
+                                    </Image.Source>
+                                </Image>
+                                <Label Text="{Binding CommentsCount}"
+                                       VerticalTextAlignment="Center"
+                                       HorizontalTextAlignment="Start"
+                                       Margin="2,0,5,0"
+                                       TextColor="White"/>
+                            </StackLayout>
+                        </Grid>
+                    </ContentView>
+                </DataTemplate>
+            </cv:CarouselViewControl.ItemTemplate>
+        </cv:CarouselViewControl>
+
+        <AbsoluteLayout x:Name="loginOverlay"
+                        AbsoluteLayout.LayoutBounds="0,0,1,1"
+                        AbsoluteLayout.LayoutFlags="All"
+                        BackgroundColor="Black"
+                        Opacity="0.9"
+                        IsVisible="{Binding IsNotLoggedIn}">
+            <Grid AbsoluteLayout.LayoutBounds="0.5,0.5,0.8,0.8"
+                  AbsoluteLayout.LayoutFlags="All"
+                  BackgroundColor="White"
+                  VerticalOptions="CenterAndExpand"
+                  Padding="30,50">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="50"/>
+                </Grid.RowDefinitions>
+
+                <Entry Text="{Binding UserName}"
+                       Placeholder="Login"
+                       Keyboard="Email"
+                       BackgroundColor="White"
+                       TextColor="Black"
+                       IsSpellCheckEnabled="False"
+                       HorizontalTextAlignment="Center"/>
+                <Entry Text="{Binding Password}"
+                       Placeholder="Password"
+                       BackgroundColor="White"
+                       TextColor="Black"
+                       IsSpellCheckEnabled="False"
+                       HorizontalTextAlignment="Center"
+                       Grid.Row="1"
+                       IsPassword="True"/>
+
+                <Label Text="{Binding LogInErrorMessage}"
+                       TextColor="Red"
+                       VerticalOptions="CenterAndExpand"
+                       HorizontalOptions="CenterAndExpand"
+                       VerticalTextAlignment="Center"
+                       HorizontalTextAlignment="Center"
+                       Grid.Row="2"/>
+                <Button Text="Submit"
+                        BackgroundColor="Black"
+                        TextColor="White"
+                        Grid.Row="3"
+                        Command="{Binding LogInCommand}"/>
+            </Grid>
+        </AbsoluteLayout>
+
+        <ContentView x:Name="workingOverlay"
+                     AbsoluteLayout.LayoutBounds="0,0,1,1"
+                     AbsoluteLayout.LayoutFlags="All"
+                     BackgroundColor="Black"
+                     Opacity="0.8"
+                     IsVisible="{Binding IsWorking}">
+            <Label Text="{Binding LoadingText}"
+                   VerticalTextAlignment="Center"
+                   HorizontalTextAlignment="Center"
+                   TextColor="White"
+                   FontSize="Large"/>
+        </ContentView>
+
+        <ContentView x:Name="messageOverlay"
+                     AbsoluteLayout.LayoutBounds="0,0,1,1"
+                     AbsoluteLayout.LayoutFlags="All"
+                     BackgroundColor="Black"
+                     Opacity="0.8"
+                     IsVisible="{Binding ShowMessage}">
+            <Label Text="{Binding MessageText}"
+                   VerticalTextAlignment="Center"
+                   HorizontalTextAlignment="Center"
+                   TextColor="Red"
+                   FontSize="Large"/>
+        </ContentView>
+    </AbsoluteLayout>
+</ContentPage>

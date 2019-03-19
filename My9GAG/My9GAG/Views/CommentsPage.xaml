@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="My9GAG.Views.CommentsPage"
+             Title="Comments"
+             BackgroundColor="Black">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Label Text="{Binding Title}"
+               Grid.Row="0"
+               Margin="5"
+               VerticalOptions="Center"
+               HorizontalOptions="Center"
+               VerticalTextAlignment="Center"
+               HorizontalTextAlignment="Center"
+               TextColor="White"/>
+
+        <ListView ItemsSource="{Binding Comments}"
+                  Grid.Row="1"
+                  Margin="0,10"
+                  HasUnevenRows="True">
+            <ListView.Resources>
+                <ResourceDictionary>
+                    <Style TargetType="Label">
+                        <Setter Property="TextColor" Value="White"/>
+                    </Style>
+                </ResourceDictionary>
+            </ListView.Resources>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <ContentView>
+                            <StackLayout Orientation="Horizontal"
+                                         Padding="5,8">
+                                <Image Source="{Binding UserAvatar}"
+                                       VerticalOptions="StartAndExpand"
+                                       HorizontalOptions="Start"
+                                       Margin="0,5,0,0"
+                                       WidthRequest="50"/>
+                                <StackLayout HorizontalOptions="FillAndExpand"
+                                             VerticalOptions="FillAndExpand"
+                                             Margin="10,0,0,0">
+                                    <Label Text="{Binding UserName}"
+                                           FontAttributes="Bold"
+                                           TextColor="LightSkyBlue"
+                                           VerticalOptions="Start"
+                                           VerticalTextAlignment="Start"/>
+                                    <Label Text="{Binding Text}"
+                                           VerticalOptions="StartAndExpand"
+                                           VerticalTextAlignment="Start"/>
+                                    <Label Text="{Binding LikesCount}"
+                                           VerticalOptions="End"
+                                           VerticalTextAlignment="End"
+                                           TextColor="White"/>
+                                </StackLayout>
+                            </StackLayout>
+                        </ContentView>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </Grid>
+</ContentPage>

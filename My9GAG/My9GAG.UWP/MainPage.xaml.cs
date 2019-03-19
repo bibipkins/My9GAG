@@ -19,8 +19,7 @@ namespace My9GAG.UWP
     {
         public MainPage()
         {
-            this.InitializeComponent();
-
+            InitializeComponent();
             LoadApplication(new My9GAG.App());
         }
     }
