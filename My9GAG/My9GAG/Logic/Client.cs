@@ -113,6 +113,7 @@ namespace My9GAG.Logic
 
                         var jsonData = JObject.Parse(responseText);
                         var rawPosts = jsonData["data"]["posts"];
+                        Debug.WriteLine(rawPosts);
 
                         foreach (var item in rawPosts)
                         {

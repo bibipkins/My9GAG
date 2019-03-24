@@ -63,7 +63,6 @@ namespace My9GAG.ViewModels
             
             await Task.Run(async () =>
             {
-                Debug.WriteLine("Started GetPosts");
                 RequestStatus requestStatus = null;
 
                 if (!loadMore)
@@ -77,34 +76,29 @@ namespace My9GAG.ViewModels
                 
                 if (requestStatus != null && requestStatus.IsSuccessful)
                 {
-                    Debug.WriteLine("1 GetPosts");
                     var loadedPosts = new ObservableCollection<MediaPost>(MediaPost.Convert(_my9GAGClient.Posts));
                     _currentCategory = postCategory;
-                    Debug.WriteLine("2 GetPosts");
+                    
                     if (!loadMore)
                     {
-                        Debug.WriteLine("3 GetPosts");
                         Device.BeginInvokeOnMainThread(() => 
                         {
                             Position = 0;
                             Posts = new ObservableCollection<MediaPost>();
                             Posts = loadedPosts;
                         });
-                        Debug.WriteLine("4 GetPosts");
+
                         if (Posts.Count > 0 && Posts[0].Type == PostType.Animated)
                             Posts[0].Reload();
-                        Debug.WriteLine("5 GetPosts");
                     }
                     else
                     {
-                        Debug.WriteLine(loadedPosts.Count);
                         Device.BeginInvokeOnMainThread(() =>
                         {
                             for (int i = 0; i < loadedPosts.Count; i++)
                             {
-                                Debug.WriteLine(loadedPosts[i]);
+                                Debug.WriteLine(loadedPosts[i].Section);
                                 Posts.Add(loadedPosts[i]);
-                                Debug.WriteLine("123");
                             }
                         });
                     }
@@ -114,9 +108,8 @@ namespace My9GAG.ViewModels
                     string message = requestStatus == null ? "Request failed" : requestStatus.Message;
                     ShowMessage(message, 2000);
                 }
-                Debug.WriteLine("6 GetPosts");
+                
                 StopWorkIndication();
-                Debug.WriteLine("Finished GetPosts");
             });
         }
         public async Task GetCommentsAsync()
@@ -178,22 +171,19 @@ namespace My9GAG.ViewModels
         }
         public string GetPostFileName(Post post)
         {
-            Debug.WriteLine("START GetPostFileName");
             if (post == null)
                 return String.Empty;
 
             string[] splittedURl = post.MediaUrl.Split('/');
             var result = splittedURl[splittedURl.Length - 1];
-            Debug.WriteLine("END GetPostFileName");
+            
             return result;
         }
         public void SaveState(IDictionary<string, object> dictionary)
         {
-            Debug.WriteLine("START SaveState");
             dictionary["isNotLoggedIn"] = IsNotLoggedIn;
             dictionary["userName"] = UserName;
             dictionary["password"] = Password;
-            Debug.WriteLine("END SaveState");
         }
         public void RestoreState(IDictionary<string, object> dictionary)
         {
