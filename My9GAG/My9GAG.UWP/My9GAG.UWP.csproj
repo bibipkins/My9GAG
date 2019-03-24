@@ -131,6 +131,36 @@
     <Content Include="Assets\Wide310x150Logo.scale-100.png" />
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
     <Content Include="Assets\Wide310x150Logo.scale-400.png" />
+    <Content Include="Images\comments.scale-100.png" />
+    <Content Include="Images\comments.scale-200.png" />
+    <Content Include="Images\comments.scale-300.png" />
+    <Content Include="Images\fresh.scale-100.png" />
+    <Content Include="Images\fresh.scale-200.png" />
+    <Content Include="Images\fresh.scale-300.png" />
+    <Content Include="Images\hot.scale-100.png" />
+    <Content Include="Images\hot.scale-200.png" />
+    <Content Include="Images\hot.scale-300.png" />
+    <Content Include="Images\likes.scale-100.png" />
+    <Content Include="Images\likes.scale-200.png" />
+    <Content Include="Images\likes.scale-300.png" />
+    <Content Include="Images\pause.scale-100.png" />
+    <Content Include="Images\pause.scale-200.png" />
+    <Content Include="Images\pause.scale-300.png" />
+    <Content Include="Images\play.scale-100.png" />
+    <Content Include="Images\play.scale-200.png" />
+    <Content Include="Images\play.scale-300.png" />
+    <Content Include="Images\stop.scale-100.png" />
+    <Content Include="Images\stop.scale-200.png" />
+    <Content Include="Images\stop.scale-300.png" />
+    <Content Include="Images\trending.scale-100.png" />
+    <Content Include="Images\trending.scale-200.png" />
+    <Content Include="Images\trending.scale-300.png" />
+    <Content Include="Images\volume_muted.scale-100.png" />
+    <Content Include="Images\volume_muted.scale-200.png" />
+    <Content Include="Images\volume_muted.scale-300.png" />
+    <Content Include="Images\volume_on.scale-100.png" />
+    <Content Include="Images\volume_on.scale-200.png" />
+    <Content Include="Images\volume_on.scale-300.png" />
     <Content Include="Properties\Default.rd.xml" />
   </ItemGroup>
   <ItemGroup>
@@ -160,7 +190,7 @@
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>
