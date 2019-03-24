@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly>false</SignAssembly>
     <AssemblyOriginatorKeyFile>my-9-gag-key.pfx</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
@@ -10,6 +10,6 @@
     <PackageReference Include="CarouselView.FormsPlugin" Version="5.2.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
     <PackageReference Include="Rox.Xamarin.Video" Version="2.1.0" />
-    <PackageReference Include="Xamarin.Forms" Version="3.6.0.220655" />
+    <PackageReference Include="Xamarin.Forms" Version="3.6.0.264807" />
   </ItemGroup>
 </Project>

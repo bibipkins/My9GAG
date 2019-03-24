@@ -5,6 +5,6 @@ namespace My9GAG.Models
     {
         Hot,
         Trending,
-        Fresh
+        Vote
     }
 }

@@ -1,12 +1,35 @@
-﻿
+﻿using Newtonsoft.Json;
+using System.Net;
+
 namespace My9GAG.Models
 {
     public class Comment
     {
-        public string ID { get; set; }
-        public string UserName { get; set; }
-        public string UserAvatar { get; set; }
-        public string Text { get; set; }
-        public int LikesCount { get; set; }
+        [JsonProperty(PropertyName = "commentId")]
+        public string Id { get; set; }
+        [JsonProperty(PropertyName = "parent")]
+        public string ParentId { get; set; }
+        public int LikeCount { get; set; }
+        public int DislikeCount { get; set; }
+        public long Timestamp { get; set; }
+        public User User { get; set; }
+        public CommentType Type { get; set; }
+        public string Text
+        {
+            get
+            {
+                return text;
+            }
+            set
+            {
+                text = WebUtility.HtmlDecode(value);
+            }
+        }
+
+        #region Fields
+
+        private string text;
+
+        #endregion
     }
 }

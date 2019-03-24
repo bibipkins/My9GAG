@@ -9,21 +9,28 @@ namespace My9GAG.ViewModels
     {
         public MediaPost(Post post)
         {
-            ID = post.ID;
+            Id = post.Id;
             Title = post.Title;
-            URL = post.URL;
+            Url = post.Url;
             UpvoteCount = post.UpvoteCount;
-            CommentsCount = post.CommentsCount;
-            MediaURL = post.MediaURL;
+            CommentCount = post.CommentCount;
+            MediaUrl = post.MediaUrl;
             Type = post.Type;
 
             switch (Type)
             {
                 case PostType.Photo:
-                    MediaView = new ZoomableImage() { Source = MediaURL };
+                    MediaView = new ZoomableImage() { Source = MediaUrl };
                     break;
                 case PostType.Animated:
                     MediaView = new VideoPlayer();
+                    break;
+                case PostType.Video:
+                    var html = new HtmlWebViewSource
+                    {
+                        Html = GenerateHtml(MediaUrl)
+                    };
+                    MediaView = new WebView() { Source = html };
                     break;
                 default:
                     MediaView = new Label()
@@ -60,12 +67,12 @@ namespace My9GAG.ViewModels
                 case PostType.Photo:
                     var photo = MediaView as ZoomableImage;
                     if (photo == null) return;
-                    photo.Source = MediaURL;
+                    photo.Source = MediaUrl;
                     break;
                 case PostType.Animated:
                     var video = MediaView as VideoPlayer;
                     if (video == null) return;
-                    video.Source = MediaURL;
+                    video.Source = MediaUrl;
                     break;
             }
         }
@@ -85,6 +92,11 @@ namespace My9GAG.ViewModels
                 mediaPosts.Add(new MediaPost(post));
 
             return mediaPosts;
+        }
+
+        private string GenerateHtml(string ytId)
+        {
+            return "<html><body><iframe width=\"100%\" height=\"100%\" src=\"https://www.youtube.com/embed/" + ytId + "?controls=0\" frameborder = \"0\" allow = \"accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture\" allowfullscreen></iframe></body><style>body{background:black;margin:0;padding:0;border:0;}</style></html>";
         }
     }
 }
