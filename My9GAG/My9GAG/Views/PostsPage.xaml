@@ -85,7 +85,7 @@
                                    HorizontalTextAlignment="Center"
                                    TextColor="White"/>
                             <ContentView x:Name="mediaView"
-                                         Content="{Binding MediaView}"
+                                         Content="{Binding PostMedia.View}"
                                          Grid.Row="1"/>
                             <StackLayout Orientation="Horizontal"
                                          Grid.Row="2"

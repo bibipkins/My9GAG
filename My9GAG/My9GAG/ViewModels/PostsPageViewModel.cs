@@ -17,7 +17,7 @@ namespace My9GAG.ViewModels
         public PostsPageViewModel()
         {
             _my9GAGClient = new Client();
-            Posts = new ObservableCollection<MediaPost>();
+            Posts = new ObservableCollection<Post>();
             NumberOfPosts = 15;
             InitCommands();
         }
@@ -78,7 +78,7 @@ namespace My9GAG.ViewModels
                 if (requestStatus != null && requestStatus.IsSuccessful)
                 {
                     Debug.WriteLine("1 GetPosts");
-                    var loadedPosts = new ObservableCollection<MediaPost>(MediaPost.Convert(_my9GAGClient.Posts));
+                    var loadedPosts = new ObservableCollection<Post>(_my9GAGClient.Posts);
                     _currentCategory = postCategory;
                     Debug.WriteLine("2 GetPosts");
                     if (!loadMore)
@@ -87,12 +87,12 @@ namespace My9GAG.ViewModels
                         Device.BeginInvokeOnMainThread(() => 
                         {
                             Position = 0;
-                            Posts = new ObservableCollection<MediaPost>();
+                            Posts = new ObservableCollection<Post>();
                             Posts = loadedPosts;
                         });
                         Debug.WriteLine("4 GetPosts");
                         if (Posts.Count > 0 && Posts[0].Type == PostType.Animated)
-                            Posts[0].Reload();
+                            Posts[0].PostMedia.Reload();
                         Debug.WriteLine("5 GetPosts");
                     }
                     else
@@ -159,7 +159,7 @@ namespace My9GAG.ViewModels
                 if (Posts == null || Posts.Count <= Position)
                     return false;
 
-                string url = Posts[Position].MediaUrl;
+                string url = Posts[Position].PostMedia.Url;
                 string fileName = GetPostFileName(Posts[Position]);
 
                 IDownloadManager downloadManager = DependencyService.Get<IDownloadManager>();
@@ -182,7 +182,7 @@ namespace My9GAG.ViewModels
             if (post == null)
                 return String.Empty;
 
-            string[] splittedURl = post.MediaUrl.Split('/');
+            string[] splittedURl = post.PostMedia.Url.Split('/');
             var result = splittedURl[splittedURl.Length - 1];
             Debug.WriteLine("END GetPostFileName");
             return result;
@@ -211,7 +211,7 @@ namespace My9GAG.ViewModels
 
         #region Properties
 
-        public ObservableCollection<MediaPost> Posts
+        public ObservableCollection<Post> Posts
         {
             get
             {
@@ -219,7 +219,7 @@ namespace My9GAG.ViewModels
             }
             private set
             {
-                SetProperty<ObservableCollection<MediaPost>>(ref _posts, value);
+                SetProperty<ObservableCollection<Post>>(ref _posts, value);
             }
         }
         public bool IsNotLoggedIn
@@ -254,12 +254,12 @@ namespace My9GAG.ViewModels
                 if (SetProperty(ref _position, value))
                 {
                     if (Posts != null && Posts.Count > _lastPosition && _lastPosition >= 0)
-                        Posts[_lastPosition].Stop();
+                        Posts[_lastPosition].PostMedia.Stop();
 
                     if (value >= 0 && value < Posts.Count && Posts[value].Type == PostType.Animated)
                         Device.StartTimer(TimeSpan.FromMilliseconds(10), () =>
                         {
-                            Posts[value].Reload();
+                            Posts[value].PostMedia.Reload();
                             return false;
                         });
 
@@ -378,7 +378,7 @@ namespace My9GAG.ViewModels
         private uint _numberOfPosts;
 
         private PostCategory _currentCategory;
-        private ObservableCollection<MediaPost> _posts;
+        private ObservableCollection<Post> _posts;
 
         #endregion
     }

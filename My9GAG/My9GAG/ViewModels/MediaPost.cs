@@ -7,44 +7,6 @@ namespace My9GAG.ViewModels
 {
     public class MediaPost : Post
     {
-        public MediaPost(Post post)
-        {
-            Id = post.Id;
-            Title = post.Title;
-            Url = post.Url;
-            UpvoteCount = post.UpvoteCount;
-            CommentCount = post.CommentCount;
-            MediaUrl = post.MediaUrl;
-            Type = post.Type;
-
-            switch (Type)
-            {
-                case PostType.Photo:
-                    MediaView = new ZoomableImage() { Source = MediaUrl };
-                    break;
-                case PostType.Animated:
-                    MediaView = new VideoPlayer();
-                    break;
-                case PostType.Video:
-                    var html = new HtmlWebViewSource
-                    {
-                        Html = GenerateHtml(MediaUrl)
-                    };
-                    MediaView = new WebView() { Source = html };
-                    break;
-                default:
-                    MediaView = new Label()
-                    {
-                        Text = "Could not convert this post to any media view",
-                        VerticalTextAlignment = TextAlignment.Center,
-                        HorizontalTextAlignment = TextAlignment.Center,
-                        BackgroundColor = Color.Black,
-                        TextColor = Color.Red
-                    };
-                    break;
-            }
-        }
-
         public void Start()
         {
             if (MediaView is VideoPlayer view)
@@ -67,32 +29,32 @@ namespace My9GAG.ViewModels
                 case PostType.Photo:
                     var photo = MediaView as ZoomableImage;
                     if (photo == null) return;
-                    photo.Source = MediaUrl;
+                    //photo.Source = MediaUrl;
                     break;
                 case PostType.Animated:
                     var video = MediaView as VideoPlayer;
                     if (video == null) return;
-                    video.Source = MediaUrl;
+                    //video.Source = MediaUrl;
                     break;
             }
         }
 
         public View MediaView { get; set; }
 
-        public static MediaPost Convert(Post post)
-        {
-            MediaPost mediaPost = new MediaPost(post);
-            return mediaPost;
-        }
-        public static IEnumerable<MediaPost> Convert(IEnumerable<Post> posts)
-        {
-            List<MediaPost> mediaPosts = new List<MediaPost>();
+        //public static MediaPost Convert(Post post)
+        //{
+        //    MediaPost mediaPost = new MediaPost(post);
+        //    return mediaPost;
+        //}
+        //public static IEnumerable<MediaPost> Convert(IEnumerable<Post> posts)
+        //{
+        //    List<MediaPost> mediaPosts = new List<MediaPost>();
 
-            foreach (var post in posts)
-                mediaPosts.Add(new MediaPost(post));
+        //    foreach (var post in posts)
+        //        mediaPosts.Add(new MediaPost(post));
 
-            return mediaPosts;
-        }
+        //    return mediaPosts;
+        //}
 
         private string GenerateHtml(string ytId)
         {
