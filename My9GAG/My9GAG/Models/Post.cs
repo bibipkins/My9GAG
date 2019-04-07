@@ -21,7 +21,7 @@ namespace My9GAG.Models
         public string MediaUrl { get; set; }
         public int UpvoteCount { get; set; }
         public int DownvoteCount { get; set; }
-        public int CommentCount { get; set; }        
+        public int CommentCount { get; set; } 
         public PostType Type { get; set; }
         [JsonProperty(PropertyName = "postSection")]
         public PostSection Section { get; set; }

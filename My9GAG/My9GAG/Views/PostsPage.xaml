@@ -53,7 +53,7 @@
                      Command="{Binding CommentsCommand}"/>
         <ToolbarItem Text="Log in"
                      Order="Secondary"
-                     Command="{Binding ReLogInCommand}"/>
+                     Command="{Binding RelogInCommand}"/>
     </ContentPage.ToolbarItems>
     
     <AbsoluteLayout HorizontalOptions="FillAndExpand"

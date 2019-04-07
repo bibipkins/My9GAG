@@ -13,19 +13,19 @@ namespace My9GAG
 
             viewModel = new PostsPageViewModel();
             viewModel.RestoreState(Current.Properties);
-            viewModel.OnShowComments += ShowCommentsPage;
+            viewModel.OnOpenCommentsPage += OpenCommentsPage;
             MainPage = new NavigationPage(new My9GAG.Views.PostsPage(viewModel))
             {
                 BarBackgroundColor = Color.Black,
                 BarTextColor = Color.White,
                 BackgroundColor = Color.Black,
-                Title = "9GAG"
+                Title = "My9GAG"
             };
         }
 
-        public void ShowCommentsPage(CommentsPageViewModel viewModel)
+        public void OpenCommentsPage(object sender, CommentsPageViewModel viewModel)
         {
-            var commentsPage = new My9GAG.Views.CommentsPage(viewModel);
+            var commentsPage = new Views.CommentsPage(viewModel);
             NavigationPage.SetHasBackButton(commentsPage, true);
             MainPage.Navigation.PushAsync(commentsPage);
         }

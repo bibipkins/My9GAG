@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace My9GAG.Logic
 {
-    class Client
+    public class Client
     {
         #region Constructors
 
@@ -113,8 +113,7 @@ namespace My9GAG.Logic
 
                         var jsonData = JObject.Parse(responseText);
                         var rawPosts = jsonData["data"]["posts"];
-                        Debug.WriteLine(rawPosts);
-
+                        
                         foreach (var item in rawPosts)
                         {
                             Post post = item.ToObject<Post>();
@@ -135,7 +134,6 @@ namespace My9GAG.Logic
                             }
 
                             Posts.Add(post);
-                            break;
                         }
                     }
                 }

@@ -37,7 +37,12 @@ namespace My9GAG.ViewModels
             set
             {
                 if (SetProperty(ref _isWorkIndicationVisible, value))
-                    UpdateCommands();
+                {
+                    Device.BeginInvokeOnMainThread(() =>
+                    {
+                        UpdateCommands();
+                    });
+                }
             }
         }
 
@@ -80,7 +85,7 @@ namespace My9GAG.ViewModels
         {
             Task.Run(async () =>
             {
-                Device.BeginInvokeOnMainThread(() => IsWorkIndicationVisible = true);
+                IsWorkIndicationVisible = true;
                 WorkIndicationText = message;
 
                 int iteration = 0;
@@ -108,7 +113,7 @@ namespace My9GAG.ViewModels
         {
             Task.Run(async () => 
             {
-                Device.BeginInvokeOnMainThread(() => IsWorkIndicationVisible = false);
+                IsWorkIndicationVisible = false;
                 WorkIndicationText = "";                
             });
         }
