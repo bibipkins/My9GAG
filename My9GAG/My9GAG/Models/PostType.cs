@@ -6,6 +6,7 @@ namespace My9GAG.Models
         Photo,
         Animated,
         Video,
-        Album
+        Album,
+        Other
     }
 }

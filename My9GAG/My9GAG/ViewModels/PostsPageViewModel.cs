@@ -17,8 +17,13 @@ namespace My9GAG.ViewModels
         public PostsPageViewModel()
         {
             _my9GAGClient = new Client();
+<<<<<<< HEAD
             _currentCategory = PostCategory.Hot;
             Posts = new ObservableCollection<MediaPost>();
+=======
+            Posts = new ObservableCollection<Post>();
+            NumberOfPosts = 15;
+>>>>>>> e805667caa38ca6a9db5191ac2dfca6803ca6793
             InitCommands();
         }
 
@@ -74,19 +79,23 @@ namespace My9GAG.ViewModels
                 
                 if (requestStatus != null && requestStatus.IsSuccessful)
                 {
-                    var loadedPosts = new ObservableCollection<MediaPost>(MediaPost.Convert(_my9GAGClient.Posts));
+                    Debug.WriteLine("1 GetPosts");
+                    var loadedPosts = new ObservableCollection<Post>(_my9GAGClient.Posts);
                     _currentCategory = postCategory;
                     
                     if (!loadMore)
                     {
                         Debug.WriteLine("Loaded posts for " + _currentCategory);
-                        Posts = loadedPosts;
-                        Position = 0;
+
+                        Device.BeginInvokeOnMainThread(() => 
+                        {                            
+                            Posts = new ObservableCollection<Post>();
+                            Posts = loadedPosts;
+                            Position = 0;
+                        });
 
                         if (Posts.Count > 0 && Posts[0].Type == PostType.Animated)
-                        {
-                            Posts[0].Reload();
-                        }
+                            Posts[0].PostMedia.Reload();
                     }
                     else
                     {
@@ -147,7 +156,7 @@ namespace My9GAG.ViewModels
                 if (Posts == null || Posts.Count <= Position)
                     return false;
 
-                string url = Posts[Position].MediaUrl;
+                string url = Posts[Position].PostMedia.Url;
                 string fileName = GetPostFileName(Posts[Position]);
 
                 var downloadManager = DependencyService.Get<IDownloadManager>();
@@ -163,7 +172,7 @@ namespace My9GAG.ViewModels
 
                 return false;
             });
-        }        
+        }
         public void SaveState(IDictionary<string, object> dictionary)
         {
             dictionary["isNotLoggedIn"] = IsNotLoggedIn;
@@ -183,10 +192,21 @@ namespace My9GAG.ViewModels
 
         #region Properties
 
-        public ObservableCollection<MediaPost> Posts
+        public ObservableCollection<Post> Posts
         {
+<<<<<<< HEAD
             get { return _posts; }
             private set { SetProperty<ObservableCollection<MediaPost>>(ref _posts, value); }
+=======
+            get
+            {
+                return _posts;
+            }
+            private set
+            {
+                SetProperty<ObservableCollection<Post>>(ref _posts, value);
+            }
+>>>>>>> e805667caa38ca6a9db5191ac2dfca6803ca6793
         }
         public bool IsNotLoggedIn
         {
@@ -226,7 +246,7 @@ namespace My9GAG.ViewModels
                 {
                     if (Posts.Count > _lastPosition && _lastPosition >= 0)
                     {
-                        Posts[_lastPosition].Stop();
+                        Posts[_lastPosition].PostMedia.Stop();
                     }
 
                     _lastPosition = value;
@@ -235,7 +255,7 @@ namespace My9GAG.ViewModels
                     {
                         Device.StartTimer(TimeSpan.FromMilliseconds(10), () =>
                         {
-                            Posts[value].Reload();
+                            Posts[value].PostMedia.Reload();
                             return false;
                         });
                     }
@@ -375,7 +395,7 @@ namespace My9GAG.ViewModels
         private List<ICommand> _commands;
 
         private PostCategory _currentCategory;
-        private ObservableCollection<MediaPost> _posts;
+        private ObservableCollection<Post> _posts;
 
         #endregion
 

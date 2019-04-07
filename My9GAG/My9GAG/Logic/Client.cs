@@ -117,22 +117,24 @@ namespace My9GAG.Logic
                         foreach (var item in rawPosts)
                         {
                             Post post = item.ToObject<Post>();
-                            
+                            string url = string.Empty;
+
                             switch (post.Type)
                             {
                                 case PostType.Photo:
-                                    post.MediaUrl = item["images"]["image700"]["url"].ToString();
+                                    url = item["images"]["image700"]["url"].ToString();
                                     break;
                                 case PostType.Animated:
-                                    post.MediaUrl = item["images"]["image460sv"]["url"].ToString();
+                                    url = item["images"]["image460sv"]["url"].ToString();
                                     break;
                                 case PostType.Video:
-                                    post.MediaUrl = item["videoId"].ToString();
+                                    url = item["videoId"].ToString();
                                     break;
                                 default:
                                     break;
                             }
 
+                            post.PostMedia = PostMediaFactory.CreatePostMedia(post.Type, url);
                             Posts.Add(post);
                         }
                     }
