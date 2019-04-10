@@ -5,6 +5,8 @@ namespace My9GAG.Models
 {
     public class Post
     {
+        #region Properties
+
         public string Id
         {
             get;
@@ -12,14 +14,8 @@ namespace My9GAG.Models
         }
         public string Title
         {
-            get
-            {
-                return title;
-            }
-            set
-            {
-                title = WebUtility.HtmlDecode(value);
-            }
+            get { return _title; }
+            set { _title = WebUtility.HtmlDecode(value); }
         }
         public string Url
         {
@@ -64,6 +60,10 @@ namespace My9GAG.Models
             set;
         }
 
+        #endregion
+
+        #region Methods
+
         public override string ToString()
         {
             return $"{Id}, {Title}, URL: {Url}, MediaURL: {PostMedia?.Url}, " +
@@ -72,9 +72,11 @@ namespace My9GAG.Models
                 $"Section: {Section?.Name}";
         }
 
+        #endregion
+
         #region Fields
 
-        private string title;
+        private string _title;
 
         #endregion
     }

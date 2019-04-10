@@ -36,21 +36,21 @@ namespace My9GAG.Models
 
         #region Methods
 
-        public void Pause()
-        {
-            
-        }
-        public void Reload()
-        {
-            
-        }
         public void Start()
         {
-            
+            (View as VideoPlayer).Start();
         }
         public void Stop()
         {
-            
+            (View as VideoPlayer).Stop();
+        }
+        public void Pause()
+        {
+            (View as VideoPlayer).Pause();
+        }
+        public void Reload()
+        {
+            (View as VideoPlayer).Source = Url;
         }
 
         #endregion

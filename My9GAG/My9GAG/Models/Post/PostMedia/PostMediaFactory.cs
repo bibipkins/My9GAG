@@ -18,6 +18,6 @@ namespace My9GAG.Models
             }
         }
 
-        private const string CONVERSION_ERROR_MESSAGE = "Could not convert this post to any of media views";
+        private const string CONVERSION_ERROR_MESSAGE = "Could not convert this post to any of existing media views";
     }
 }

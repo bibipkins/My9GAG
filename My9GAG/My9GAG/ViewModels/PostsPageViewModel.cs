@@ -17,13 +17,8 @@ namespace My9GAG.ViewModels
         public PostsPageViewModel()
         {
             _my9GAGClient = new Client();
-<<<<<<< HEAD
             _currentCategory = PostCategory.Hot;
-            Posts = new ObservableCollection<MediaPost>();
-=======
             Posts = new ObservableCollection<Post>();
-            NumberOfPosts = 15;
->>>>>>> e805667caa38ca6a9db5191ac2dfca6803ca6793
             InitCommands();
         }
 
@@ -194,19 +189,8 @@ namespace My9GAG.ViewModels
 
         public ObservableCollection<Post> Posts
         {
-<<<<<<< HEAD
             get { return _posts; }
-            private set { SetProperty<ObservableCollection<MediaPost>>(ref _posts, value); }
-=======
-            get
-            {
-                return _posts;
-            }
-            private set
-            {
-                SetProperty<ObservableCollection<Post>>(ref _posts, value);
-            }
->>>>>>> e805667caa38ca6a9db5191ac2dfca6803ca6793
+            private set { SetProperty<ObservableCollection<Post>>(ref _posts, value); }
         }
         public bool IsNotLoggedIn
         {
@@ -373,9 +357,11 @@ namespace My9GAG.ViewModels
         protected string GetPostFileName(Post post)
         {
             if (post == null)
+            {
                 return String.Empty;
+            }
 
-            string[] splittedUrl = post.MediaUrl.Split('/');
+            string[] splittedUrl = post.PostMedia.Url.Split('/');
             var result = splittedUrl[splittedUrl.Length - 1];
 
             return result;

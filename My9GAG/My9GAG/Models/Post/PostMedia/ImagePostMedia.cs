@@ -45,7 +45,10 @@ namespace My9GAG.Models
         }
         public void Reload()
         {
-
+            View = new ZoomableImage()
+            {
+                Source = Url
+            };
         }
         public void Start()
         {

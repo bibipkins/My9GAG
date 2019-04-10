@@ -111,7 +111,7 @@ namespace My9GAG.ViewModels
         }
         protected void StopWorkIndication()
         {
-            Task.Run(async () => 
+            Task.Run(() => 
             {
                 IsWorkIndicationVisible = false;
                 WorkIndicationText = "";                
