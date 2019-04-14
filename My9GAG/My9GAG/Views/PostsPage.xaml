@@ -11,35 +11,38 @@
         <OnPlatform x:TypeArguments="Thickness"
                     iOS="0,20,0,0"/>
     </ContentPage.Padding>
-    <ContentPage.ToolbarItems>        
-        <!--<ToolbarItem Text="Hot"
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Hot"
                      Order="Primary"
                      Command="{Binding GetHotPostsCommand}">
             <ToolbarItem.Icon>
-                <OnPlatform x:TypeArguments="FileImageSource"
-                            iOS="hot.png"
-                            Android="hot.png"
-                            UWP="Images/hot.png"/>
+                <OnPlatform x:TypeArguments="FileImageSource">
+                    <On Platform="iOS" Value="hot.png"></On>
+                    <On Platform="Android" Value="hot.png"></On>
+                    <On Platform="UWP" Value="Images/hot.png"></On>
+                </OnPlatform>
             </ToolbarItem.Icon>
-        </ToolbarItem>        
+        </ToolbarItem>
         <ToolbarItem Text="Trending"
                      Order="Primary"
                      Command="{Binding GetTrendingPostsCommand}">
             <ToolbarItem.Icon>
-                <OnPlatform x:TypeArguments="FileImageSource"
-                            iOS="trending.png"
-                            Android="trending.png"
-                            UWP="Images/trending.png"/>
+                <OnPlatform x:TypeArguments="FileImageSource">
+                    <On Platform="iOS" Value="trending.png"></On>
+                    <On Platform="Android" Value="trending.png"></On>
+                    <On Platform="UWP" Value="Images/trending.png"></On>
+                </OnPlatform>
             </ToolbarItem.Icon>
         </ToolbarItem>
         <ToolbarItem Text="Fresh"
                      Order="Primary"
                      Command="{Binding GetFreshPostsCommand}">
             <ToolbarItem.Icon>
-                <OnPlatform x:TypeArguments="FileImageSource"
-                            iOS="fresh.png"
-                            Android="fresh.png"
-                            UWP="Images/fresh.png"/>
+                <OnPlatform x:TypeArguments="FileImageSource">
+                    <On Platform="iOS" Value="fresh.png"></On>
+                    <On Platform="Android" Value="fresh.png"></On>
+                    <On Platform="UWP" Value="Images/fresh.png"></On>
+                </OnPlatform>
             </ToolbarItem.Icon>
         </ToolbarItem>
         <ToolbarItem Text="Download"
@@ -50,7 +53,7 @@
                      Command="{Binding CommentsCommand}"/>
         <ToolbarItem Text="Log in"
                      Order="Secondary"
-                     Command="{Binding ReLogInCommand}"/>-->
+                     Command="{Binding RelogInCommand}"/>
     </ContentPage.ToolbarItems>
     
     <AbsoluteLayout HorizontalOptions="FillAndExpand"
@@ -181,11 +184,19 @@
                      BackgroundColor="Black"
                      Opacity="0.8"
                      IsVisible="{Binding IsWorkIndicationVisible}">
-            <Label Text="{Binding WorkIndicationText}"
-                   VerticalTextAlignment="Center"
-                   HorizontalTextAlignment="Center"
-                   TextColor="White"
-                   FontSize="Large"/>
+            <StackLayout Orientation="Vertical"
+                         VerticalOptions="CenterAndExpand">
+                <ActivityIndicator VerticalOptions="Center"
+                                   IsRunning="{Binding IsWorkIndicationVisible}"
+                                   Color="White"/>
+                <Label Text="{Binding WorkIndicationText}"
+                       VerticalOptions="Center"
+                       VerticalTextAlignment="Center"
+                       HorizontalTextAlignment="Center"
+                       TextColor="White"
+                       FontSize="Large"
+                       Margin="0,10,0,0"/>
+            </StackLayout>            
         </ContentView>
 
         <ContentView x:Name="messageOverlay"

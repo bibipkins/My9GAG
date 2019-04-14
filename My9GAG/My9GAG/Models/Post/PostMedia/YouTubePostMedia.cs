@@ -65,7 +65,8 @@ namespace My9GAG.Models
 
         private string GenerateHtml()
         {
-            return "<html><body><iframe width=\"100%\" height=\"100%\" src=\"https://www.youtube.com/embed/" + Url + "?controls=0\" frameborder = \"0\" allow = \"accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture\" allowfullscreen></iframe></body><style>body{background:black;margin:0;padding:0;border:0;}</style></html>";
+            return "<iframe width=\"100%\" height=\"100%\" src=\"https://www.youtube.com/embed/" + Url +
+                "\" frameborder = \"0\" allow = \"accelerometer;\" allowfullscreen></iframe>";
         }
 
         #endregion

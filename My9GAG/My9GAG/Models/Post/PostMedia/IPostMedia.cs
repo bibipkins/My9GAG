@@ -4,13 +4,21 @@ namespace My9GAG.Models
 {
     public interface IPostMedia
     {
-        string Url { get; set; }
+        #region Properties
+
         View View { get; }
         PostType Type { get; }
+        string Url { get; set; }
+
+        #endregion
+
+        #region Methods
 
         void Start();
         void Stop();
         void Pause();
         void Reload();
+
+        #endregion
     }
 }

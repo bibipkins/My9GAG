@@ -37,7 +37,12 @@ namespace My9GAG.ViewModels
             set
             {
                 if (SetProperty(ref _isWorkIndicationVisible, value))
-                    UpdateCommands();
+                {
+                    Device.BeginInvokeOnMainThread(() =>
+                    {
+                        UpdateCommands();
+                    });
+                }
             }
         }
 
@@ -77,40 +82,14 @@ namespace My9GAG.ViewModels
             });
         }
         protected void StartWorkIndication(string message)
-        {
-            Task.Run(async () =>
-            {
-                Device.BeginInvokeOnMainThread(() => IsWorkIndicationVisible = true);
-                WorkIndicationText = message;
-
-                int iteration = 0;
-                int delay = 300;
-                string indicationText = message;
-
-                while (IsWorkIndicationVisible)
-                {
-                    await Task.Delay(delay);
-
-                    indicationText += ".";
-                    iteration++;
-
-                    WorkIndicationText = indicationText;
-
-                    if (iteration > 2)
-                    {   
-                        indicationText = message;
-                        iteration = 0;
-                    }
-                }
-            });
+        {            
+            WorkIndicationText = message;
+            IsWorkIndicationVisible = true;
         }
         protected void StopWorkIndication()
         {
-            Task.Run(async () => 
-            {
-                Device.BeginInvokeOnMainThread(() => IsWorkIndicationVisible = false);
-                WorkIndicationText = "";                
-            });
+            IsWorkIndicationVisible = false;
+            WorkIndicationText = "";
         }
 
         #endregion

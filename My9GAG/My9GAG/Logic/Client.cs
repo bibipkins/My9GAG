@@ -2,28 +2,34 @@
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 
 namespace My9GAG.Logic
 {
-    class Client
+    public class Client
     {
         #region Constructors
 
         public Client()
         {
-            this.timestamp  = RequestUtils.GetTimestamp();
-            this.appID      = RequestUtils.APP_ID;
-            this.token      = RequestUtils.GetSha1(timestamp);
-            this.deviceUUID = RequestUtils.GetUuid();
-            this.signature  = RequestUtils.GetSignature(timestamp, appID, deviceUUID);
+            _timestamp  = RequestUtils.GetTimestamp();
+            _appId      = RequestUtils.APP_ID;
+            _token      = RequestUtils.GetSha1(_timestamp);
+            _deviceUuid = RequestUtils.GetUuid();
+            _signature  = RequestUtils.GetSignature(_timestamp, _appId, _deviceUuid);
 
             Posts = new List<Post>();
             Comments = new List<Comment>();
         }
+
+        #endregion
+
+        #region Properties
+
+        public List<Post> Posts { get; private set; }
+        public List<Comment> Comments { get; private set; }
 
         #endregion
 
@@ -37,9 +43,8 @@ namespace My9GAG.Logic
                 { "loginName", userName },
                 { "password", RequestUtils.GetMd5(password) },
                 { "language", "en_US" },
-                { "pushToken", token }
+                { "pushToken", _token }
             };
-
             HttpWebRequest request = FormRequest(RequestUtils.API, RequestUtils.LOGIN_PATH, args);
             RequestStatus loginStatus = new RequestStatus();
 
@@ -55,8 +60,8 @@ namespace My9GAG.Logic
                     if (loginStatus.IsSuccessful)
                     {
                         var jsonData = JObject.Parse(responseText);
-                        token = jsonData["data"]["userToken"].ToString();
-                        userData = jsonData["data"].ToString();
+                        _token = jsonData["data"]["userToken"].ToString();
+                        _userData = jsonData["data"].ToString();
                         string[] readStateParams = jsonData["data"]["noti"]["readStateParams"].ToString().Split('&');
 
                         foreach (var param in readStateParams)
@@ -65,7 +70,7 @@ namespace My9GAG.Logic
 
                             if (pair[0].Contains("appId"))
                             {
-                                generatedAppId = pair[1];
+                                _generatedAppId = pair[1];
                                 break;
                             }
                         }
@@ -80,6 +85,7 @@ namespace My9GAG.Logic
 
             return loginStatus;
         }
+        // TODO: refactor and confirm if api calls are correct
         public async Task<RequestStatus> GetPostsAsync(PostCategory postCategory, uint count, string olderThan = "")
         {
             string type = postCategory.ToString().ToLower();
@@ -113,7 +119,7 @@ namespace My9GAG.Logic
 
                         var jsonData = JObject.Parse(responseText);
                         var rawPosts = jsonData["data"]["posts"];
-
+                        
                         foreach (var item in rawPosts)
                         {
                             Post post = item.ToObject<Post>();
@@ -133,9 +139,11 @@ namespace My9GAG.Logic
                                 default:
                                     break;
                             }
-
+                            
+                            //post.PostMedia = PostMediaFactory.CreatePostMedia(PostType.Video, "bF9zOykErJ4");
                             post.PostMedia = PostMediaFactory.CreatePostMedia(post.Type, url);
                             Posts.Add(post);
+                            //break;
                         }
                     }
                 }
@@ -148,6 +156,7 @@ namespace My9GAG.Logic
 
             return requestStatus;
         }
+        // TODO: refactor
         public async Task<RequestStatus> GetCommentsAsync(string postUrl, uint count)
         {
             var args = new Dictionary<string, string>();
@@ -196,33 +205,28 @@ namespace My9GAG.Logic
 
         #endregion
 
-        #region Properties
-
-        public List<Post> Posts { get; private set; }
-        public List<Comment> Comments { get; private set; }
-
-        #endregion
-
         #region Implementation
 
         private HttpWebRequest FormRequest(string api, string path, Dictionary<string, string> args)
         {
             Dictionary<string, string> headers = new Dictionary<string, string>()
             {
-                { "9GAG-9GAG_TOKEN", token },
-                { "9GAG-TIMESTAMP", timestamp },
-                { "9GAG-APP_ID", appID },
-                { "X-Package-ID", appID },
-                { "9GAG-DEVICE_UUID", deviceUUID },
-                { "X-Device-UUID", deviceUUID },
+                { "9GAG-9GAG_TOKEN", _token },
+                { "9GAG-TIMESTAMP", _timestamp },
+                { "9GAG-APP_ID", _appId },
+                { "X-Package-ID", _appId },
+                { "9GAG-DEVICE_UUID", _deviceUuid },
+                { "X-Device-UUID", _deviceUuid },
                 { "9GAG-DEVICE_TYPE", "android" },
                 { "9GAG-BUCKET_NAME", "MAIN_RELEASE" },
-                { "9GAG-REQUEST-SIGNATURE", signature }
+                { "9GAG-REQUEST-SIGNATURE", _signature }
             };
 
             List<string> argsStrings = new List<string>();
             foreach (KeyValuePair<string, string> entry in args)
+            {
                 argsStrings.Add(String.Format("{0}/{1}", entry.Key, entry.Value));
+            }
 
             List<string> urlItems = new List<string>()
             {
@@ -237,7 +241,9 @@ namespace My9GAG.Logic
 
             var headerCollection = new WebHeaderCollection();
             foreach (KeyValuePair<string, string> entry in headers)
+            {
                 headerCollection.Add(entry.Key, entry.Value);
+            }
 
             request.Headers = headerCollection;
             request.Method = WebRequestMethods.Http.Get;
@@ -296,13 +302,13 @@ namespace My9GAG.Logic
 
         #region Fields
 
-        private string timestamp = "";
-        private string appID = "";
-        private string token = "";
-        private string deviceUUID = "";
-        private string signature = "";
-        private string userData = "";
-        private string generatedAppId = "";
+        private string _timestamp = "";
+        private string _appId = "";
+        private string _token = "";
+        private string _deviceUuid = "";
+        private string _signature = "";
+        private string _userData = "";
+        private string _generatedAppId = "";
 
         #endregion
     }

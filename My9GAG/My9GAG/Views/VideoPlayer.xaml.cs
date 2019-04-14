@@ -1,6 +1,7 @@
 ﻿using Rox;
 using System;
 using System.ComponentModel;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -9,7 +10,9 @@ namespace My9GAG.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class VideoPlayer : ContentView
 	{
-		public VideoPlayer ()
+        #region Constructors
+
+        public VideoPlayer ()
 		{
 			InitializeComponent ();
 
@@ -26,21 +29,46 @@ namespace My9GAG.Views
             };
 		}
 
-        public void Start()
+        #endregion
+
+        #region Properties
+
+        public string Source
         {
-            player.Start();
+            get { return (string)GetValue(SourceProperty); }
+            set { SetValue(SourceProperty, value); }
+        }
+
+        public static readonly BindableProperty SourceProperty =
+            BindableProperty.Create("Source", typeof(string), typeof(VideoPlayer), VideoView.SourceProperty.DefaultValue,
+                VideoView.SourceProperty.DefaultBindingMode,
+                propertyChanged: (BindableObject bindable, object oldValue, object newValue) =>
+                {
+                    if (bindable is VideoPlayer videoPlayer)
+                    {
+                        videoPlayer.player.Source = (string)newValue;
+                    }                    
+                });
+
+        #endregion
+
+        #region Methods
+
+        public async Task Start()
+        {
+            await player.Start();
             playImage.IsVisible = false;
             pauseImage.IsVisible = true;
         }
-        public void Pause()
+        public async Task Pause()
         {
-            player.Pause();
+            await player.Pause();
             playImage.IsVisible = true;
             pauseImage.IsVisible = false;
         }
-        public void Stop()
+        public async Task Stop()
         {
-            player.Stop();
+            await player.Stop();
             playImage.IsVisible = true;
             pauseImage.IsVisible = false;
         }
@@ -57,30 +85,9 @@ namespace My9GAG.Views
             volumeOnImage.IsVisible = true;
         }
 
-        public static readonly BindableProperty SourceProperty = 
-            BindableProperty.Create("Source", typeof(string), typeof(VideoPlayer), VideoView.SourceProperty.DefaultValue,
-                VideoView.SourceProperty.DefaultBindingMode, 
-                propertyChanged: (BindableObject bindable, object oldValue, object newValue) => 
-                {
-                    VideoPlayer videoPlayer = bindable as VideoPlayer;
+        #endregion
 
-                    if (videoPlayer == null)
-                        return;
-
-                    videoPlayer.player.Source = (string)newValue;
-                });
-
-        public string Source
-        {
-            get
-            {
-                return (string)GetValue(SourceProperty);
-            }
-            set
-            {
-                SetValue(SourceProperty, value);
-            }
-        }
+        #region Implementation
 
         private void player_Tapped(object sender, EventArgs e)
         {
@@ -97,7 +104,6 @@ namespace My9GAG.Views
                     break;
             }
         }
-
         private void volumeOnImage_Tapped(object sender, EventArgs e)
         {
             VolumeOn();
@@ -118,5 +124,7 @@ namespace My9GAG.Views
         {
             Stop();
         }
+
+        #endregion
     }
 }
