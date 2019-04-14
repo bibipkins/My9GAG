@@ -44,6 +44,8 @@ namespace My9GAG.ViewModels
                 IsNotLoggedIn = !requestStatus.IsSuccessful;
                 LogInErrorMessage = requestStatus.Message;
 
+                await Task.Delay(1000);
+
                 if (requestStatus.IsSuccessful && Posts.Count == 0)
                 {
                     await GetPostsAsync(_currentCategory);
@@ -52,67 +54,83 @@ namespace My9GAG.ViewModels
 
             StopWorkIndication();
         }
-        public async Task GetPostsAsync(PostCategory postCategory, bool loadMore = false)
+        public async Task GetPostsAsync(PostCategory postCategory)
         {
-            if (!loadMore)
+            switch (postCategory)
             {
-                StartWorkIndication(ViewModelConstants.LOADING_MESSAGE + postCategory);
+                case PostCategory.Hot:
+                    StartWorkIndication(ViewModelConstants.LOADING_HOT_MESSAGE);
+                    break;
+                case PostCategory.Trending:
+                    StartWorkIndication(ViewModelConstants.LOADING_TRENDING_MESSAGE);
+                    break;
+                case PostCategory.Vote:
+                    StartWorkIndication(ViewModelConstants.LOADING_FRESH_MESSAGE);
+                    break;
             }
-            
+
             await Task.Run(async () =>
             {
-                RequestStatus requestStatus = null;
+                RequestStatus requestStatus = await _my9GAGClient.GetPostsAsync(postCategory, NUMBER_OF_POSTS);
 
-                if (!loadMore)
-                {
-                    requestStatus = await _my9GAGClient.GetPostsAsync(postCategory, NUMBER_OF_POSTS);
-                }
-                else if (Posts.Count > 0)
-                {
-                    requestStatus = await _my9GAGClient.GetPostsAsync(postCategory, NUMBER_OF_POSTS, Posts[Posts.Count - 1].Id);
-                }
-                
                 if (requestStatus != null && requestStatus.IsSuccessful)
                 {
-                    Debug.WriteLine("1 GetPosts");
                     var loadedPosts = new ObservableCollection<Post>(_my9GAGClient.Posts);
                     _currentCategory = postCategory;
-                    
-                    if (!loadMore)
-                    {
-                        Debug.WriteLine("Loaded posts for " + _currentCategory);
 
-                        Device.BeginInvokeOnMainThread(() => 
-                        {                            
-                            Posts = new ObservableCollection<Post>();
-                            Posts = loadedPosts;
-                            Position = 0;
-                        });
-
-                        if (Posts.Count > 0 && Posts[0].Type == PostType.Animated)
-                            Posts[0].PostMedia.Reload();
-                    }
-                    else
+                    Device.BeginInvokeOnMainThread(() =>
                     {
-                        Debug.WriteLine("Loaded more posts for " + _currentCategory);
-                        Device.BeginInvokeOnMainThread(() =>
-                        {
-                            foreach (var post in loadedPosts)
-                            {
-                                Posts.Add(post);
-                            }
-                        });
+                        Position = 0;
+                        Posts = loadedPosts;
+                    });
+
+                    if (Posts.Count > 0 && Posts[0].Type == PostType.Animated)
+                    {
+                        Posts[0].PostMedia.Reload();
                     }
+
+                    await Task.Delay(1500);
                 }
                 else
                 {
                     StopWorkIndication();
                     string message = requestStatus == null ? ViewModelConstants.REQUEST_FAILED_MESSAGE : requestStatus.Message;
-                    ShowMessage(message, 2000);
+                    ShowMessage(message, ViewModelConstants.MESSAGE_DELAY);
                 }
             });
 
             StopWorkIndication();
+        }
+        public async Task GetMorePostsAsync()
+        {
+            if (Posts.Count < 1)
+            {
+                ShowMessage(ViewModelConstants.EMPTY_POST_LIST_MESSAGE, ViewModelConstants.MESSAGE_DELAY);
+                return;
+            }
+
+            await Task.Run(async () =>
+            {
+                RequestStatus requestStatus = await _my9GAGClient.GetPostsAsync(_currentCategory, NUMBER_OF_POSTS, Posts[Posts.Count - 1].Id);
+                
+                if (requestStatus != null && requestStatus.IsSuccessful)
+                {
+                    var loadedPosts = new ObservableCollection<Post>(_my9GAGClient.Posts);
+
+                    Device.BeginInvokeOnMainThread(() =>
+                    {
+                        foreach (var post in loadedPosts)
+                        {
+                            Posts.Add(post);
+                        }
+                    });
+                }
+                else
+                {
+                    string message = requestStatus == null ? ViewModelConstants.REQUEST_FAILED_MESSAGE : requestStatus.Message;
+                    ShowMessage(message, ViewModelConstants.MESSAGE_DELAY);
+                }
+            });
         }
         public async Task GetCommentsAsync()
         {
@@ -135,7 +153,7 @@ namespace My9GAG.ViewModels
                 }
                 else
                 {
-                    ShowMessage(requestStatus.Message, 2000);
+                    ShowMessage(requestStatus.Message, ViewModelConstants.MESSAGE_DELAY);
                 }
 
                 StopWorkIndication();
@@ -162,7 +180,7 @@ namespace My9GAG.ViewModels
                 }
                 catch (Exception e)
                 {
-                    ShowMessage(e.Message, 2000);
+                    ShowMessage(e.Message, ViewModelConstants.MESSAGE_DELAY);
                 }
 
                 return false;
@@ -244,11 +262,9 @@ namespace My9GAG.ViewModels
                         });
                     }
 
-                    Debug.WriteLine("Called from Position " + Posts.Count + " " + _position);
-
-                    if (Posts.Count > 0 && _position > 0 && _position >= Posts.Count - 5)
+                    if (Posts.Count > 0 && value > 0 && value >= Posts.Count - NUMBER_OF_POSTS_BEFORE_LOADING_MORE)
                     {
-                        GetPostsAsync(_currentCategory, true);
+                        GetMorePostsAsync();
                     }
                 }
             }
@@ -388,6 +404,7 @@ namespace My9GAG.ViewModels
         #region Constants
 
         private const uint NUMBER_OF_POSTS = 10;
+        private const int NUMBER_OF_POSTS_BEFORE_LOADING_MORE = 5;
 
         #endregion
     }
