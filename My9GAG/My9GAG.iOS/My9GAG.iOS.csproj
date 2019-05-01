@@ -166,4 +166,31 @@
       <Name>My9GAG</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\fresh.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\fresh%402x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\fresh%403x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\hot.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\hot%402x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\hot%403x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\trending.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\trending%402x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\trending%403x.png" />
+  </ItemGroup>
 </Project>

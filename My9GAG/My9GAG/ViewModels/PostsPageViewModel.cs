@@ -36,7 +36,7 @@ namespace My9GAG.ViewModels
         public ObservableCollection<Post> Posts
         {
             get { return _posts; }
-            private set { SetProperty(ref _posts, value); }
+            private set { SetProperty(ref _posts, value); Debug.WriteLine(""); Debug.WriteLine("NUMBER OF POSTS: " + _posts.Count); }
         }
         public bool IsNotLoggedIn
         {
