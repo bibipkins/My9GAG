@@ -7,7 +7,7 @@ namespace My9GAG.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class CommentsPage : ContentPage
 	{
-		public CommentsPage (CommentsPageViewModel viewModel)
+		public CommentsPage(CommentsPageViewModel viewModel)
 		{
 			InitializeComponent ();
             BindingContext = viewModel;

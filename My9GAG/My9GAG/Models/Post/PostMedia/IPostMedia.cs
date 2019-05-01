@@ -18,6 +18,7 @@ namespace My9GAG.Models
         void Stop();
         void Pause();
         void Reload();
+        void Unload();
 
         #endregion
     }

@@ -12,14 +12,15 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using Xamarin.Forms;
 
 namespace My9GAG.UWP
 {
     public sealed partial class MainPage
     {
         public MainPage()
-        {
-            InitializeComponent();
+        {            
+            InitializeComponent();            
             LoadApplication(new My9GAG.App());
         }
     }

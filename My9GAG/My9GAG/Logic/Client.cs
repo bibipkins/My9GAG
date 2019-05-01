@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
@@ -85,8 +86,7 @@ namespace My9GAG.Logic
 
             return loginStatus;
         }
-        // TODO: refactor and confirm if api calls are correct
-        public async Task<RequestStatus> GetPostsAsync(PostCategory postCategory, uint count, string olderThan = "")
+        public async Task<RequestStatus> GetPostsAsync(PostCategory postCategory, int count, string olderThan = "")
         {
             string type = postCategory.ToString().ToLower();
             var args = new Dictionary<string, string>()
@@ -156,7 +156,7 @@ namespace My9GAG.Logic
 
             return requestStatus;
         }
-        // TODO: refactor
+        // TODO: refactor and make it work(again)!!!
         public async Task<RequestStatus> GetCommentsAsync(string postUrl, uint count)
         {
             var args = new Dictionary<string, string>();
@@ -182,7 +182,7 @@ namespace My9GAG.Logic
                     if (requestStatus.IsSuccessful)
                     {
                         Comments = new List<Comment>();
-
+                        Debug.WriteLine(responseText);
                         var jsonData = JObject.Parse(responseText);
                         var comments = jsonData["payload"]["data"][0]["comments"];
 

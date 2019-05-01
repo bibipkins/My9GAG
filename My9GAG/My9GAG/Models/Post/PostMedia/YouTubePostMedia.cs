@@ -56,7 +56,11 @@ namespace My9GAG.Models
         }
         public void Stop()
         {
-            
+
+        }
+        public void Unload()
+        {
+
         }
 
         #endregion
@@ -65,8 +69,9 @@ namespace My9GAG.Models
 
         private string GenerateHtml()
         {
-            return "<iframe width=\"100%\" height=\"100%\" src=\"https://www.youtube.com/embed/" + Url +
-                "\" frameborder = \"0\" allow = \"accelerometer;\" allowfullscreen></iframe>";
+            return "<html><head><style>body,html{background:black;margin:0;}</style></head>" +
+                "<body><iframe width=\"100%\" height=\"100%\" src=\"https://www.youtube.com/embed/" + Url +
+                "\" frameborder = \"0\" allow = \"accelerometer;\" allowfullscreen></iframe></body></html>";
         }
 
         #endregion

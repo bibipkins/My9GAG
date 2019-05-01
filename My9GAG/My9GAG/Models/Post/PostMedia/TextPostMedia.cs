@@ -64,6 +64,10 @@ namespace My9GAG.Models
         {
 
         }
+        public void Unload()
+        {
+
+        }
 
         #endregion
     }

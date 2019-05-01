@@ -10,7 +10,10 @@ namespace My9GAG.Models
         public AnimatedPostMedia(string url)
         {
             Url = url;
-            View = new VideoPlayer();
+            View = new VideoPlayer()
+            {
+                Source = url
+            };
         }
 
         #endregion
@@ -51,6 +54,10 @@ namespace My9GAG.Models
         public void Reload()
         {
             (View as VideoPlayer).Source = Url;
+        }
+        public void Unload()
+        {
+
         }
 
         #endregion

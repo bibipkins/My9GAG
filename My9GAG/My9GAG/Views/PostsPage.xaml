@@ -1,12 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:cv="clr-namespace:CarouselView.FormsPlugin.Abstractions;assembly=CarouselView.FormsPlugin.Abstractions"
              xmlns:local="clr-namespace:My9GAG.Views"
-             x:Class="My9GAG.Views.PostsPage"
-             Title="Posts"
-             BackgroundColor="Black">
-    
+             x:Class="My9GAG.Views.PostsPage"             
+             BackgroundColor="Black"
+             Title="Posts">
+
     <ContentPage.Padding>
         <OnPlatform x:TypeArguments="Thickness"
                     iOS="0,20,0,0"/>
@@ -55,25 +54,21 @@
                      Order="Secondary"
                      Command="{Binding RelogInCommand}"/>
     </ContentPage.ToolbarItems>
-    
+
     <AbsoluteLayout HorizontalOptions="FillAndExpand"
                     VerticalOptions="FillAndExpand">
-        <cv:CarouselViewControl x:Name="carousel"
-                                AbsoluteLayout.LayoutBounds="0,0,1,1"
-                                AbsoluteLayout.LayoutFlags="All"
-                                ItemsSource="{Binding Posts}"
-                                Position="{Binding Position}"
-                                HorizontalOptions="FillAndExpand"
-                                VerticalOptions="FillAndExpand"
-                                AnimateTransition="True"
-                                ShowIndicators="False"
-                                BackgroundColor="Black"
-                                InterPageSpacing="0"
-                                Orientation="Horizontal">
-            <cv:CarouselViewControl.ItemTemplate>
+        <CarouselView x:Name="carousel"
+                      AbsoluteLayout.LayoutBounds="0,0,1,1"
+                      AbsoluteLayout.LayoutFlags="All"
+                      ItemsSource="{Binding Posts}"
+                      HorizontalOptions="FillAndExpand"
+                      VerticalOptions="FillAndExpand"
+                      BackgroundColor="Black">
+            <CarouselView.ItemTemplate>
                 <DataTemplate>
                     <ContentView>
-                        <Grid>
+                        <Label Text="123" TextColor="White"></Label>
+                        <!--<Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="*"/>
@@ -123,11 +118,11 @@
                                        Margin="2,0,5,0"
                                        TextColor="White"/>
                             </StackLayout>
-                        </Grid>
+                        </Grid>-->
                     </ContentView>
                 </DataTemplate>
-            </cv:CarouselViewControl.ItemTemplate>
-        </cv:CarouselViewControl>
+            </CarouselView.ItemTemplate>
+        </CarouselView>
 
         <AbsoluteLayout x:Name="loginOverlay"
                         AbsoluteLayout.LayoutBounds="0,0,1,1"
