@@ -5,12 +5,12 @@ using Xamarin.Forms.Xaml;
 namespace My9GAG.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class PostsPage : ContentPage
+	public partial class LoginPage : ContentPage
 	{
-		public PostsPage(PostsPageViewModel viewModel)
+		public LoginPage(LoginPageViewModel viewModel)
 		{
 			InitializeComponent();
             BindingContext = viewModel;
-        }
-    }
+		}
+	}
 }

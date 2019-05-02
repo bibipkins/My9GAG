@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CarouselView.FormsPlugin.UWP;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Windows.ApplicationModel;
@@ -39,9 +40,11 @@ namespace My9GAG.UWP
                 // Create a Frame to act as the navigation context and navigate to the first page
                 rootFrame = new Frame();
                 rootFrame.NavigationFailed += OnNavigationFailed;
-                
-                List<Assembly> assembliesToInclude = new List<Assembly>();
-                Xamarin.Forms.Forms.SetFlags("CollectionView_Experimental");
+
+                List<Assembly> assembliesToInclude = new List<Assembly>()
+                {
+                    typeof(CarouselViewRenderer).GetTypeInfo().Assembly
+                };
                 Xamarin.Forms.Forms.Init(e, assembliesToInclude);
 
                 ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.FullScreen;

@@ -14,16 +14,33 @@ namespace My9GAG
         {
             InitializeComponent();
 
-            _viewModel = new PostsPageViewModel();
-            _viewModel.RestoreState(Current.Properties);
-            _viewModel.OnOpenCommentsPage += OpenCommentsPage;
-            MainPage = new NavigationPage(new My9GAG.Views.PostsPage(_viewModel))
+            _loginPageViewModel = new LoginPageViewModel();
+
+            _postsPageViewModel = new PostsPageViewModel();
+            _postsPageViewModel.RestoreState(Current.Properties);
+            _postsPageViewModel.OnOpenCommentsPage += OpenCommentsPage;
+
+            MainPage = new NavigationPage(new My9GAG.Views.PostsPage(_postsPageViewModel))
             {
                 BarBackgroundColor = Color.Black,
                 BarTextColor = Color.White,
                 BackgroundColor = Color.Black,
                 Title = "My9GAG"
             };
+
+            bool userNeedsLogin = true;
+
+            if (Current.Properties.ContainsKey(USER_LOGIN_KEY))
+            {
+                userNeedsLogin = (bool)Current.Properties[USER_LOGIN_KEY];
+            }
+
+            if (true)
+            {
+                var loginPage = new Views.LoginPage(_loginPageViewModel);
+                NavigationPage.SetHasBackButton(loginPage, false);
+                MainPage.Navigation.PushAsync(loginPage);
+            }
         }
 
         public void OpenCommentsPage(object sender, CommentsPageViewModel viewModel)
@@ -43,13 +60,24 @@ namespace My9GAG
         }
         protected override void OnSleep()
         {
-            _viewModel.SaveState(Current.Properties);
+            _postsPageViewModel.SaveState(Current.Properties);
         }
         protected override void OnResume()
         {
             // Handle when your app resumes
         }
 
-        private PostsPageViewModel _viewModel;
+        #region Fields
+
+        private LoginPageViewModel _loginPageViewModel;
+        private PostsPageViewModel _postsPageViewModel;
+
+        #endregion
+
+        #region Constants
+
+        private const string USER_LOGIN_KEY = "isNotLoggedIn";
+
+        #endregion
     }
 }

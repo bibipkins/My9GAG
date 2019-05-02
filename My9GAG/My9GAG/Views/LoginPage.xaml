@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="My9GAG.Views.LoginPage">
+    
+    <ContentPage.Content>
+        <StackLayout>
+            <Label Text="Login"
+                VerticalOptions="Start" 
+                HorizontalOptions="Start" />
+            <Entry Text="{Binding UserName}"
+                   Placeholder="Login"
+                   Keyboard="Email"
+                   BackgroundColor="White"
+                   TextColor="Black"
+                   IsSpellCheckEnabled="False"
+                   HorizontalTextAlignment="Center"/>
+            <Entry Text="{Binding Password}"
+                       Placeholder="Password"
+                       BackgroundColor="White"
+                       TextColor="Black"
+                       IsSpellCheckEnabled="False"
+                       HorizontalTextAlignment="Center"
+                       Grid.Row="1"
+                       IsPassword="True"/>
+
+            <Label Text="{Binding LogInErrorMessage}"
+                       TextColor="Red"
+                       VerticalOptions="CenterAndExpand"
+                       HorizontalOptions="CenterAndExpand"
+                       VerticalTextAlignment="Center"
+                       HorizontalTextAlignment="Center"
+                       Grid.Row="2"/>
+            <Button Text="Submit"
+                        BackgroundColor="Black"
+                        TextColor="White"
+                        Grid.Row="3"
+                        Command="{Binding LogInCommand}"/>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
