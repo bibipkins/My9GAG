@@ -190,55 +190,6 @@
             </carousel:CarouselViewControl.ItemTemplate>
         </carousel:CarouselViewControl>-->
 
-        <AbsoluteLayout x:Name="loginOverlay"
-                        AbsoluteLayout.LayoutBounds="0,0,1,1"
-                        AbsoluteLayout.LayoutFlags="All"
-                        BackgroundColor="Black"
-                        Opacity="0.9"
-                        IsVisible="{Binding IsNotLoggedIn}">
-            <Grid AbsoluteLayout.LayoutBounds="0.5,0.5,0.8,0.8"
-                  AbsoluteLayout.LayoutFlags="All"
-                  BackgroundColor="White"
-                  VerticalOptions="CenterAndExpand"
-                  Padding="30,50">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="50"/>
-                    <RowDefinition Height="50"/>
-                    <RowDefinition Height="50"/>
-                    <RowDefinition Height="50"/>
-                </Grid.RowDefinitions>
-
-                <Entry Text="{Binding UserName}"
-                       Placeholder="Login"
-                       Keyboard="Email"
-                       BackgroundColor="White"
-                       TextColor="Black"
-                       IsSpellCheckEnabled="False"
-                       HorizontalTextAlignment="Center"/>
-                <Entry Text="{Binding Password}"
-                       Placeholder="Password"
-                       BackgroundColor="White"
-                       TextColor="Black"
-                       IsSpellCheckEnabled="False"
-                       HorizontalTextAlignment="Center"
-                       Grid.Row="1"
-                       IsPassword="True"/>
-
-                <Label Text="{Binding LogInErrorMessage}"
-                       TextColor="Red"
-                       VerticalOptions="CenterAndExpand"
-                       HorizontalOptions="CenterAndExpand"
-                       VerticalTextAlignment="Center"
-                       HorizontalTextAlignment="Center"
-                       Grid.Row="2"/>
-                <Button Text="Submit"
-                        BackgroundColor="Black"
-                        TextColor="White"
-                        Grid.Row="3"
-                        Command="{Binding LogInCommand}"/>
-            </Grid>
-        </AbsoluteLayout>
-
         <ContentView x:Name="workingOverlay"
                      AbsoluteLayout.LayoutBounds="0,0,1,1"
                      AbsoluteLayout.LayoutFlags="All"

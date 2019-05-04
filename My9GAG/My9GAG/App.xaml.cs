@@ -1,7 +1,12 @@
 using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
+using Microsoft.Practices.ServiceLocation;
+using Microsoft.Practices.Unity;
+using My9GAG.Logic;
 using My9GAG.ViewModels;
+using My9GAG.Views;
+using System.Diagnostics;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -10,45 +15,42 @@ namespace My9GAG
 {
     public partial class App : Application
 	{
+        #region Constructors
+
         public App()
         {
             InitializeComponent();
-
-            _loginPageViewModel = new LoginPageViewModel();
-
-            _postsPageViewModel = new PostsPageViewModel();
-            _postsPageViewModel.RestoreState(Current.Properties);
-            _postsPageViewModel.OnOpenCommentsPage += OpenCommentsPage;
-
-            MainPage = new NavigationPage(new My9GAG.Views.PostsPage(_postsPageViewModel))
-            {
-                BarBackgroundColor = Color.Black,
-                BarTextColor = Color.White,
-                BackgroundColor = Color.Black,
-                Title = "My9GAG"
-            };
-
-            bool userNeedsLogin = true;
-
-            if (Current.Properties.ContainsKey(USER_LOGIN_KEY))
-            {
-                userNeedsLogin = (bool)Current.Properties[USER_LOGIN_KEY];
-            }
-
-            if (true)
-            {
-                var loginPage = new Views.LoginPage(_loginPageViewModel);
-                NavigationPage.SetHasBackButton(loginPage, false);
-                MainPage.Navigation.PushAsync(loginPage);
-            }
+            RegisterContainer();
+            SetupPages();
         }
 
-        public void OpenCommentsPage(object sender, CommentsPageViewModel viewModel)
+        #endregion
+
+        #region Methods
+
+        public async void OpenPostsPage()
         {
-            var commentsPage = new Views.CommentsPage(viewModel);
-            NavigationPage.SetHasBackButton(commentsPage, true);
-            MainPage.Navigation.PushAsync(commentsPage);
+            var postsPage = new PostsPage();
+            NavigationPage.SetHasBackButton(postsPage, false);
+            MainPage.Navigation.InsertPageBefore(postsPage, MainPage.Navigation.NavigationStack[0]);
+            await MainPage.Navigation.PopToRootAsync();
         }
+        public async void OpenCommentsPage()
+        {
+            var commentsPage = new CommentsPage();
+            NavigationPage.SetHasBackButton(commentsPage, true);
+            await MainPage.Navigation.PushAsync(commentsPage);
+        }
+        public async void OpenLoginPage()
+        {
+            var loginPage = new LoginPage();
+            NavigationPage.SetHasBackButton(loginPage, true);
+            await MainPage.Navigation.PushAsync(loginPage);
+        }
+
+        #endregion
+
+        #region Implementation
 
         protected override void OnStart()
         {
@@ -60,23 +62,72 @@ namespace My9GAG
         }
         protected override void OnSleep()
         {
-            _postsPageViewModel.SaveState(Current.Properties);
+            
         }
         protected override void OnResume()
         {
-            // Handle when your app resumes
+
         }
+
+        private void RegisterContainer()
+        {
+            var unityContainer = new UnityContainer();
+
+            unityContainer.RegisterType<IClientService, ClientService>(new ContainerControlledLifetimeManager());
+            unityContainer.RegisterType<IPageNavigator, PageNavigator>(new ContainerControlledLifetimeManager(), 
+                new InjectionFactory(navigator => new PageNavigator()
+                {
+                    OnOpenPostsPage = OpenPostsPage,
+                    OnOpenCommentsPage = OpenCommentsPage,
+                    OnOpenLoginPage = OpenLoginPage
+                }));
+
+            unityContainer.RegisterInstance(typeof(LoginPageViewModel));
+            unityContainer.RegisterInstance(typeof(PostsPageViewModel));
+            unityContainer.RegisterInstance(typeof(CommentsPageViewModel));
+
+            _unityServiceLocator = new UnityServiceLocator(unityContainer);
+            ServiceLocator.SetLocatorProvider(() => _unityServiceLocator);
+        }
+        private void SetupPages()
+        {
+            MainPage = new NavigationPage()
+            {
+                BarBackgroundColor = Color.Black,
+                BarTextColor = Color.White,
+                BackgroundColor = Color.Black,
+                Title = APP_NAME
+            };
+
+            bool isUserLoggedIn = false;
+
+            if (Current.Properties.ContainsKey(USER_LOGGED_IN_KEY))
+            {
+                isUserLoggedIn = (bool)Current.Properties[USER_LOGGED_IN_KEY];
+            }
+
+            if (isUserLoggedIn)
+            {
+                OpenPostsPage();                
+            }
+            else
+            {
+                OpenLoginPage();
+            }
+        }
+
+        #endregion
 
         #region Fields
 
-        private LoginPageViewModel _loginPageViewModel;
-        private PostsPageViewModel _postsPageViewModel;
+        UnityServiceLocator _unityServiceLocator;
 
         #endregion
 
         #region Constants
 
-        private const string USER_LOGIN_KEY = "isNotLoggedIn";
+        private const string APP_NAME = "My9GAG";
+        private const string USER_LOGGED_IN_KEY = "isUserLoggedIn";
 
         #endregion
     }

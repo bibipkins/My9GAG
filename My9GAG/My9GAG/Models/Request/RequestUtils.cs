@@ -18,13 +18,27 @@ namespace My9GAG.Models
         }
         public static string GetSha1(string data)
         {
-            using (var sha1 = new SHA1Managed())
-                return (BitConverter.ToString(sha1.ComputeHash(Encoding.UTF8.GetBytes(data)))).Replace("-", String.Empty).ToLower();
+            if (!String.IsNullOrEmpty(data))
+            {
+                using (var sha1 = new SHA1Managed())
+                    return (BitConverter.ToString(sha1.ComputeHash(Encoding.UTF8.GetBytes(data)))).Replace("-", String.Empty).ToLower();
+            }
+            else
+            {
+                return "";
+            }
         }
         public static string GetMd5(string data)
         {
-            using (var md5 = new MD5CryptoServiceProvider())
-                return (BitConverter.ToString(md5.ComputeHash(Encoding.UTF8.GetBytes(data)))).Replace("-", String.Empty).ToLower();
+            if (!String.IsNullOrEmpty(data))
+            {
+                using (var md5 = new MD5CryptoServiceProvider())
+                    return (BitConverter.ToString(md5.ComputeHash(Encoding.UTF8.GetBytes(data)))).Replace("-", String.Empty).ToLower();
+            }
+            else
+            {
+                return "";
+            }
         }
         public static string GetSignature(string timestamp, string appId, string deviceUuid)
         {

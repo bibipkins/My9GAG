@@ -17,9 +17,10 @@ namespace My9GAG.ViewModels
 
         public PostsPageViewModel()
         {
-            _my9GAGClient = new Client();
+            _my9GAGClient = new ClientService();
             _currentCategory = PostCategory.Hot;
             Posts = new ObservableCollection<Post>();
+
             InitCommands();
         }
 
@@ -209,7 +210,7 @@ namespace My9GAG.ViewModels
 
                 if (requestStatus != null && requestStatus.IsSuccessful)
                 {
-                    var viewModel = new CommentsPageViewModel(_my9GAGClient.Comments)
+                    var viewModel = new CommentsPageViewModel()
                     {
                         Title = Posts[Position].Title
                     };
@@ -395,7 +396,7 @@ namespace My9GAG.ViewModels
 
         #region Fields
 
-        private Client _my9GAGClient;
+        private ClientService _my9GAGClient;
         private bool _isNotLoggedIn;
         private string _logInErrorMessage;
         private string _userName;

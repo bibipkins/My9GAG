@@ -1,41 +1,98 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="My9GAG.Views.LoginPage">
-    
-    <ContentPage.Content>
-        <StackLayout>
-            <Label Text="Login"
-                VerticalOptions="Start" 
-                HorizontalOptions="Start" />
-            <Entry Text="{Binding UserName}"
-                   Placeholder="Login"
-                   Keyboard="Email"
-                   BackgroundColor="White"
-                   TextColor="Black"
-                   IsSpellCheckEnabled="False"
-                   HorizontalTextAlignment="Center"/>
-            <Entry Text="{Binding Password}"
-                       Placeholder="Password"
-                       BackgroundColor="White"
-                       TextColor="Black"
-                       IsSpellCheckEnabled="False"
-                       HorizontalTextAlignment="Center"
-                       Grid.Row="1"
-                       IsPassword="True"/>
+             x:Class="My9GAG.Views.LoginPage"
+             SizeChanged="OnLayoutSizeChanged"
+             Title="Welcome!">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style TargetType="Label">
+                <Setter Property="FontSize" Value="Default"/>
+                <Setter Property="TextColor" Value="White"/>
+            </Style>
+            <Style TargetType="Button">
+                <Setter Property="BorderWidth" Value="0"/>
+                <Setter Property="BorderColor" Value="White"/>
+                <Setter Property="HeightRequest" Value="40"/>
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
 
-            <Label Text="{Binding LogInErrorMessage}"
-                       TextColor="Red"
-                       VerticalOptions="CenterAndExpand"
-                       HorizontalOptions="CenterAndExpand"
+    <AbsoluteLayout>
+        <ScrollView AbsoluteLayout.LayoutFlags="All"
+                    AbsoluteLayout.LayoutBounds="0,0,1,1">
+            <AbsoluteLayout>
+                <StackLayout x:Name="layout"
+                             Padding="15"
+                             AbsoluteLayout.LayoutFlags="All"
+                             AbsoluteLayout.LayoutBounds="0,0,1,1"
+                             HorizontalOptions="FillAndExpand"
+                             VerticalOptions="FillAndExpand">
+                    <Label Text="Please enter your credentials"
+                           VerticalOptions="Start" 
+                           HorizontalOptions="Start"
+                           Margin="0,0,0,5"/>
+                    <Entry Text="{Binding UserName}"
+                           Placeholder="Login"
+                           Keyboard="Email"
+                           HorizontalTextAlignment="Center"/>
+                    <Entry Text="{Binding Password}"
+                           Placeholder="Password"
+                           HorizontalTextAlignment="Center"
+                           IsPassword="True"/>
+                    <Button Text="Submit"
+                            Command="{Binding LoginCommand}"
+                            Margin="0,5,0,0"/>
+
+                    <Label Text="Or sign in with..."
+                           VerticalOptions="Start" 
+                           HorizontalOptions="Start"
+                           Margin="0,20,0,5"/>
+                    <Button Text="Google"
+                            VerticalOptions="Start"/>
+                    <Button Text="Facebook"
+                            VerticalOptions="Start"/>
+
+                    <Label Text="{Binding LoginErrorMessage}"
+                           TextColor="Red"
+                           HorizontalOptions="CenterAndExpand"
+                           VerticalTextAlignment="Center"
+                           HorizontalTextAlignment="Center"
+                           Margin="20"/>
+                </StackLayout>
+            </AbsoluteLayout>
+        </ScrollView>
+
+        <ContentView AbsoluteLayout.LayoutBounds="0,0,1,1"
+                     AbsoluteLayout.LayoutFlags="All"
+                     BackgroundColor="Black"
+                     Opacity="0.8"
+                     IsVisible="{Binding IsWorkIndicationVisible}">
+            <StackLayout Orientation="Vertical"
+                         VerticalOptions="CenterAndExpand">
+                <ActivityIndicator VerticalOptions="Center"
+                                   IsRunning="{Binding IsWorkIndicationVisible}"
+                                   Color="White"/>
+                <Label Text="{Binding WorkIndicationText}"
+                       VerticalOptions="Center"
                        VerticalTextAlignment="Center"
                        HorizontalTextAlignment="Center"
-                       Grid.Row="2"/>
-            <Button Text="Submit"
-                        BackgroundColor="Black"
-                        TextColor="White"
-                        Grid.Row="3"
-                        Command="{Binding LogInCommand}"/>
-        </StackLayout>
-    </ContentPage.Content>
+                       TextColor="White"
+                       FontSize="Large"
+                       Margin="0,10,0,0"/>
+            </StackLayout>
+        </ContentView>
+
+        <ContentView AbsoluteLayout.LayoutBounds="0,0,1,1"
+                     AbsoluteLayout.LayoutFlags="All"
+                     BackgroundColor="Black"
+                     Opacity="0.8"
+                     IsVisible="{Binding IsMessageVisible}">
+            <Label Text="{Binding MessageText}"
+                   VerticalTextAlignment="Center"
+                   HorizontalTextAlignment="Center"
+                   TextColor="Red"
+                   FontSize="Large"/>
+        </ContentView>
+    </AbsoluteLayout>
 </ContentPage>

@@ -8,9 +8,9 @@ namespace My9GAG.ViewModels
     {
         #region Constructor
 
-        public CommentsPageViewModel(IEnumerable<Comment> comments)
+        public CommentsPageViewModel()
         {
-            Comments = new ObservableCollection<Comment>(comments);
+            Comments = new ObservableCollection<Comment>();
         }
 
         #endregion

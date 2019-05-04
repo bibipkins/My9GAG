@@ -1,5 +1,5 @@
 ﻿
-namespace My9GAG.ViewModels
+namespace My9GAG.Logic
 {
     public interface IDownloadManager
     {

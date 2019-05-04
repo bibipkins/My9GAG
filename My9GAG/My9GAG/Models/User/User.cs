@@ -10,5 +10,6 @@ namespace My9GAG.Models
         public string UserName { get; set; }
         [JsonProperty(PropertyName = "avatarUrl")]
         public string UserAvatar { get; set; }
+        public string Password { get; set; }
     }
 }

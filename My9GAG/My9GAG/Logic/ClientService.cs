@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace My9GAG.Logic
 {
-    public class Client
+    public class ClientService : IClientService
     {
         #region Constructors
 
-        public Client()
+        public ClientService()
         {
             _timestamp  = RequestUtils.GetTimestamp();
             _appId      = RequestUtils.APP_ID;
@@ -48,7 +48,7 @@ namespace My9GAG.Logic
             };
             HttpWebRequest request = FormRequest(RequestUtils.API, RequestUtils.LOGIN_PATH, args);
             RequestStatus loginStatus = new RequestStatus();
-
+            
             try
             {
                 using (HttpWebResponse response = (HttpWebResponse)(await request.GetResponseAsync()))
@@ -57,14 +57,14 @@ namespace My9GAG.Logic
                 {
                     string responseText = await reader.ReadToEndAsync();
                     loginStatus = ValidateResponse(responseText);
-
+                    
                     if (loginStatus.IsSuccessful)
                     {
                         var jsonData = JObject.Parse(responseText);
                         _token = jsonData["data"]["userToken"].ToString();
                         _userData = jsonData["data"].ToString();
                         string[] readStateParams = jsonData["data"]["noti"]["readStateParams"].ToString().Split('&');
-
+                        
                         foreach (var param in readStateParams)
                         {
                             string[] pair = param.Split('=');
@@ -156,7 +156,6 @@ namespace My9GAG.Logic
 
             return requestStatus;
         }
-        // TODO: refactor and make it work(again)!!!
         public async Task<RequestStatus> GetCommentsAsync(string postUrl, uint count)
         {
             var args = new Dictionary<string, string>();
@@ -223,6 +222,7 @@ namespace My9GAG.Logic
             };
 
             List<string> argsStrings = new List<string>();
+
             foreach (KeyValuePair<string, string> entry in args)
             {
                 argsStrings.Add(String.Format("{0}/{1}", entry.Key, entry.Value));
@@ -234,12 +234,10 @@ namespace My9GAG.Logic
                 path,
                 String.Join("/", argsStrings)
             };
-
             string url = String.Join("/", urlItems);
-
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-
             var headerCollection = new WebHeaderCollection();
+
             foreach (KeyValuePair<string, string> entry in headers)
             {
                 headerCollection.Add(entry.Key, entry.Value);
