@@ -9379,44 +9379,44 @@ namespace My9GAG.Droid
 		public partial class Color
 		{
 			
-			// aapt resource value: 0x7f0d005a
-			public const int abc_background_cache_hint_selector_material_dark = 2131558490;
-			
 			// aapt resource value: 0x7f0d005b
-			public const int abc_background_cache_hint_selector_material_light = 2131558491;
+			public const int abc_background_cache_hint_selector_material_dark = 2131558491;
 			
 			// aapt resource value: 0x7f0d005c
-			public const int abc_btn_colored_borderless_text_material = 2131558492;
+			public const int abc_background_cache_hint_selector_material_light = 2131558492;
 			
 			// aapt resource value: 0x7f0d005d
-			public const int abc_btn_colored_text_material = 2131558493;
+			public const int abc_btn_colored_borderless_text_material = 2131558493;
 			
 			// aapt resource value: 0x7f0d005e
-			public const int abc_color_highlight_material = 2131558494;
+			public const int abc_btn_colored_text_material = 2131558494;
 			
 			// aapt resource value: 0x7f0d005f
-			public const int abc_hint_foreground_material_dark = 2131558495;
+			public const int abc_color_highlight_material = 2131558495;
 			
 			// aapt resource value: 0x7f0d0060
-			public const int abc_hint_foreground_material_light = 2131558496;
+			public const int abc_hint_foreground_material_dark = 2131558496;
+			
+			// aapt resource value: 0x7f0d0061
+			public const int abc_hint_foreground_material_light = 2131558497;
 			
 			// aapt resource value: 0x7f0d0004
 			public const int abc_input_method_navigation_guard = 2131558404;
 			
-			// aapt resource value: 0x7f0d0061
-			public const int abc_primary_text_disable_only_material_dark = 2131558497;
-			
 			// aapt resource value: 0x7f0d0062
-			public const int abc_primary_text_disable_only_material_light = 2131558498;
+			public const int abc_primary_text_disable_only_material_dark = 2131558498;
 			
 			// aapt resource value: 0x7f0d0063
-			public const int abc_primary_text_material_dark = 2131558499;
+			public const int abc_primary_text_disable_only_material_light = 2131558499;
 			
 			// aapt resource value: 0x7f0d0064
-			public const int abc_primary_text_material_light = 2131558500;
+			public const int abc_primary_text_material_dark = 2131558500;
 			
 			// aapt resource value: 0x7f0d0065
-			public const int abc_search_url_text = 2131558501;
+			public const int abc_primary_text_material_light = 2131558501;
+			
+			// aapt resource value: 0x7f0d0066
+			public const int abc_search_url_text = 2131558502;
 			
 			// aapt resource value: 0x7f0d0005
 			public const int abc_search_url_text_normal = 2131558405;
@@ -9427,29 +9427,29 @@ namespace My9GAG.Droid
 			// aapt resource value: 0x7f0d0007
 			public const int abc_search_url_text_selected = 2131558407;
 			
-			// aapt resource value: 0x7f0d0066
-			public const int abc_secondary_text_material_dark = 2131558502;
-			
 			// aapt resource value: 0x7f0d0067
-			public const int abc_secondary_text_material_light = 2131558503;
+			public const int abc_secondary_text_material_dark = 2131558503;
 			
 			// aapt resource value: 0x7f0d0068
-			public const int abc_tint_btn_checkable = 2131558504;
+			public const int abc_secondary_text_material_light = 2131558504;
 			
 			// aapt resource value: 0x7f0d0069
-			public const int abc_tint_default = 2131558505;
+			public const int abc_tint_btn_checkable = 2131558505;
 			
 			// aapt resource value: 0x7f0d006a
-			public const int abc_tint_edittext = 2131558506;
+			public const int abc_tint_default = 2131558506;
 			
 			// aapt resource value: 0x7f0d006b
-			public const int abc_tint_seek_thumb = 2131558507;
+			public const int abc_tint_edittext = 2131558507;
 			
 			// aapt resource value: 0x7f0d006c
-			public const int abc_tint_spinner = 2131558508;
+			public const int abc_tint_seek_thumb = 2131558508;
 			
 			// aapt resource value: 0x7f0d006d
-			public const int abc_tint_switch_track = 2131558509;
+			public const int abc_tint_spinner = 2131558509;
+			
+			// aapt resource value: 0x7f0d006e
+			public const int abc_tint_switch_track = 2131558510;
 			
 			// aapt resource value: 0x7f0d0008
 			public const int accent_material_dark = 2131558408;
@@ -9505,14 +9505,14 @@ namespace My9GAG.Droid
 			// aapt resource value: 0x7f0d0003
 			public const int cardview_shadow_start_color = 2131558403;
 			
-			// aapt resource value: 0x7f0d0059
-			public const int colorAccent = 2131558489;
-			
-			// aapt resource value: 0x7f0d0057
-			public const int colorPrimary = 2131558487;
+			// aapt resource value: 0x7f0d005a
+			public const int colorAccent = 2131558490;
 			
 			// aapt resource value: 0x7f0d0058
-			public const int colorPrimaryDark = 2131558488;
+			public const int colorPrimary = 2131558488;
+			
+			// aapt resource value: 0x7f0d0059
+			public const int colorPrimaryDark = 2131558489;
 			
 			// aapt resource value: 0x7f0d0053
 			public const int default_circle_indicator_fill_color = 2131558483;
@@ -9526,8 +9526,8 @@ namespace My9GAG.Droid
 			// aapt resource value: 0x7f0d0040
 			public const int design_bottom_navigation_shadow_color = 2131558464;
 			
-			// aapt resource value: 0x7f0d006e
-			public const int design_error = 2131558510;
+			// aapt resource value: 0x7f0d006f
+			public const int design_error = 2131558511;
 			
 			// aapt resource value: 0x7f0d0041
 			public const int design_fab_shadow_end_color = 2131558465;
@@ -9553,8 +9553,8 @@ namespace My9GAG.Droid
 			// aapt resource value: 0x7f0d0048
 			public const int design_snackbar_background_color = 2131558472;
 			
-			// aapt resource value: 0x7f0d006f
-			public const int design_tint_password_toggle = 2131558511;
+			// aapt resource value: 0x7f0d0070
+			public const int design_tint_password_toggle = 2131558512;
 			
 			// aapt resource value: 0x7f0d0016
 			public const int dim_foreground_disabled_material_dark = 2131558422;
@@ -9673,17 +9673,20 @@ namespace My9GAG.Droid
 			// aapt resource value: 0x7f0d0038
 			public const int secondary_text_disabled_material_light = 2131558456;
 			
+			// aapt resource value: 0x7f0d0057
+			public const int splash_background = 2131558487;
+			
 			// aapt resource value: 0x7f0d0039
 			public const int switch_thumb_disabled_material_dark = 2131558457;
 			
 			// aapt resource value: 0x7f0d003a
 			public const int switch_thumb_disabled_material_light = 2131558458;
 			
-			// aapt resource value: 0x7f0d0070
-			public const int switch_thumb_material_dark = 2131558512;
-			
 			// aapt resource value: 0x7f0d0071
-			public const int switch_thumb_material_light = 2131558513;
+			public const int switch_thumb_material_dark = 2131558513;
+			
+			// aapt resource value: 0x7f0d0072
+			public const int switch_thumb_material_light = 2131558514;
 			
 			// aapt resource value: 0x7f0d003b
 			public const int switch_thumb_normal_material_dark = 2131558459;
@@ -10497,26 +10500,26 @@ namespace My9GAG.Droid
 			// aapt resource value: 0x7f020053
 			public const int avd_hide_password = 2130837587;
 			
-			// aapt resource value: 0x7f020136
-			public const int avd_hide_password_1 = 2130837814;
-			
 			// aapt resource value: 0x7f020137
-			public const int avd_hide_password_2 = 2130837815;
+			public const int avd_hide_password_1 = 2130837815;
 			
 			// aapt resource value: 0x7f020138
-			public const int avd_hide_password_3 = 2130837816;
+			public const int avd_hide_password_2 = 2130837816;
+			
+			// aapt resource value: 0x7f020139
+			public const int avd_hide_password_3 = 2130837817;
 			
 			// aapt resource value: 0x7f020054
 			public const int avd_show_password = 2130837588;
 			
-			// aapt resource value: 0x7f020139
-			public const int avd_show_password_1 = 2130837817;
-			
 			// aapt resource value: 0x7f02013a
-			public const int avd_show_password_2 = 2130837818;
+			public const int avd_show_password_1 = 2130837818;
 			
 			// aapt resource value: 0x7f02013b
-			public const int avd_show_password_3 = 2130837819;
+			public const int avd_show_password_2 = 2130837819;
+			
+			// aapt resource value: 0x7f02013c
+			public const int avd_show_password_3 = 2130837820;
 			
 			// aapt resource value: 0x7f020055
 			public const int design_bottom_navigation_item_background = 2130837589;
@@ -11166,11 +11169,11 @@ namespace My9GAG.Droid
 			// aapt resource value: 0x7f02012c
 			public const int notification_icon_background = 2130837804;
 			
-			// aapt resource value: 0x7f020134
-			public const int notification_template_icon_bg = 2130837812;
-			
 			// aapt resource value: 0x7f020135
-			public const int notification_template_icon_low_bg = 2130837813;
+			public const int notification_template_icon_bg = 2130837813;
+			
+			// aapt resource value: 0x7f020136
+			public const int notification_template_icon_low_bg = 2130837814;
 			
 			// aapt resource value: 0x7f02012d
 			public const int notification_tile_bg = 2130837805;
@@ -11182,16 +11185,19 @@ namespace My9GAG.Droid
 			public const int Prev = 2130837807;
 			
 			// aapt resource value: 0x7f020130
-			public const int tooltip_frame_dark = 2130837808;
+			public const int splash_screen = 2130837808;
 			
 			// aapt resource value: 0x7f020131
-			public const int tooltip_frame_light = 2130837809;
+			public const int tooltip_frame_dark = 2130837809;
 			
 			// aapt resource value: 0x7f020132
-			public const int trending = 2130837810;
+			public const int tooltip_frame_light = 2130837810;
 			
 			// aapt resource value: 0x7f020133
-			public const int Up = 2130837811;
+			public const int trending = 2130837811;
+			
+			// aapt resource value: 0x7f020134
+			public const int Up = 2130837812;
 			
 			static Drawable()
 			{
@@ -12198,10 +12204,7 @@ namespace My9GAG.Droid
 			public const int icon = 2130903040;
 			
 			// aapt resource value: 0x7f030001
-			public const int icon_round = 2130903041;
-			
-			// aapt resource value: 0x7f030002
-			public const int launcher_foreground = 2130903042;
+			public const int splash_foreground = 2130903041;
 			
 			static Mipmap()
 			{
@@ -12436,8 +12439,8 @@ namespace My9GAG.Droid
 			// aapt resource value: 0x7f0c016e
 			public const int Animation_Design_BottomSheetDialog = 2131493230;
 			
-			// aapt resource value: 0x7f0c0194
-			public const int AppCompatDialogStyle = 2131493268;
+			// aapt resource value: 0x7f0c0195
+			public const int AppCompatDialogStyle = 2131493269;
 			
 			// aapt resource value: 0x7f0c00a9
 			public const int Base_AlertDialog_AppCompat = 2131493033;
@@ -12931,6 +12934,9 @@ namespace My9GAG.Droid
 			// aapt resource value: 0x7f0c0170
 			public const int Base_Widget_Design_TabLayout = 2131493232;
 			
+			// aapt resource value: 0x7f0c0194
+			public const int BaseTheme = 2131493268;
+			
 			// aapt resource value: 0x7f0c000b
 			public const int CardView = 2131492875;
 			
@@ -12942,9 +12948,6 @@ namespace My9GAG.Droid
 			
 			// aapt resource value: 0x7f0c0192
 			public const int MainTheme = 2131493266;
-			
-			// aapt resource value: 0x7f0c0193
-			public const int MainTheme_Base = 2131493267;
 			
 			// aapt resource value: 0x7f0c002d
 			public const int Platform_AppCompat = 2131492909;
@@ -13029,6 +13032,9 @@ namespace My9GAG.Droid
 			
 			// aapt resource value: 0x7f0c0047
 			public const int RtlUnderlay_Widget_AppCompat_ActionButton_Overflow = 2131492935;
+			
+			// aapt resource value: 0x7f0c0193
+			public const int SplashTheme = 2131493267;
 			
 			// aapt resource value: 0x7f0c00d6
 			public const int TextAppearance_AppCompat = 2131493078;

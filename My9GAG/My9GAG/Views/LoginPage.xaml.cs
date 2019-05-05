@@ -19,15 +19,19 @@ namespace My9GAG.Views
         {
             if (Device.Idiom != TargetIdiom.Phone)
             {
-                if (Width > 720.0)
+                if (Width > MIN_WIDTH_TO_CLAMP)
                 {
                     AbsoluteLayout.SetLayoutBounds(layout, new Rectangle(0.5, 0.5, 0.5, 1));
+                    layout.VerticalOptions = LayoutOptions.CenterAndExpand;
                 }
                 else
                 {
                     AbsoluteLayout.SetLayoutBounds(layout, new Rectangle(0, 0, 1, 1));
+                    layout.VerticalOptions = LayoutOptions.FillAndExpand;
                 }
             }
         }
+
+        private const double MIN_WIDTH_TO_CLAMP = 720.0;
     }
 }

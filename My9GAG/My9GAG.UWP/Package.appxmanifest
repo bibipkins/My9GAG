@@ -5,7 +5,7 @@
   <Properties>
     <DisplayName>My9GAG.UWP</DisplayName>
     <PublisherDisplayName>806c7f5c-95bb-47f7-a4e5-be88fe37712f</PublisherDisplayName>
-    <Logo>Assets\StoreLogo.png</Logo>
+    <Logo>assets\Store\StoreLogo.png</Logo>
   </Properties>
   <Dependencies>
     <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.0.0" MaxVersionTested="10.0.0.0" />
@@ -15,15 +15,16 @@
   </Resources>
   <Applications>
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="My9GAG.UWP.App">
-      <uap:VisualElements DisplayName="My9GAG.UWP" Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\Square44x44Logo.png" Description="My9GAG.UWP" BackgroundColor="transparent">
-        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" Square310x310Logo="Assets\LargeTile.png" Square71x71Logo="Assets\SmallTile.png">
+      <uap:VisualElements DisplayName="My9GAG" Square150x150Logo="assets\Medium\Medium150x150Logo.png" Square44x44Logo="assets\AppList\AppList.png" Description="My9GAG" BackgroundColor="transparent">
+        <uap:DefaultTile Wide310x150Logo="assets\Wide\Wide310x150Logo.png" Square310x310Logo="assets\Large\Large310x310Logo.png" Square71x71Logo="assets\Small\Small71x71Logo.png">
           <uap:ShowNameOnTiles>
             <uap:ShowOn Tile="square150x150Logo" />
             <uap:ShowOn Tile="wide310x150Logo" />
             <uap:ShowOn Tile="square310x310Logo" />
           </uap:ShowNameOnTiles>
         </uap:DefaultTile>
-        <uap:SplashScreen Image="Assets\SplashScreen.png" />
+        <uap:SplashScreen Image="assets\SplashScreen\SplashScreen.png" />
+        <uap:LockScreen BadgeLogo="assets\Badge\Badge.png" Notification="badge" />
       </uap:VisualElements>
     </Application>
   </Applications>
