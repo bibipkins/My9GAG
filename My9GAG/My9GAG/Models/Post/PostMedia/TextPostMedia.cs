@@ -1,6 +1,6 @@
 ﻿using Xamarin.Forms;
 
-namespace My9GAG.Models
+namespace My9GAG.Models.Post.Media
 {
     public class TextPostMedia : IPostMedia
     {

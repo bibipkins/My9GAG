@@ -1,6 +1,4 @@
-﻿using Microsoft.Practices.ServiceLocation;
-using My9GAG.ViewModels;
-using Xamarin.Forms;
+﻿using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
 namespace My9GAG.Views
@@ -11,7 +9,6 @@ namespace My9GAG.Views
 		public PostsPage()
 		{
 			InitializeComponent();
-            BindingContext = ServiceLocator.Current.GetInstance(typeof(PostsPageViewModel));
         }
     }
 }

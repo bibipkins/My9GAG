@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace My9GAG.Models
+namespace My9GAG.Models.Request
 {
     public static class RequestUtils
     {
@@ -44,6 +45,26 @@ namespace My9GAG.Models
         {
             string data = String.Format("*{0}_._{1}._.{2}9GAG", timestamp, appId, deviceUuid);
             return GetSha1(data);
+        }
+        public static string ExtractValueFromUrl(string url, string key)
+        {
+            string value = string.Empty;
+            char attributeDivider = '&';
+            char keyValueDivider = '=';
+            string fullKey = key + keyValueDivider;
+
+            if (url.Contains(fullKey))
+            {
+                var attributes = url.Split(attributeDivider);
+                var keyValuePair = attributes.FirstOrDefault(s => s.Contains(fullKey)).Split(keyValueDivider);
+
+                if (keyValuePair.Length > 1)
+                {
+                    value = keyValuePair[1];
+                }
+            }
+
+            return value;
         }
 
         #endregion

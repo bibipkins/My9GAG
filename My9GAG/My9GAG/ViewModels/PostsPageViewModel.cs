@@ -1,10 +1,10 @@
 ﻿using My9GAG.Logic;
-using My9GAG.Models;
+using My9GAG.Models.Post;
+using My9GAG.Models.Request;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
@@ -15,13 +15,15 @@ namespace My9GAG.ViewModels
     {
         #region Constructors
 
-        public PostsPageViewModel()
+        public PostsPageViewModel(IClientService clientService, IPageNavigator pageNavigator)
         {
-            _my9GAGClient = new ClientService();
+            _clientService = clientService;
             _currentCategory = PostCategory.Hot;
             Posts = new ObservableCollection<Post>();
 
             InitCommands();
+
+            GetPostsAsync(_currentCategory);
         }
 
         #endregion
@@ -101,29 +103,6 @@ namespace My9GAG.ViewModels
 
         #region Methods
 
-        public async Task LoginAsync()
-        {
-            StartWorkIndication(ViewModelConstants.LOGIN_MESSAGE);
-            
-            await Task.Run(async () =>
-            {
-                var requestStatus = await _my9GAGClient.LoginAsync(_userName, _password);
-
-                StopWorkIndication();
-                IsNotLoggedIn = !requestStatus.IsSuccessful;
-                LogInErrorMessage = requestStatus.Message;
-
-                await Task.Delay(ViewModelConstants.LOGIN_DELAY);
-
-                if (requestStatus.IsSuccessful && Posts.Count == 0)
-                {
-                    StopWorkIndication();
-                    await GetPostsAsync(_currentCategory);
-                }
-            });
-
-            StopWorkIndication();
-        }
         public async Task GetPostsAsync(PostCategory postCategory)
         {
             switch (postCategory)
@@ -141,11 +120,11 @@ namespace My9GAG.ViewModels
 
             await Task.Run(async () =>
             {
-                RequestStatus requestStatus = await _my9GAGClient.GetPostsAsync(postCategory, NUMBER_OF_POSTS);
+                RequestStatus requestStatus = await _clientService.GetPostsAsync(postCategory, NUMBER_OF_POSTS);
 
                 if (requestStatus != null && requestStatus.IsSuccessful)
                 {
-                    var loadedPosts = new ObservableCollection<Post>(_my9GAGClient.Posts);
+                    var loadedPosts = new ObservableCollection<Post>(_clientService.Posts);
                     _currentCategory = postCategory;
 
                     Device.BeginInvokeOnMainThread(() =>
@@ -176,11 +155,11 @@ namespace My9GAG.ViewModels
 
             await Task.Run(async () =>
             {
-                RequestStatus requestStatus = await _my9GAGClient.GetPostsAsync(_currentCategory, NUMBER_OF_POSTS, Posts[Posts.Count - 1].Id);
+                RequestStatus requestStatus = await _clientService.GetPostsAsync(_currentCategory, NUMBER_OF_POSTS, Posts[Posts.Count - 1].Id);
                 
                 if (requestStatus != null && requestStatus.IsSuccessful)
                 {
-                    var loadedPosts = new ObservableCollection<Post>(_my9GAGClient.Posts);
+                    var loadedPosts = new ObservableCollection<Post>(_clientService.Posts);
 
                     Device.BeginInvokeOnMainThread(() =>
                     {
@@ -201,12 +180,12 @@ namespace My9GAG.ViewModels
         {
             StartWorkIndication("Getting comments");
 
-            await Task.Run(async () =>
+            await Task.Run((Func<Task>)(async () =>
             {
                 Debug.WriteLine("Started GetComments");
                 uint count = (uint)Posts[Position].CommentCount;
                 string postUrl = Posts[Position].Url;
-                RequestStatus requestStatus = await _my9GAGClient.GetCommentsAsync(postUrl, count);
+                RequestStatus requestStatus = await this._clientService.GetCommentsAsync(postUrl, count);
 
                 if (requestStatus != null && requestStatus.IsSuccessful)
                 {
@@ -220,9 +199,9 @@ namespace My9GAG.ViewModels
                 {
                     ShowMessage(requestStatus.Message, ViewModelConstants.MESSAGE_DELAY);
                 }
-                
+
                 Debug.WriteLine("Finished GetComments");
-            });
+            }));
 
             StopWorkIndication();
         }
@@ -262,8 +241,6 @@ namespace My9GAG.ViewModels
             IsNotLoggedIn = GetDictionaryEntry(dictionary, "isNotLoggedIn", true);
             UserName = GetDictionaryEntry(dictionary, "userName", "");
             Password = GetDictionaryEntry(dictionary, "password", "");
-            
-            LoginAsync();
         }
 
         #endregion
@@ -331,7 +308,7 @@ namespace My9GAG.ViewModels
         protected void InitCommands()
         {
             LogInCommand = new Command(
-                () => { LoginAsync(); });
+                () => {  });
             GetHotPostsCommand = new Command(
                 () => { GetPostsAsync(PostCategory.Hot); }, 
                 () => { return !IsNotLoggedIn && !IsWorkIndicationVisible; });
@@ -396,7 +373,11 @@ namespace My9GAG.ViewModels
 
         #region Fields
 
-        private ClientService _my9GAGClient;
+        private IClientService _clientService;
+        private IPageNavigator _pageNavigator;
+        private PostCategory _currentCategory;
+        private ObservableCollection<Post> _posts;
+
         private bool _isNotLoggedIn;
         private string _logInErrorMessage;
         private string _userName;
@@ -406,9 +387,6 @@ namespace My9GAG.ViewModels
         private int _startPosition = 0;
         private int _endPosition = 0;
         private List<ICommand> _commands;
-
-        private PostCategory _currentCategory;
-        private ObservableCollection<Post> _posts;
 
         #endregion
 

@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Net;
 
-namespace My9GAG.Models
+namespace My9GAG.Models.Comment
 {
     public class Comment
     {
@@ -34,7 +34,7 @@ namespace My9GAG.Models
             get;
             set;
         }
-        public User User
+        public User.User User
         {
             get;
             set;

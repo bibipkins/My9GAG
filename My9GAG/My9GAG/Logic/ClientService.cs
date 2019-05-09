@@ -1,4 +1,7 @@
-﻿using My9GAG.Models;
+﻿using My9GAG.Models.Comment;
+using My9GAG.Models.Post;
+using My9GAG.Models.Post.Media;
+using My9GAG.Models.Request;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -61,20 +64,62 @@ namespace My9GAG.Logic
                     if (loginStatus.IsSuccessful)
                     {
                         var jsonData = JObject.Parse(responseText);
+
                         _token = jsonData["data"]["userToken"].ToString();
                         _userData = jsonData["data"].ToString();
-                        string[] readStateParams = jsonData["data"]["noti"]["readStateParams"].ToString().Split('&');
-                        
-                        foreach (var param in readStateParams)
-                        {
-                            string[] pair = param.Split('=');
 
-                            if (pair[0].Contains("appId"))
-                            {
-                                _generatedAppId = pair[1];
-                                break;
-                            }
-                        }
+                        string readStateParams = jsonData["data"]["noti"]["readStateParams"].ToString();
+
+                        _generatedAppId = RequestUtils.ExtractValueFromUrl(readStateParams, "appId");
+
+                        Debug.WriteLine("TOKEN: " + _token);
+                        Debug.WriteLine("APP_ID: " + _generatedAppId);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                loginStatus.IsSuccessful = false;
+                loginStatus.Message = ex.Message;
+            }
+
+            return loginStatus;
+        }
+        public async Task<RequestStatus> LoginWithGoogleAsync(string token)
+        {
+            var args = new Dictionary<string, string>()
+            {
+                { "userAccessToken", token },
+                { "loginMethod", "google-plus" },
+                { "language", "en_US" },
+                { "pushToken", _token }
+            };
+            HttpWebRequest request = FormRequest(RequestUtils.API, RequestUtils.LOGIN_PATH, args);
+            RequestStatus loginStatus = new RequestStatus();
+
+            try
+            {
+                using (HttpWebResponse response = (HttpWebResponse)(await request.GetResponseAsync()))
+                using (Stream stream = response.GetResponseStream())
+                using (StreamReader reader = new StreamReader(stream))
+                {
+                    string responseText = await reader.ReadToEndAsync();
+
+                    loginStatus = ValidateResponse(responseText);
+
+                    if (loginStatus.IsSuccessful)
+                    {
+                        var jsonData = JObject.Parse(responseText);
+
+                        _token = jsonData["data"]["userToken"].ToString();
+                        _userData = jsonData["data"].ToString();
+
+                        string readStateParams = jsonData["data"]["noti"]["readStateParams"].ToString();
+
+                        _generatedAppId = RequestUtils.ExtractValueFromUrl(readStateParams, "appId");
+
+                        Debug.WriteLine("TOKEN: " + _token);
+                        Debug.WriteLine("APP_ID: " + _generatedAppId);
                     }
                 }
             }
@@ -104,6 +149,10 @@ namespace My9GAG.Logic
             HttpWebRequest request = FormRequest(RequestUtils.API, RequestUtils.POSTS_PATH, args);
             RequestStatus requestStatus = new RequestStatus();
 
+            Debug.WriteLine("TOKEN: " + _token);
+            Debug.WriteLine("APP_ID: " + _generatedAppId);
+            Debug.WriteLine(request.Address.ToString());
+
             try
             {
                 using (HttpWebResponse response = (HttpWebResponse)(await request.GetResponseAsync()))
@@ -111,6 +160,10 @@ namespace My9GAG.Logic
                 using (StreamReader reader = new StreamReader(stream))
                 {
                     string responseText = await reader.ReadToEndAsync();
+
+                    Debug.WriteLine("");
+                    Debug.WriteLine(responseText);
+
                     requestStatus = ValidateResponse(responseText);
 
                     if (requestStatus.IsSuccessful)

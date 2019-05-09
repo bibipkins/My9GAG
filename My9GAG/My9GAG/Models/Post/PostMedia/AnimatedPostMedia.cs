@@ -1,7 +1,7 @@
-﻿using My9GAG.Views;
+﻿using My9GAG.Views.CustomViews;
 using Xamarin.Forms;
 
-namespace My9GAG.Models
+namespace My9GAG.Models.Post.Media
 {
     public class AnimatedPostMedia : IPostMedia
     {

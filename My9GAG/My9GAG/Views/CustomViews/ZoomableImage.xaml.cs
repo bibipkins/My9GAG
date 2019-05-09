@@ -3,7 +3,7 @@ using System.Diagnostics;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace My9GAG.Views
+namespace My9GAG.Views.CustomViews
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class ZoomableImage : ContentView

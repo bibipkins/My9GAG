@@ -6,5 +6,6 @@ namespace My9GAG.Logic
         void OpenPostsPage();
         void OpenCommentsPage();
         void OpenLoginPage();
+        void OpenLoginWithGooglePage();
     }
 }

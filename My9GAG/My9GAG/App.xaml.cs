@@ -1,8 +1,9 @@
+using Autofac;
+using Autofac.Extras.CommonServiceLocator;
+using CommonServiceLocator;
 using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
-using Microsoft.Practices.ServiceLocation;
-using Microsoft.Practices.Unity;
 using My9GAG.Logic;
 using My9GAG.ViewModels;
 using My9GAG.Views;
@@ -11,6 +12,7 @@ using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
+
 namespace My9GAG
 {
     public partial class App : Application
@@ -30,22 +32,40 @@ namespace My9GAG
 
         public async void OpenPostsPage()
         {
-            var postsPage = new PostsPage();
+            var postsPage = new PostsPage()
+            {
+                BindingContext = _container.Resolve<PostsPageViewModel>()
+            };
             NavigationPage.SetHasBackButton(postsPage, false);
             MainPage.Navigation.InsertPageBefore(postsPage, MainPage.Navigation.NavigationStack[0]);
             await MainPage.Navigation.PopToRootAsync();
         }
         public async void OpenCommentsPage()
         {
-            var commentsPage = new CommentsPage();
+            var commentsPage = new CommentsPage()
+            {
+                BindingContext = _container.Resolve<CommentsPageViewModel>()
+            };
             NavigationPage.SetHasBackButton(commentsPage, true);
             await MainPage.Navigation.PushAsync(commentsPage);
         }
         public async void OpenLoginPage()
         {
-            var loginPage = new LoginPage();
+            var loginPage = new LoginPage()
+            {
+                BindingContext = _container.Resolve<LoginPageViewModel>()
+            };
             NavigationPage.SetHasBackButton(loginPage, true);
             await MainPage.Navigation.PushAsync(loginPage);
+        }
+        public async void OpenLoginWithGooglePage()
+        {
+            var googleLoginPage = new GoogleLoginPage()
+            {
+                BindingContext = _container.Resolve<GoogleLoginPageViewModel>()
+            };
+            NavigationPage.SetHasBackButton(googleLoginPage, true);
+            await MainPage.Navigation.PushAsync(googleLoginPage);
         }
 
         #endregion
@@ -71,23 +91,24 @@ namespace My9GAG
 
         private void RegisterContainer()
         {
-            var unityContainer = new UnityContainer();
+            var builder = new ContainerBuilder();
 
-            unityContainer.RegisterType<IClientService, ClientService>(new ContainerControlledLifetimeManager());
-            unityContainer.RegisterType<IPageNavigator, PageNavigator>(new ContainerControlledLifetimeManager(), 
-                new InjectionFactory(navigator => new PageNavigator()
-                {
-                    OnOpenPostsPage = OpenPostsPage,
-                    OnOpenCommentsPage = OpenCommentsPage,
-                    OnOpenLoginPage = OpenLoginPage
-                }));
+            builder.RegisterType<GoogleAuthenticationService>().As<IGoogleAuthenticationService>();
+            builder.RegisterType<ClientService>().As<IClientService>().SingleInstance();
+            builder.Register(navigator => new PageNavigator()
+            {
+                OnOpenPostsPage = OpenPostsPage,
+                OnOpenCommentsPage = OpenCommentsPage,
+                OnOpenLoginPage = OpenLoginPage,
+                OnOpenLoginWithGooglePage = OpenLoginWithGooglePage
+            }).As<IPageNavigator>().SingleInstance();
 
-            unityContainer.RegisterInstance(typeof(LoginPageViewModel));
-            unityContainer.RegisterInstance(typeof(PostsPageViewModel));
-            unityContainer.RegisterInstance(typeof(CommentsPageViewModel));
+            builder.RegisterType<LoginPageViewModel>();
+            builder.RegisterType<GoogleLoginPageViewModel>();
+            builder.RegisterType<PostsPageViewModel>();
+            builder.RegisterType<CommentsPageViewModel>();
 
-            _unityServiceLocator = new UnityServiceLocator(unityContainer);
-            ServiceLocator.SetLocatorProvider(() => _unityServiceLocator);
+            _container = builder.Build();
         }
         private void SetupPages()
         {
@@ -120,7 +141,7 @@ namespace My9GAG
 
         #region Fields
 
-        UnityServiceLocator _unityServiceLocator;
+        private IContainer _container;
 
         #endregion
 

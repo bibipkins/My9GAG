@@ -1,6 +1,4 @@
-﻿using Microsoft.Practices.ServiceLocation;
-using My9GAG.ViewModels;
-using System;
+﻿using System;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -12,7 +10,6 @@ namespace My9GAG.Views
 		public LoginPage()
 		{
 			InitializeComponent();
-            BindingContext = ServiceLocator.Current.GetInstance(typeof(LoginPageViewModel));
 		}
 
         private void OnLayoutSizeChanged(object sender, EventArgs e)

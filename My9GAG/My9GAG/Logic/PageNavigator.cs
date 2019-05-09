@@ -9,6 +9,7 @@ namespace My9GAG.Logic
         public Action OnOpenPostsPage;
         public Action OnOpenCommentsPage;
         public Action OnOpenLoginPage;
+        public Action OnOpenLoginWithGooglePage;
 
         #endregion
 
@@ -25,6 +26,10 @@ namespace My9GAG.Logic
         public void OpenLoginPage()
         {
             OnOpenLoginPage?.Invoke();
+        }
+        public void OpenLoginWithGooglePage()
+        {
+            OnOpenLoginWithGooglePage?.Invoke();
         }
 
         #endregion

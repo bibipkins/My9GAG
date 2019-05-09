@@ -2,8 +2,7 @@
 <ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:player="clr-namespace:Rox;assembly=Rox.Xamarin.Video.Portable"
-             xmlns:local="clr-namespace:My9GAG.Views"
-             x:Class="My9GAG.Views.VideoPlayer"
+             x:Class="My9GAG.Views.CustomViews.VideoPlayer"
              BackgroundColor="Black">
 
     <ContentView.Content>

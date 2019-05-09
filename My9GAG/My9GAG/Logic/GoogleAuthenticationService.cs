@@ -1,0 +1,50 @@
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System.Net.Http;
+using System.Threading.Tasks;
+
+namespace My9GAG.Logic
+{
+    public class GoogleAuthenticationService : IGoogleAuthenticationService
+    {
+        #region Methods
+
+        public string GetAuthenticationPageUrl()
+        {
+            string url = AUTHENTICATION_PAGE_BASE_URL +
+                "?response_type=code" +
+                "&scope=openid" +
+                "&redirect_uri=" + REDIRECT_URL +
+                "&client_id=" + CLIENT_ID;
+
+            return url;
+        }
+        public async Task<string> GetAccessTokenAsync(string code)
+        {
+            string requestUrl = "https://www.googleapis.com/oauth2/v4/token"
+                         + "?code=" + code
+                         + "&client_id=" + CLIENT_ID
+                         + "&client_secret=" + CLIENT_SECRET
+                         + "&redirect_uri=" + System.Net.WebUtility.UrlEncode(REDIRECT_URL)
+                         + "&grant_type=authorization_code";
+
+            var client = new HttpClient();
+            var response = await client.PostAsync(requestUrl, null);
+            var data = await response.Content.ReadAsStringAsync();
+
+            return JsonConvert.DeserializeObject<JObject>(data).Value<string>(JSON_ACCESS_TOKEN_KEY);
+        }
+
+        #endregion
+
+        #region Constants
+
+        private const string AUTHENTICATION_PAGE_BASE_URL = "https://accounts.google.com/o/oauth2/v2/auth";
+        private const string CLIENT_ID = "508189286171-qjcsbu5l43noibpcg70t8sdp29no2dn0.apps.googleusercontent.com";
+        private const string CLIENT_SECRET = "F1MTmepVSpWBaE4l7SNOSwDf";
+        private const string REDIRECT_URL = "https://github.com/bibipkins/My9GAG";
+        private const string JSON_ACCESS_TOKEN_KEY = "access_token";
+
+        #endregion
+    }
+}

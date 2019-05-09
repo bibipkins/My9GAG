@@ -1,5 +1,5 @@
 ﻿using My9GAG.Logic;
-using My9GAG.Models;
+using My9GAG.Models.User;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -119,7 +119,7 @@ namespace My9GAG.ViewModels
             LoginCommand = new Command(
                 () => LoginAsync(),
                 () => !string.IsNullOrEmpty(Password) && !string.IsNullOrEmpty(UserName));
-            LoginWithGoogleCommand = new Command(() => {  });
+            LoginWithGoogleCommand = new Command(() => { _pageNavigator.OpenLoginWithGooglePage(); });
             LoginWithFacebookCommand = new Command(() => {  });
 
             CommandList = new List<ICommand>()

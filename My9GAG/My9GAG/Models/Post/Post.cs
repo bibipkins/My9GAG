@@ -1,7 +1,8 @@
-﻿using Newtonsoft.Json;
+﻿using My9GAG.Models.Post.Media;
+using Newtonsoft.Json;
 using System.Net;
 
-namespace My9GAG.Models
+namespace My9GAG.Models.Post
 {
     public class Post
     {

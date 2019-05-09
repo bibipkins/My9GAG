@@ -49,7 +49,8 @@
                            HorizontalOptions="Start"
                            Margin="0,20,0,5"/>
                     <Button Text="Google"
-                            VerticalOptions="Start"/>
+                            VerticalOptions="Start"
+                            Command="{Binding LoginWithGoogleCommand}"/>
                     <Button Text="Facebook"
                             VerticalOptions="Start"/>
 
