@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:behaviors="clr-namespace:My9GAG.Views.Behaviors"
+             xmlns:views="clr-namespace:My9GAG.Views.CustomViews"
+             x:Class="My9GAG.Views.LoginWithGooglePage"
+             Title="Sign in with Google">
+
+    <AbsoluteLayout>
+        <WebView AbsoluteLayout.LayoutFlags="All"
+                 AbsoluteLayout.LayoutBounds="0,0,1,1"
+                 Source="{Binding PageUrl}">
+            <WebView.Behaviors>
+                <behaviors:WebViewNavigatingBehavior Command="{Binding NavigatingCommand}"/>
+            </WebView.Behaviors>
+        </WebView>
+
+        <ContentView AbsoluteLayout.LayoutBounds="0,0,1,1"
+                     AbsoluteLayout.LayoutFlags="All"
+                     BackgroundColor="Black"
+                     Opacity="0.8"
+                     IsVisible="{Binding IsWorkIndicationVisible}">
+            <StackLayout Orientation="Vertical"
+                         VerticalOptions="CenterAndExpand">
+                <ActivityIndicator VerticalOptions="Center"
+                                   IsRunning="{Binding IsWorkIndicationVisible}"
+                                   Color="White"/>
+                <Label Text="{Binding WorkIndicationText}"
+                       VerticalOptions="Center"
+                       VerticalTextAlignment="Center"
+                       HorizontalTextAlignment="Center"
+                       TextColor="White"
+                       FontSize="Large"
+                       Margin="0,10,0,0"/>
+            </StackLayout>
+        </ContentView>
+
+        <views:WorkIndicationOverlay 
+            AbsoluteLayout.LayoutBounds="0,0,1,1"
+            AbsoluteLayout.LayoutFlags="All"
+            IsVisible="{Binding IsWorkIndicationVisible}"
+            Text="{Binding WorkIndicationText}"/>
+        
+        <views:MessageOverlay 
+            AbsoluteLayout.LayoutBounds="0,0,1,1"
+            AbsoluteLayout.LayoutFlags="All"
+            IsVisible="{Binding IsMessageVisible}"
+            Text="{Binding MessageText}"/>
+    </AbsoluteLayout>
+</ContentPage>

@@ -10,7 +10,7 @@ using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace My9GAG.Logic
+namespace My9GAG.Logic.Client
 {
     public class ClientService : IClientService
     {
@@ -71,9 +71,6 @@ namespace My9GAG.Logic
                         string readStateParams = jsonData["data"]["noti"]["readStateParams"].ToString();
 
                         _generatedAppId = RequestUtils.ExtractValueFromUrl(readStateParams, "appId");
-
-                        Debug.WriteLine("TOKEN: " + _token);
-                        Debug.WriteLine("APP_ID: " + _generatedAppId);
                     }
                 }
             }
@@ -117,9 +114,6 @@ namespace My9GAG.Logic
                         string readStateParams = jsonData["data"]["noti"]["readStateParams"].ToString();
 
                         _generatedAppId = RequestUtils.ExtractValueFromUrl(readStateParams, "appId");
-
-                        Debug.WriteLine("TOKEN: " + _token);
-                        Debug.WriteLine("APP_ID: " + _generatedAppId);
                     }
                 }
             }

@@ -1,13 +1,13 @@
 using Autofac;
-using Autofac.Extras.CommonServiceLocator;
-using CommonServiceLocator;
 using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
-using My9GAG.Logic;
+using My9GAG.Logic.Client;
+using My9GAG.Logic.FacebookAuthentication;
+using My9GAG.Logic.GoogleAuthentication;
+using My9GAG.Logic.PageNavigator;
 using My9GAG.ViewModels;
 using My9GAG.Views;
-using System.Diagnostics;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -30,6 +30,13 @@ namespace My9GAG
 
         #region Methods
 
+        public async void GoBack()
+        {
+            if (MainPage.Navigation.NavigationStack.Count > 1)
+            {
+                await MainPage.Navigation.PopAsync();
+            }
+        }
         public async void OpenPostsPage()
         {
             var postsPage = new PostsPage()
@@ -60,12 +67,21 @@ namespace My9GAG
         }
         public async void OpenLoginWithGooglePage()
         {
-            var googleLoginPage = new GoogleLoginPage()
+            var googleLoginPage = new LoginWithGooglePage()
             {
-                BindingContext = _container.Resolve<GoogleLoginPageViewModel>()
+                BindingContext = _container.Resolve<LoginWithGooglePageViewModel>()
             };
             NavigationPage.SetHasBackButton(googleLoginPage, true);
             await MainPage.Navigation.PushAsync(googleLoginPage);
+        }
+        public async void OpenLoginWithFacebookPage()
+        {
+            var facebookLoginPage = new LoginWithFacebookPage()
+            {
+                BindingContext = _container.Resolve<LoginWithFacebookPageViewModel>()
+            };
+            NavigationPage.SetHasBackButton(facebookLoginPage, true);
+            await MainPage.Navigation.PushAsync(facebookLoginPage);
         }
 
         #endregion
@@ -94,17 +110,21 @@ namespace My9GAG
             var builder = new ContainerBuilder();
 
             builder.RegisterType<GoogleAuthenticationService>().As<IGoogleAuthenticationService>();
+            builder.RegisterType<FacebookAuthenticationService>().As<IFacebookAuthenticationService>();
             builder.RegisterType<ClientService>().As<IClientService>().SingleInstance();
             builder.Register(navigator => new PageNavigator()
             {
+                OnGoBack = GoBack,
                 OnOpenPostsPage = OpenPostsPage,
                 OnOpenCommentsPage = OpenCommentsPage,
                 OnOpenLoginPage = OpenLoginPage,
-                OnOpenLoginWithGooglePage = OpenLoginWithGooglePage
+                OnOpenLoginWithGooglePage = OpenLoginWithGooglePage,
+                OnOpenLoginWithFacebookPage = OpenLoginWithFacebookPage
             }).As<IPageNavigator>().SingleInstance();
 
             builder.RegisterType<LoginPageViewModel>();
-            builder.RegisterType<GoogleLoginPageViewModel>();
+            builder.RegisterType<LoginWithGooglePageViewModel>();
+            builder.RegisterType<LoginWithFacebookPageViewModel>();
             builder.RegisterType<PostsPageViewModel>();
             builder.RegisterType<CommentsPageViewModel>();
 

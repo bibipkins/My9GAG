@@ -2,8 +2,9 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:behaviors="clr-namespace:My9GAG.Views.Behaviors"
-             x:Class="My9GAG.Views.GoogleLoginPage"
-             Title="Sign in with Google">
+             xmlns:views="clr-namespace:My9GAG.Views.CustomViews"
+             x:Class="My9GAG.Views.LoginWithFacebookPage"
+             Title="Sign in with Facebook">
 
     <AbsoluteLayout>
         <WebView AbsoluteLayout.LayoutFlags="All"
@@ -34,16 +35,16 @@
             </StackLayout>
         </ContentView>
 
-        <ContentView AbsoluteLayout.LayoutBounds="0,0,1,1"
-                     AbsoluteLayout.LayoutFlags="All"
-                     BackgroundColor="Black"
-                     Opacity="0.8"
-                     IsVisible="{Binding IsMessageVisible}">
-            <Label Text="{Binding MessageText}"
-                   VerticalTextAlignment="Center"
-                   HorizontalTextAlignment="Center"
-                   TextColor="Red"
-                   FontSize="Large"/>
-        </ContentView>
+        <views:WorkIndicationOverlay 
+            AbsoluteLayout.LayoutBounds="0,0,1,1"
+            AbsoluteLayout.LayoutFlags="All"
+            IsVisible="{Binding IsWorkIndicationVisible}"
+            Text="{Binding WorkIndicationText}"/>
+        
+        <views:MessageOverlay 
+            AbsoluteLayout.LayoutBounds="0,0,1,1"
+            AbsoluteLayout.LayoutFlags="All"
+            IsVisible="{Binding IsMessageVisible}"
+            Text="{Binding MessageText}"/>
     </AbsoluteLayout>
 </ContentPage>

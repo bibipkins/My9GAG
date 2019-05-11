@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="My9GAG.Views.CustomViews.MessageOverlay"
+             BackgroundColor="Black"
+             Opacity="0.8">
+
+    <Label x:Name="label"
+           VerticalTextAlignment="Center"
+           HorizontalTextAlignment="Center"
+           TextColor="Red"
+           FontSize="Large"/>
+</ContentView>

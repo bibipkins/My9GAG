@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace My9GAG.Logic
+namespace My9GAG.Logic.GoogleAuthentication
 {
     public interface IGoogleAuthenticationService
     {

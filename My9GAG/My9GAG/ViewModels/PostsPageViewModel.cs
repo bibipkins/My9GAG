@@ -1,4 +1,6 @@
-﻿using My9GAG.Logic;
+﻿using My9GAG.Logic.Client;
+using My9GAG.Logic.DownloadManager;
+using My9GAG.Logic.PageNavigator;
 using My9GAG.Models.Post;
 using My9GAG.Models.Request;
 using System;

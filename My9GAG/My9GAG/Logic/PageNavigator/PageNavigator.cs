@@ -1,20 +1,26 @@
 ﻿using System;
 
-namespace My9GAG.Logic
+namespace My9GAG.Logic.PageNavigator
 {
     public class PageNavigator : IPageNavigator
     {
         #region Actions
 
+        public Action OnGoBack;
         public Action OnOpenPostsPage;
         public Action OnOpenCommentsPage;
         public Action OnOpenLoginPage;
         public Action OnOpenLoginWithGooglePage;
+        public Action OnOpenLoginWithFacebookPage;
 
         #endregion
 
         #region Methods
 
+        public void GoBack()
+        {
+            OnGoBack?.Invoke();
+        }
         public void OpenPostsPage()
         {
             OnOpenPostsPage?.Invoke();
@@ -30,6 +36,10 @@ namespace My9GAG.Logic
         public void OpenLoginWithGooglePage()
         {
             OnOpenLoginWithGooglePage?.Invoke();
+        }
+        public void OpenLoginWithFacebookPage()
+        {
+            OnOpenLoginWithFacebookPage?.Invoke();
         }
 
         #endregion

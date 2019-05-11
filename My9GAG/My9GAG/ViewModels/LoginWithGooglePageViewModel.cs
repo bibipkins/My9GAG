@@ -1,17 +1,17 @@
-﻿using My9GAG.Logic;
-using My9GAG.Models.Request;
-using System.Diagnostics;
+﻿using My9GAG.Logic.Client;
+using My9GAG.Logic.GoogleAuthentication;
+using My9GAG.Logic.PageNavigator;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
 
 namespace My9GAG.ViewModels
 {
-    public class GoogleLoginPageViewModel : ViewModelBase
+    public class LoginWithGooglePageViewModel : ViewModelBase
     {
         #region Constructors
 
-        public GoogleLoginPageViewModel(
+        public LoginWithGooglePageViewModel(
             IGoogleAuthenticationService googleAuthenticationService, 
             IClientService clientService, 
             IPageNavigator pageNavigator)
@@ -39,40 +39,47 @@ namespace My9GAG.ViewModels
 
         #region Methods
 
-        public async void LoginAsync(string redirectUrl)
+        public async void LoginAsync(string code)
         {
             StartWorkIndication(ViewModelConstants.LOGIN_MESSAGE);
 
-            string code = RequestUtils.ExtractValueFromUrl(redirectUrl, CODE_URL_KEY);
-
-            if (!string.IsNullOrWhiteSpace(code))
+            await Task.Run(async () =>
             {
-                await Task.Run(async () =>
+                string accessToken = await _googleAuthenticationService.GetAccessTokenAsync(code);
+
+                if (!string.IsNullOrWhiteSpace(accessToken))
                 {
-                    string accessToken = await _googleAuthenticationService.GetAccessTokenAsync(code);
+                    var requestStatus = await _clientService.LoginWithGoogleAsync(accessToken);
 
-                    Debug.WriteLine("ACCESS TOKEN: " + accessToken);
-
-                    if (!string.IsNullOrWhiteSpace(accessToken))
+                    if (requestStatus.IsSuccessful)
                     {
-                        var requestStatus = await _clientService.LoginWithGoogleAsync(accessToken);
-                        Debug.WriteLine(requestStatus.IsSuccessful + " " + requestStatus.Message);
-                        if (requestStatus.IsSuccessful)
-                        {
-                            await Task.Delay(ViewModelConstants.LOGIN_DELAY);
+                        await Task.Delay(ViewModelConstants.LOGIN_DELAY);
 
-                            Device.BeginInvokeOnMainThread(() =>
-                            {
-                                _pageNavigator.OpenPostsPage();
-                            });
-                        }
-                        else
+                        Device.BeginInvokeOnMainThread(() =>
                         {
-                            //LoginErrorMessage = requestStatus.Message;
-                        }
+                            _pageNavigator.OpenPostsPage();
+                        });
                     }
-                });
-            }
+                    else
+                    {
+                        await ShowMessage(ViewModelConstants.LOGIN_FAILED_MESSAGE, ViewModelConstants.MESSAGE_DELAY);
+
+                        Device.BeginInvokeOnMainThread(() =>
+                        {
+                            _pageNavigator.GoBack();
+                        });
+                    }
+                }
+                else
+                {
+                    await ShowMessage(ViewModelConstants.LOGIN_WITH_GOOGLE_FAILED_MESSAGE, ViewModelConstants.MESSAGE_DELAY);
+
+                    Device.BeginInvokeOnMainThread(() =>
+                    {
+                        _pageNavigator.GoBack();
+                    });
+                }
+            });
 
             StopWorkIndication();
         }
@@ -105,12 +112,6 @@ namespace My9GAG.ViewModels
         private IClientService _clientService;
         private IPageNavigator _pageNavigator;
         private string _pageUrl;
-
-        #endregion
-
-        #region Constants
-
-        private const string CODE_URL_KEY = "code";
 
         #endregion
     }

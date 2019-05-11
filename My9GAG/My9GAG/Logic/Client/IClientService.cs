@@ -4,7 +4,7 @@ using My9GAG.Models.Request;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace My9GAG.Logic
+namespace My9GAG.Logic.Client
 {
     public interface IClientService
     {

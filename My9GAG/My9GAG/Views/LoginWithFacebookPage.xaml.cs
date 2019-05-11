@@ -4,11 +4,11 @@ using Xamarin.Forms.Xaml;
 namespace My9GAG.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class GoogleLoginPage : ContentPage
+	public partial class LoginWithFacebookPage : ContentPage
 	{
-		public GoogleLoginPage()
+		public LoginWithFacebookPage ()
 		{
-			InitializeComponent();
-        }
-    }
+			InitializeComponent ();
+		}
+	}
 }

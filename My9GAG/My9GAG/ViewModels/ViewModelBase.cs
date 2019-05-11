@@ -68,9 +68,9 @@ namespace My9GAG.ViewModels
             OnPropertyChanged(propertyName);
             return true;
         }
-        protected void ShowMessage(string message, int timespan)
+        protected Task ShowMessage(string message, int timespan)
         {
-            Task.Run(async () =>
+            return Task.Run(async () =>
             {
                 Device.BeginInvokeOnMainThread(() => IsMessageVisible = true);
                 MessageText = message;

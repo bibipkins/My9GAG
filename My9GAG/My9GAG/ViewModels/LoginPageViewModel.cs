@@ -1,4 +1,5 @@
-﻿using My9GAG.Logic;
+﻿using My9GAG.Logic.Client;
+using My9GAG.Logic.PageNavigator;
 using My9GAG.Models.User;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -119,8 +120,8 @@ namespace My9GAG.ViewModels
             LoginCommand = new Command(
                 () => LoginAsync(),
                 () => !string.IsNullOrEmpty(Password) && !string.IsNullOrEmpty(UserName));
-            LoginWithGoogleCommand = new Command(() => { _pageNavigator.OpenLoginWithGooglePage(); });
-            LoginWithFacebookCommand = new Command(() => {  });
+            LoginWithGoogleCommand = new Command(async () => { _pageNavigator.OpenLoginWithGooglePage(); });
+            LoginWithFacebookCommand = new Command(() => { _pageNavigator.OpenLoginWithFacebookPage(); });
 
             CommandList = new List<ICommand>()
             {

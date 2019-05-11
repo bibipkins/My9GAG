@@ -3,7 +3,7 @@ using Newtonsoft.Json.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace My9GAG.Logic
+namespace My9GAG.Logic.GoogleAuthentication
 {
     public class GoogleAuthenticationService : IGoogleAuthenticationService
     {
@@ -42,7 +42,7 @@ namespace My9GAG.Logic
         private const string AUTHENTICATION_PAGE_BASE_URL = "https://accounts.google.com/o/oauth2/v2/auth";
         private const string CLIENT_ID = "508189286171-qjcsbu5l43noibpcg70t8sdp29no2dn0.apps.googleusercontent.com";
         private const string CLIENT_SECRET = "F1MTmepVSpWBaE4l7SNOSwDf";
-        private const string REDIRECT_URL = "https://github.com/bibipkins/My9GAG";
+        private const string REDIRECT_URL = "https://9gag.com/";
         private const string JSON_ACCESS_TOKEN_KEY = "access_token";
 
         #endregion

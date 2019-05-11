@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <PackageReference Include="Autofac" Version="4.9.2" />
-    <PackageReference Include="Autofac.Extras.CommonServiceLocator" Version="5.0.0" />
     <PackageReference Include="CardsView" Version="2.1.0" />
     <PackageReference Include="CarouselView.FormsPlugin" Version="5.2.0" />
     <PackageReference Include="Microsoft.AppCenter.Analytics" Version="2.0.0" />
@@ -19,13 +18,22 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Views\GoogleLoginPage.xaml.cs">
-      <DependentUpon>GoogleLoginPage.xaml</DependentUpon>
+    <Compile Update="Views\LoginWithGooglePage.xaml.cs">
+      <DependentUpon>LoginWithGooglePage.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="Views\GoogleLoginPage.xaml">
+    <EmbeddedResource Update="Views\CustomViews\MessageOverlay.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\CustomViews\WorkIndicationOverlay.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\LoginWithFacebookPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\LoginWithGooglePage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\LoginPage.xaml">

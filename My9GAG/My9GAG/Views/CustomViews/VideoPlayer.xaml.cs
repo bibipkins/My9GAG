@@ -12,9 +12,9 @@ namespace My9GAG.Views.CustomViews
 	{
         #region Constructors
 
-        public VideoPlayer ()
+        public VideoPlayer()
 		{
-			InitializeComponent ();
+			InitializeComponent();
 
             player.PropertyChanged += (object sender, PropertyChangedEventArgs e) =>
             {

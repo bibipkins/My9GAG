@@ -1,5 +1,6 @@
 ﻿using My9GAG.Models.Request;
 using System;
+using System.Diagnostics;
 using System.Windows.Input;
 using Xamarin.Forms;
 
@@ -58,6 +59,8 @@ namespace My9GAG.Views.Behaviors
         }
         private void Bindable_Navigating(object sender, WebNavigatingEventArgs e)
         {
+            Debug.WriteLine(e.Url);
+
             if (Command == null)
             {
                 return;
@@ -65,14 +68,21 @@ namespace My9GAG.Views.Behaviors
 
             if (Command.CanExecute(e.Url))
             {
-                if (!string.IsNullOrWhiteSpace(RequestUtils.ExtractValueFromUrl(e.Url, "code")))
+                string code = RequestUtils.ExtractValueFromUrl(e.Url, CODE_ATTRIBUTE_KEY);
+
+                if (!string.IsNullOrWhiteSpace(code))
                 {
                     e.Cancel = true;
-                }
-
-                Command.Execute(e.Url);
+                    Command.Execute(code);
+                }                
             }
         }
+
+        #endregion
+
+        #region Constants
+
+        private const string CODE_ATTRIBUTE_KEY = "code";
 
         #endregion
     }
