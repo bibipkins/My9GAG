@@ -12,6 +12,7 @@ namespace My9GAG.Logic.PageNavigator
         public Action OnOpenLoginPage;
         public Action OnOpenLoginWithGooglePage;
         public Action OnOpenLoginWithFacebookPage;
+        public Action OnOpenRegistrationPage;
 
         #endregion
 
@@ -40,6 +41,10 @@ namespace My9GAG.Logic.PageNavigator
         public void OpenLoginWithFacebookPage()
         {
             OnOpenLoginWithFacebookPage?.Invoke();
+        }
+        public void OpenRegistrationPage()
+        {
+            OnOpenRegistrationPage?.Invoke();
         }
 
         #endregion

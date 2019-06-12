@@ -9,5 +9,6 @@ namespace My9GAG.Logic.PageNavigator
         void OpenLoginPage();
         void OpenLoginWithGooglePage();
         void OpenLoginWithFacebookPage();
+        void OpenRegistrationPage();
     }
 }

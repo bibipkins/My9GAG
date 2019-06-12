@@ -2,6 +2,7 @@
 using My9GAG.Models.Post;
 using My9GAG.Models.Post.Media;
 using My9GAG.Models.Request;
+using My9GAG.Models.User;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -26,6 +27,7 @@ namespace My9GAG.Logic.Client
 
             Posts = new List<Post>();
             Comments = new List<Comment>();
+            User = new User();
         }
 
         #endregion
@@ -34,12 +36,13 @@ namespace My9GAG.Logic.Client
 
         public List<Post> Posts { get; private set; }
         public List<Comment> Comments { get; private set; }
+        public User User { get; private set; }
 
         #endregion
 
         #region Methods
 
-        public async Task<RequestStatus> LoginAsync(string userName, string password)
+        public async Task<RequestStatus> LoginWithCredentialsAsync(string userName, string password)
         {
             var args = new Dictionary<string, string>()
             {
@@ -49,35 +52,12 @@ namespace My9GAG.Logic.Client
                 { "language", "en_US" },
                 { "pushToken", _token }
             };
-            HttpWebRequest request = FormRequest(RequestUtils.API, RequestUtils.LOGIN_PATH, args);
-            RequestStatus loginStatus = new RequestStatus();
-            
-            try
+
+            var loginStatus = await LoginAsync(args);
+
+            if (loginStatus.IsSuccessful)
             {
-                using (HttpWebResponse response = (HttpWebResponse)(await request.GetResponseAsync()))
-                using (Stream stream = response.GetResponseStream())
-                using (StreamReader reader = new StreamReader(stream))
-                {
-                    string responseText = await reader.ReadToEndAsync();
-                    loginStatus = ValidateResponse(responseText);
-                    
-                    if (loginStatus.IsSuccessful)
-                    {
-                        var jsonData = JObject.Parse(responseText);
-
-                        _token = jsonData["data"]["userToken"].ToString();
-                        _userData = jsonData["data"].ToString();
-
-                        string readStateParams = jsonData["data"]["noti"]["readStateParams"].ToString();
-
-                        _generatedAppId = RequestUtils.ExtractValueFromUrl(readStateParams, "appId");
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                loginStatus.IsSuccessful = false;
-                loginStatus.Message = ex.Message;
+                User.LoginStatus = LoginStatus.Credentials;
             }
 
             return loginStatus;
@@ -91,36 +71,31 @@ namespace My9GAG.Logic.Client
                 { "language", "en_US" },
                 { "pushToken", _token }
             };
-            HttpWebRequest request = FormRequest(RequestUtils.API, RequestUtils.LOGIN_PATH, args);
-            RequestStatus loginStatus = new RequestStatus();
 
-            try
+            var loginStatus = await LoginAsync(args);
+
+            if (loginStatus.IsSuccessful)
             {
-                using (HttpWebResponse response = (HttpWebResponse)(await request.GetResponseAsync()))
-                using (Stream stream = response.GetResponseStream())
-                using (StreamReader reader = new StreamReader(stream))
-                {
-                    string responseText = await reader.ReadToEndAsync();
+                User.LoginStatus = LoginStatus.Google;
+            }            
 
-                    loginStatus = ValidateResponse(responseText);
-
-                    if (loginStatus.IsSuccessful)
-                    {
-                        var jsonData = JObject.Parse(responseText);
-
-                        _token = jsonData["data"]["userToken"].ToString();
-                        _userData = jsonData["data"].ToString();
-
-                        string readStateParams = jsonData["data"]["noti"]["readStateParams"].ToString();
-
-                        _generatedAppId = RequestUtils.ExtractValueFromUrl(readStateParams, "appId");
-                    }
-                }
-            }
-            catch (Exception ex)
+            return loginStatus;
+        }
+        public async Task<RequestStatus> LoginWithFacebookAsync(string token)
+        {
+            var args = new Dictionary<string, string>()
             {
-                loginStatus.IsSuccessful = false;
-                loginStatus.Message = ex.Message;
+                { "loginMethod", "facebook" },
+                { "userAccessToken", token },                
+                { "language", "en_US" },
+                { "pushToken", _token }
+            };
+
+            var loginStatus = await LoginAsync(args);
+
+            if (loginStatus.IsSuccessful)
+            {
+                User.LoginStatus = LoginStatus.Facebook;
             }
 
             return loginStatus;
@@ -248,6 +223,14 @@ namespace My9GAG.Logic.Client
 
             return requestStatus;
         }
+        public void SaveState(IDictionary<string, object> dictionary)
+        {
+            dictionary["User"] = User;
+        }
+        public void RestoreState(IDictionary<string, object> dictionary)
+        {
+            User = GetDictionaryEntry(dictionary, "User", User);
+        }
 
         #endregion
 
@@ -296,7 +279,8 @@ namespace My9GAG.Logic.Client
             request.ContentType = "application/json";
             request.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
             request.Accept = "*/*";
-
+            Debug.WriteLine(request.RequestUri);
+            Debug.WriteLine(request.Address);
             return request;
         }
         private RequestStatus ValidateResponse(string response)
@@ -341,6 +325,51 @@ namespace My9GAG.Logic.Client
             }
 
             return requestStatus;
+        }
+        private async Task<RequestStatus> LoginAsync(Dictionary<string, string> args)
+        {
+            HttpWebRequest request = FormRequest(RequestUtils.API, RequestUtils.LOGIN_PATH, args);
+            RequestStatus loginStatus = new RequestStatus();
+
+            try
+            {
+                using (HttpWebResponse response = (HttpWebResponse)(await request.GetResponseAsync()))
+                using (Stream stream = response.GetResponseStream())
+                using (StreamReader reader = new StreamReader(stream))
+                {
+                    string responseText = await reader.ReadToEndAsync();
+                    Debug.WriteLine(responseText);
+                    loginStatus = ValidateResponse(responseText);
+
+                    if (loginStatus.IsSuccessful)
+                    {
+                        var jsonData = JObject.Parse(responseText);
+
+                        _token = jsonData["data"]["userToken"].ToString();
+                        _userData = jsonData["data"].ToString();
+
+                        string readStateParams = jsonData["data"]["noti"]["readStateParams"].ToString();
+
+                        _generatedAppId = RequestUtils.ExtractValueFromUrl(readStateParams, "appId");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                loginStatus.IsSuccessful = false;
+                loginStatus.Message = ex.Message;
+            }
+
+            return loginStatus;
+        }
+        protected T GetDictionaryEntry<T>(IDictionary<string, object> dictionary, string key, T defaultValue)
+        {
+            if (dictionary.ContainsKey(key))
+            {
+                return (T)dictionary[key];
+            }
+
+            return defaultValue;
         }
 
         #endregion

@@ -1,4 +1,5 @@
-﻿using My9GAG.Models.Comment;
+﻿using My9GAG.Logic.Client;
+using My9GAG.Models.Comment;
 using System.Collections.ObjectModel;
 
 namespace My9GAG.ViewModels

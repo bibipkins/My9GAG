@@ -1,5 +1,4 @@
-﻿using My9GAG.Models.Request;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Windows.Input;
 using Xamarin.Forms;
@@ -22,7 +21,11 @@ namespace My9GAG.Views.Behaviors
             get { return (ICommand)GetValue(CommandProperty); }
             set { SetValue(CommandProperty, value); }
         }
-        public WebView AssociatedObject { get; private set; }
+        public WebView AssociatedObject
+        {
+            get;
+            private set;
+        }
 
         #endregion
 
@@ -66,23 +69,11 @@ namespace My9GAG.Views.Behaviors
                 return;
             }
 
-            if (Command.CanExecute(e.Url))
+            if (Command.CanExecute(e))
             {
-                string code = RequestUtils.ExtractValueFromUrl(e.Url, CODE_ATTRIBUTE_KEY);
-
-                if (!string.IsNullOrWhiteSpace(code))
-                {
-                    e.Cancel = true;
-                    Command.Execute(code);
-                }                
+                Command.Execute(e);
             }
         }
-
-        #endregion
-
-        #region Constants
-
-        private const string CODE_ATTRIBUTE_KEY = "code";
 
         #endregion
     }

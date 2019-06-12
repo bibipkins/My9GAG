@@ -1,6 +1,7 @@
 ﻿using My9GAG.Logic.Client;
 using My9GAG.Logic.GoogleAuthentication;
 using My9GAG.Logic.PageNavigator;
+using My9GAG.Models.Request;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
@@ -100,8 +101,16 @@ namespace My9GAG.ViewModels
 
         private void InitCommands()
         {
-            NavigatingCommand = new Command(
-                redirectUrl => LoginAsync((string)redirectUrl));
+            NavigatingCommand = new Command<WebNavigatingEventArgs>(e =>
+            {
+                string code = RequestUtils.ExtractValueFromUrl(e.Url, URL_CODE_ATTRIBUTE_KEY);
+
+                if (!string.IsNullOrWhiteSpace(code))
+                {
+                    e.Cancel = true;
+                    LoginAsync(code);
+                }
+            });
         }
 
         #endregion
@@ -112,6 +121,12 @@ namespace My9GAG.ViewModels
         private IClientService _clientService;
         private IPageNavigator _pageNavigator;
         private string _pageUrl;
+
+        #endregion
+
+        #region Constants
+
+        private const string URL_CODE_ATTRIBUTE_KEY = "code";
 
         #endregion
     }

@@ -18,7 +18,24 @@ namespace My9GAG.ViewModels
             _pageNavigator = pageNavigator;
 
             InitCommands();
-            _user = new User();
+
+            //if (_clientService.User.TokenExpired())
+            //{
+            //    switch (_clientService.User.LoginStatus)
+            //    {
+            //        case LoginStatus.None:
+            //            break;
+            //        case LoginStatus.Credentials:
+            //            LoginAsync();
+            //            break;
+            //        case LoginStatus.Google:
+            //            _pageNavigator.OpenLoginWithGooglePage();
+            //            break;
+            //        case LoginStatus.Facebook:
+            //            _pageNavigator.OpenLoginWithFacebookPage();
+            //            break;
+            //    }
+            //}
         }
 
         #endregion
@@ -66,7 +83,7 @@ namespace My9GAG.ViewModels
             
             await Task.Run(async () =>
             {
-                var requestStatus = await _clientService.LoginAsync(userName, password);
+                var requestStatus = await _clientService.LoginWithCredentialsAsync(userName, password);
                 await Task.Delay(ViewModelConstants.LOGIN_DELAY);                
 
                 if (requestStatus.IsSuccessful)
@@ -104,6 +121,11 @@ namespace My9GAG.ViewModels
             get;
             protected set;
         }
+        public ICommand RegisterCommand
+        {
+            get;
+            protected set;
+        }
 
         public List<ICommand> CommandList
         {
@@ -120,14 +142,19 @@ namespace My9GAG.ViewModels
             LoginCommand = new Command(
                 () => LoginAsync(),
                 () => !string.IsNullOrEmpty(Password) && !string.IsNullOrEmpty(UserName));
-            LoginWithGoogleCommand = new Command(async () => { _pageNavigator.OpenLoginWithGooglePage(); });
-            LoginWithFacebookCommand = new Command(() => { _pageNavigator.OpenLoginWithFacebookPage(); });
+            LoginWithGoogleCommand = new Command(
+                () => _pageNavigator.OpenLoginWithGooglePage());
+            LoginWithFacebookCommand = new Command(
+                () => _pageNavigator.OpenLoginWithFacebookPage());
+            RegisterCommand = new Command(
+                () => _pageNavigator.OpenRegistrationPage());
 
             CommandList = new List<ICommand>()
             {
                 LoginCommand,
                 LoginWithGoogleCommand,
-                LoginWithFacebookCommand
+                LoginWithFacebookCommand,
+                RegisterCommand
             };
         }
         protected override void UpdateCommands()

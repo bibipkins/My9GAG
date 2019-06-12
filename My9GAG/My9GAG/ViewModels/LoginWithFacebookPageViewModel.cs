@@ -2,6 +2,7 @@
 using My9GAG.Logic.FacebookAuthentication;
 using My9GAG.Logic.PageNavigator;
 using My9GAG.Models.Request;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
 
@@ -40,50 +41,37 @@ namespace My9GAG.ViewModels
 
         #region Methods
 
-        //public async void LoginAsync(string code)
-        //{
-        //    StartWorkIndication(ViewModelConstants.LOGIN_MESSAGE);
+        public async void LoginAsync(string token)
+        {
+            StartWorkIndication(ViewModelConstants.LOGIN_MESSAGE);
 
-        //    await Task.Run(async () =>
-        //    {
-        //        string accessToken = await _googleAuthenticationService.GetAccessTokenAsync(code);
+            await Task.Run(async () =>
+            {
+                await _clientService.LoginWithFacebookAsync(token);
+                var requestStatus = await _clientService.LoginWithFacebookAsync(token);
 
-        //        if (!string.IsNullOrWhiteSpace(accessToken))
-        //        {
-        //            var requestStatus = await _clientService.LoginWithGoogleAsync(accessToken);
+                if (requestStatus.IsSuccessful)
+                {
+                    await Task.Delay(ViewModelConstants.LOGIN_DELAY);
 
-        //            if (requestStatus.IsSuccessful)
-        //            {
-        //                await Task.Delay(ViewModelConstants.LOGIN_DELAY);
+                    Device.BeginInvokeOnMainThread(() =>
+                    {
+                        _pageNavigator.OpenPostsPage();
+                    });
+                }
+                else
+                {
+                    await ShowMessage(ViewModelConstants.LOGIN_FAILED_MESSAGE, ViewModelConstants.MESSAGE_DELAY);
 
-        //                Device.BeginInvokeOnMainThread(() =>
-        //                {
-        //                    _pageNavigator.OpenPostsPage();
-        //                });
-        //            }
-        //            else
-        //            {
-        //                await ShowMessage(ViewModelConstants.LOGIN_FAILED_MESSAGE, ViewModelConstants.MESSAGE_DELAY);
+                    Device.BeginInvokeOnMainThread(() =>
+                    {
+                        _pageNavigator.GoBack();
+                    });
+                }
+            });
 
-        //                Device.BeginInvokeOnMainThread(() =>
-        //                {
-        //                    _pageNavigator.GoBack();
-        //                });
-        //            }
-        //        }
-        //        else
-        //        {
-        //            await ShowMessage(ViewModelConstants.LOGIN_WITH_GOOGLE_FAILED_MESSAGE, ViewModelConstants.MESSAGE_DELAY);
-
-        //            Device.BeginInvokeOnMainThread(() =>
-        //            {
-        //                _pageNavigator.GoBack();
-        //            });
-        //        }
-        //    });
-
-        //    StopWorkIndication();
-        //}
+            StopWorkIndication();
+        }
 
         #endregion
 
@@ -101,8 +89,31 @@ namespace My9GAG.ViewModels
 
         private void InitCommands()
         {
-            NavigatingCommand = new Command(
-                redirectUrl => { }/*LoginAsync((string)redirectUrl)*/);
+            NavigatingCommand = new Command<WebNavigatingEventArgs>(async e =>
+            {
+                string token = RequestUtils.ExtractValueFromUrl(e.Url, URL_ACCESS_TOKEN_ATTRIBUTE_KEY);
+                string state = RequestUtils.ExtractValueFromUrl(e.Url, URL_STATE_ATTRIBUTE_KEY);
+                string error = RequestUtils.ExtractValueFromUrl(e.Url, URL_ERROR_ATTRIBUTE_KEY);
+
+                if (!string.IsNullOrWhiteSpace(token) && _state == state)
+                {
+                    e.Cancel = true;
+                    LoginAsync(token);
+                    return;
+                }
+
+                if (!string.IsNullOrWhiteSpace(error))
+                {
+                    e.Cancel = true;
+
+                    await ShowMessage(ViewModelConstants.LOGIN_WITH_FACEBOOK_FAILED_MESSAGE, ViewModelConstants.MESSAGE_DELAY);
+
+                    Device.BeginInvokeOnMainThread(() =>
+                    {
+                        _pageNavigator.GoBack();
+                    });
+                }
+            });
         }
 
         #endregion
@@ -114,6 +125,14 @@ namespace My9GAG.ViewModels
         private IPageNavigator _pageNavigator;
         private string _pageUrl;
         private string _state;
+
+        #endregion
+
+        #region Constants
+
+        private const string URL_ACCESS_TOKEN_ATTRIBUTE_KEY = "access_token";
+        private const string URL_STATE_ATTRIBUTE_KEY = "state";
+        private const string URL_ERROR_ATTRIBUTE_KEY = "error";
 
         #endregion
     }

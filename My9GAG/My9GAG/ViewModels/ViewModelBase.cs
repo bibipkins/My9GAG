@@ -1,4 +1,6 @@
-﻿using System;
+﻿using My9GAG.Logic.Client;
+using My9GAG.Logic.PageNavigator;
+using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
@@ -99,7 +101,7 @@ namespace My9GAG.ViewModels
         private string _messageText;
         private bool _isMessageVisible;
         private string _workIndicationText;
-        private bool _isWorkIndicationVisible;        
+        private bool _isWorkIndicationVisible;
 
         #endregion
     }

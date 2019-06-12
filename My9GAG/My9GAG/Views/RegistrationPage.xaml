@@ -2,9 +2,9 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:views="clr-namespace:My9GAG.Views.CustomViews"
-             x:Class="My9GAG.Views.LoginPage"
+             x:Class="My9GAG.Views.RegistrationPage"
              SizeChanged="OnLayoutSizeChanged"
-             Title="Welcome!">
+             Title="Join us!">
     <ContentPage.Resources>
         <ResourceDictionary>
             <Style TargetType="Label">
@@ -29,41 +29,29 @@
                              AbsoluteLayout.LayoutBounds="0,0,1,1"
                              HorizontalOptions="FillAndExpand"
                              VerticalOptions="FillAndExpand">
-                    <Label Text="Please enter your credentials"
+                    <Label Text="Please fill this registration form"
                            VerticalOptions="Start" 
                            HorizontalOptions="Start"
                            Margin="0,0,0,5"/>
+                    <Entry Text="{Binding Email}"
+                           Placeholder="Email"
+                           Keyboard="Email"
+                           HorizontalTextAlignment="Center"/>
                     <Entry Text="{Binding UserName}"
-                           Placeholder="Login"
+                           Placeholder="Name"
                            Keyboard="Email"
                            HorizontalTextAlignment="Center"/>
                     <Entry Text="{Binding Password}"
                            Placeholder="Password"
                            HorizontalTextAlignment="Center"
                            IsPassword="True"/>
+                    <Entry Text="{Binding ConfirmPassword}"
+                           Placeholder="Confirm password"
+                           HorizontalTextAlignment="Center"
+                           IsPassword="True"/>
                     <Button Text="Submit"
-                            Command="{Binding LoginCommand}"
                             Margin="0,10,0,0"/>
-                    
-                    <Label Text="Or sign in with..."
-                           VerticalOptions="Start" 
-                           HorizontalOptions="Start"
-                           Margin="0,20,0,5"/>
-                    <Button Text="Google"
-                            VerticalOptions="Start"
-                            Command="{Binding LoginWithGoogleCommand}"/>
-                    <Button Text="Facebook"
-                            VerticalOptions="Start"
-                            Command="{Binding LoginWithFacebookCommand}"/>
 
-                    <Label Text="You do not have an account yet?"
-                           VerticalOptions="Start" 
-                           HorizontalOptions="Start"
-                           Margin="0,20,0,5"/>
-                    <Button Text="Sign up"
-                            VerticalOptions="Start"
-                            Command="{Binding RegisterCommand}"/>
-                    
                     <Label Text="{Binding LoginErrorMessage}"
                            TextColor="Red"
                            HorizontalOptions="CenterAndExpand"

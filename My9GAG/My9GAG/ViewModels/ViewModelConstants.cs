@@ -5,7 +5,8 @@ namespace My9GAG.ViewModels
     {
         public const string LOGIN_MESSAGE = "Logging in";
         public const string LOGIN_FAILED_MESSAGE = "Unsuccessful login attempt";
-        public const string LOGIN_WITH_GOOGLE_FAILED_MESSAGE = "Could not retrieve access token from Google";
+        public const string LOGIN_WITH_GOOGLE_FAILED_MESSAGE = "Could not log in with Google";
+        public const string LOGIN_WITH_FACEBOOK_FAILED_MESSAGE = "Could not log in with Facebook";
         public const string LOADING_HOT_MESSAGE = "Loading Hot";
         public const string LOADING_TRENDING_MESSAGE = "Loading Trending";
         public const string LOADING_FRESH_MESSAGE = "Loading Fresh";

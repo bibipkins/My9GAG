@@ -14,6 +14,7 @@ namespace My9GAG.Logic.GoogleAuthentication
             string url = AUTHENTICATION_PAGE_BASE_URL +
                 "?response_type=code" +
                 "&scope=openid" +
+                "&prompt=select_account" + 
                 "&redirect_uri=" + REDIRECT_URL +
                 "&client_id=" + CLIENT_ID;
 
