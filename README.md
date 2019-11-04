@@ -6,11 +6,10 @@ It is written with C# using Xamarin and Xamarin.Forms.
 <ul>
   <li>No ads at all! - as the result app loads the actual content much faster, 
   UI does not lag and most importantly it saves Internet traffic 
-  (instead of receiving 100+ Mb of garbage you receive as much as content weighs). 
+  (instead of receiving 100+ Mb of garbage you receive only as much as content weighs). 
   So now you can enjoy 9GAG even with slow Internet connection and without high-end smartphone</li>
   <li>Simple and clean UI - more space for content and less possibility of missclicking</li>
-  <li>Video content does not play automatically - now you can skip video-post or turn off the sound before playback</li>
-  <li>Dark mode out of the box</li>
+  <li>Video content does not play automatically and you have full control over the playback</li>
 </ul>
 
 ## Supported platforms
