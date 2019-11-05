@@ -112,7 +112,7 @@ namespace My9GAG.Logic.Client
                 { "offset", "10" }
             };
 
-            if (!String.IsNullOrEmpty(olderThan))
+            if (!string.IsNullOrEmpty(olderThan))
                 args["olderThan"] = olderThan;
             
             HttpWebRequest request = FormRequest(RequestUtils.API, RequestUtils.POSTS_PATH, args);
@@ -170,10 +170,16 @@ namespace My9GAG.Logic.Client
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
                 requestStatus.IsSuccessful = false;
-                requestStatus.Message = ex.Message;
+                requestStatus.Message = e.Message;
+
+                Debug.WriteLine("-----------------------------------");
+                Debug.WriteLine("EXCEPRION: " + e.Message);
+                Debug.WriteLine(e.StackTrace);
+                Debug.WriteLine("EXCEPRION: ");
+                Debug.WriteLine("-----------------------------------");
             }
 
             return requestStatus;
@@ -215,10 +221,10 @@ namespace My9GAG.Logic.Client
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
                 requestStatus.IsSuccessful = false;
-                requestStatus.Message = ex.Message;
+                requestStatus.Message = e.Message;
             }
 
             return requestStatus;
@@ -354,10 +360,10 @@ namespace My9GAG.Logic.Client
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
                 loginStatus.IsSuccessful = false;
-                loginStatus.Message = ex.Message;
+                loginStatus.Message = e.Message;
             }
 
             return loginStatus;

@@ -6,12 +6,8 @@ using My9GAG.Logic.Client;
 using My9GAG.Logic.FacebookAuthentication;
 using My9GAG.Logic.GoogleAuthentication;
 using My9GAG.Logic.PageNavigator;
-using My9GAG.Models.User;
 using My9GAG.ViewModels;
 using My9GAG.Views;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -108,28 +104,15 @@ namespace My9GAG
             string iosSecret = "ios=aee2b868-4650-4d89-a6e2-bf7503dd97e8;";
 
             AppCenter.Start(uwpSecret + androidSecret + iosSecret, typeof(Analytics), typeof(Crashes));
-
-            if (_tokenExpirationCheckLoop == null)
-            {
-                _tokenExpirationCheckLoop = StartTokenExpirationCheckLoop();
-            }
         }
         protected override void OnSleep()
         {
             var clientService = _container.Resolve<IClientService>();
             clientService.SaveState(Current.Properties);
-
-            if (_tokenExpirationCheckLoop != null)
-            {
-                _tokenExpirationCheckLoop.Cancel();
-            }
         }
         protected override void OnResume()
         {
-            if (_tokenExpirationCheckLoop == null)
-            {
-                _tokenExpirationCheckLoop = StartTokenExpirationCheckLoop();
-            }
+
         }
 
         private void RegisterContainer()
@@ -173,46 +156,7 @@ namespace My9GAG
             clientService.RestoreState(Current.Properties);
             var user = clientService.User;
 
-            bool userNeedsLogIn = user.LoginStatus == LoginStatus.None ||
-                (user.TokenExpirationTime - DateTime.UtcNow).TotalMinutes < 30;
-
-            if (userNeedsLogIn)
-            {
-                OpenLoginPage();
-            }
-            else
-            {
-                OpenPostsPage();
-            }
-        }
-        private CancellationTokenSource StartTokenExpirationCheckLoop()
-        {
-            var clientService = _container.Resolve<IClientService>();
-            var navigationStack = MainPage.Navigation.NavigationStack;
-            var cancellationTokenSource = new CancellationTokenSource();
-            var cancellationToken = cancellationTokenSource.Token;
-
-            Task.Run(async () =>
-            {
-                while (true)
-                {
-                    if (clientService.User.LoginStatus != LoginStatus.None && clientService.User.TokenExpired() && navigationStack.Count > 0)
-                    {
-                        if (navigationStack[navigationStack.Count - 1].BindingContext is ViewModelBase viewModel)
-                        {
-                            //await viewModel.AutoLoginAsync();
-                        }
-                    }
-
-                    await Task.Delay(CHECK_TOKEN_EXPIRATION_DELAY);
-                }
-            }, cancellationToken);
-
-            return cancellationTokenSource;
-        }
-        private void StopTokenExpirationCheckLoop()
-        {
-
+            OpenLoginPage();
         }
 
         #endregion
@@ -220,7 +164,6 @@ namespace My9GAG
         #region Fields
 
         private IContainer _container;
-        private CancellationTokenSource _tokenExpirationCheckLoop;
 
         #endregion
 
@@ -228,7 +171,6 @@ namespace My9GAG
 
         private const string APP_NAME = "My9GAG";
         private const string USER_LOGGED_IN_KEY = "isUserLoggedIn";
-        private const int CHECK_TOKEN_EXPIRATION_DELAY = 30000;
 
         #endregion
     }

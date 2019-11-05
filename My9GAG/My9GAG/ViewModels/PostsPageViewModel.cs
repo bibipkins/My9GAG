@@ -145,6 +145,8 @@ namespace My9GAG.ViewModels
                 }
             });
 
+            Debug.WriteLine(Posts.Count);
+
             StopWorkIndication();
         }
         public async Task GetMorePostsAsync()

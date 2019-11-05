@@ -1,4 +1,4 @@
-﻿using My9GAG.Views.CustomViews;
+﻿using My9GAG.Views.CustomViews.VideoPlayer;
 using Xamarin.Forms;
 
 namespace My9GAG.Models.Post.Media
@@ -12,7 +12,10 @@ namespace My9GAG.Models.Post.Media
             Url = url;
             View = new VideoPlayer()
             {
-                Source = url
+                Source = new UriVideoSource()
+                {
+                    Uri = url
+                }
             };
         }
 
@@ -41,19 +44,19 @@ namespace My9GAG.Models.Post.Media
 
         public void Start()
         {
-            (View as VideoPlayer).Start();
+            //(View as VideoPlayer).Start();
         }
         public void Stop()
         {
-            (View as VideoPlayer).Stop();
+            //(View as VideoPlayer).Stop();
         }
         public void Pause()
         {
-            (View as VideoPlayer).Pause();
+            //(View as VideoPlayer).Pause();
         }
         public void Reload()
         {
-            (View as VideoPlayer).Source = Url;
+            //(View as VideoPlayer).Source = Url;
         }
         public void Unload()
         {

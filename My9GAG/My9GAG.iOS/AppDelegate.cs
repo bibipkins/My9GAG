@@ -1,7 +1,6 @@
-﻿using CarouselView.FormsPlugin.iOS;
-using Foundation;
-using PanCardView.iOS;
+﻿using Foundation;
 using UIKit;
+using Xamarin.Forms;
 
 namespace My9GAG.iOS
 {
@@ -20,9 +19,9 @@ namespace My9GAG.iOS
         //
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
-            global::Xamarin.Forms.Forms.Init();
-            CardsViewRenderer.Preserve();
-            CarouselViewRenderer.Init();
+            Forms.SetFlags("CollectionView_Experimental");
+            Forms.Init();
+
             LoadApplication(new App());
 
             return base.FinishedLaunching(app, options);

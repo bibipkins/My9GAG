@@ -5,6 +5,7 @@ using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 
 [assembly: ExportRenderer(typeof(Entry), typeof(DarkEntryRenderer))]
+
 namespace My9GAG.Droid.Renderers
 {
     public class DarkEntryRenderer : EntryRenderer

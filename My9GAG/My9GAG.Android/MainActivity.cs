@@ -2,11 +2,12 @@
 using Android.Content.PM;
 using Android.OS;
 using Android.Views;
-using PanCardView.Droid;
+using Xamarin.Forms;
 
 namespace My9GAG.Droid
 {
-    [Activity(Label = "My9GAG", 
+    [Activity(
+        Label = "My9GAG", 
         Icon = "@mipmap/icon", 
         Theme = "@style/SplashTheme",
         MainLauncher = true, 
@@ -23,9 +24,9 @@ namespace My9GAG.Droid
 
             base.OnCreate(bundle);
 
-            Xamarin.Forms.Forms.Init(this, bundle);
-            CardsViewRenderer.Preserve();
-            CarouselView.FormsPlugin.Android.CarouselViewRenderer.Init();
+            Forms.SetFlags("CollectionView_Experimental");
+            Forms.Init(this, bundle);
+
             LoadApplication(new App());
         }
     }

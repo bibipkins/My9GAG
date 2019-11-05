@@ -14,7 +14,7 @@ namespace My9GAG.Views.CustomViews
         }
 
         public static readonly BindableProperty SourceProperty =
-            BindableProperty.Create("Source", typeof(string), typeof(VideoPlayer), Image.SourceProperty.DefaultValue,
+            BindableProperty.Create("Source", typeof(string), typeof(ZoomableImage), Image.SourceProperty.DefaultValue,
                 Image.SourceProperty.DefaultBindingMode,
                 propertyChanged: (BindableObject bindable, object oldValue, object newValue) =>
                 {
