@@ -2,7 +2,7 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:behaviors="clr-namespace:My9GAG.Views.Behaviors"
-             xmlns:views="clr-namespace:My9GAG.Views.CustomViews"
+             xmlns:overlays="clr-namespace:My9GAG.Views.CustomViews.Overlays"
              x:Class="My9GAG.Views.LoginWithFacebookPage"
              Title="Sign in with Facebook">
 
@@ -15,13 +15,13 @@
             </WebView.Behaviors>
         </WebView>
 
-        <views:WorkIndicationOverlay 
+        <overlays:WorkIndicationOverlay 
             AbsoluteLayout.LayoutBounds="0,0,1,1"
             AbsoluteLayout.LayoutFlags="All"
             IsVisible="{Binding IsWorkIndicationVisible}"
             Text="{Binding WorkIndicationText}"/>
         
-        <views:MessageOverlay 
+        <overlays:MessageOverlay 
             AbsoluteLayout.LayoutBounds="0,0,1,1"
             AbsoluteLayout.LayoutFlags="All"
             IsVisible="{Binding IsMessageVisible}"

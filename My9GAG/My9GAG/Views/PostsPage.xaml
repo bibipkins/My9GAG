@@ -2,7 +2,7 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:My9GAG.Views"
-             xmlns:views="clr-namespace:My9GAG.Views.CustomViews"
+             xmlns:overlays="clr-namespace:My9GAG.Views.CustomViews.Overlays"
              x:Class="My9GAG.Views.PostsPage"             
              BackgroundColor="Black"
              Title="Posts">
@@ -58,7 +58,6 @@
 
     <AbsoluteLayout HorizontalOptions="FillAndExpand"
                     VerticalOptions="FillAndExpand">
-
         <CarouselView
             AbsoluteLayout.LayoutBounds="0,0,1,1"
             AbsoluteLayout.LayoutFlags="All"
@@ -123,143 +122,13 @@
             </CarouselView.ItemTemplate>
         </CarouselView>
         
-        <!--<cards:CarouselView AbsoluteLayout.LayoutBounds="0,0,1,1"
-                            AbsoluteLayout.LayoutFlags="All"
-                            HorizontalOptions="FillAndExpand"
-                            VerticalOptions="FillAndExpand"
-                            ItemsSource="{Binding Posts}"
-                            SelectedIndex="{Binding Position}">
-            <cards:CarouselView.ItemTemplate>
-                <DataTemplate>
-                    <ContentView>
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="40"/>
-                            </Grid.RowDefinitions>
-
-                            <Label Text="{Binding Title}"
-                                   Margin="5"
-                                   VerticalOptions="Center"
-                                   HorizontalOptions="Center"
-                                   VerticalTextAlignment="Center"
-                                   HorizontalTextAlignment="Center"
-                                   TextColor="White"/>
-                            <ContentView Content="{Binding PostMedia.View}"
-                                         Grid.Row="1"/>
-                            <StackLayout Orientation="Horizontal"
-                                         Grid.Row="2"
-                                         VerticalOptions="Center"
-                                         Padding="10,5,0,5">
-                                <Image VerticalOptions="Center">
-                                    <Image.Source>
-                                        <OnPlatform x:TypeArguments="ImageSource">
-                                            <On Platform="iOS" Value="likes.png"></On>
-                                            <On Platform="Android" Value="likes.png"></On>
-                                            <On Platform="UWP" Value="Images/likes.png"></On>
-                                        </OnPlatform>
-                                    </Image.Source>
-                                </Image>
-                                <Label Text="{Binding UpvoteCount}"
-                                       VerticalTextAlignment="Center"
-                                       HorizontalTextAlignment="Start"
-                                       Margin="2,0,5,0"
-                                       TextColor="White"/>
-                                <Image VerticalOptions="Center">
-                                    <Image.Source>
-                                        <OnPlatform x:TypeArguments="ImageSource">
-                                            <On Platform="iOS" Value="comments.png"></On>
-                                            <On Platform="Android" Value="comments.png"></On>
-                                            <On Platform="UWP" Value="Images/comments.png"></On>
-                                        </OnPlatform>
-                                    </Image.Source>
-                                </Image>
-                                <Label Text="{Binding CommentCount}"
-                                       VerticalTextAlignment="Center"
-                                       HorizontalTextAlignment="Start"
-                                       Margin="2,0,5,0"
-                                       TextColor="White"/>
-                            </StackLayout>
-                        </Grid>
-                    </ContentView>
-                </DataTemplate>
-            </cards:CarouselView.ItemTemplate>
-        </cards:CarouselView>-->
-        
-        <!--<carousel:CarouselViewControl AbsoluteLayout.LayoutBounds="0,0,1,1"
-                                      AbsoluteLayout.LayoutFlags="All"
-                                      HorizontalOptions="FillAndExpand"
-                                      VerticalOptions="FillAndExpand"            
-                                      Orientation="Horizontal" 
-                                      InterPageSpacing="10"
-                                      ItemsSource="{Binding Posts}"
-                                      Position="{Binding Position}">
-            <carousel:CarouselViewControl.ItemTemplate>
-                <DataTemplate>
-                    <ContentView>
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="40"/>
-                            </Grid.RowDefinitions>
-
-                            <Label Text="{Binding Title}"
-                                   Margin="5"
-                                   VerticalOptions="Center"
-                                   HorizontalOptions="Center"
-                                   VerticalTextAlignment="Center"
-                                   HorizontalTextAlignment="Center"
-                                   TextColor="White"/>
-                            <ContentView Content="{Binding PostMedia.View}"
-                                         Grid.Row="1"/>
-                            <StackLayout Orientation="Horizontal"
-                                         Grid.Row="2"
-                                         VerticalOptions="Center"
-                                         Padding="10,5,0,5">
-                                <Image VerticalOptions="Center">
-                                    <Image.Source>
-                                        <OnPlatform x:TypeArguments="ImageSource">
-                                            <On Platform="iOS" Value="likes.png"></On>
-                                            <On Platform="Android" Value="likes.png"></On>
-                                            <On Platform="UWP" Value="Images/likes.png"></On>
-                                        </OnPlatform>
-                                    </Image.Source>
-                                </Image>
-                                <Label Text="{Binding UpvoteCount}"
-                                       VerticalTextAlignment="Center"
-                                       HorizontalTextAlignment="Start"
-                                       Margin="2,0,5,0"
-                                       TextColor="White"/>
-                                <Image VerticalOptions="Center">
-                                    <Image.Source>
-                                        <OnPlatform x:TypeArguments="ImageSource">
-                                            <On Platform="iOS" Value="comments.png"></On>
-                                            <On Platform="Android" Value="comments.png"></On>
-                                            <On Platform="UWP" Value="Images/comments.png"></On>
-                                        </OnPlatform>
-                                    </Image.Source>
-                                </Image>
-                                <Label Text="{Binding CommentCount}"
-                                       VerticalTextAlignment="Center"
-                                       HorizontalTextAlignment="Start"
-                                       Margin="2,0,5,0"
-                                       TextColor="White"/>
-                            </StackLayout>
-                        </Grid>
-                    </ContentView>
-                </DataTemplate>
-            </carousel:CarouselViewControl.ItemTemplate>
-        </carousel:CarouselViewControl>-->
-
-        <views:WorkIndicationOverlay 
+        <overlays:WorkIndicationOverlay 
             AbsoluteLayout.LayoutBounds="0,0,1,1"
             AbsoluteLayout.LayoutFlags="All"
             IsVisible="{Binding IsWorkIndicationVisible}"
             Text="{Binding WorkIndicationText}"/>
 
-        <views:MessageOverlay 
+        <overlays:MessageOverlay 
             AbsoluteLayout.LayoutBounds="0,0,1,1"
             AbsoluteLayout.LayoutFlags="All"
             IsVisible="{Binding IsMessageVisible}"

@@ -18,24 +18,6 @@ namespace My9GAG.ViewModels
             _pageNavigator = pageNavigator;
 
             InitCommands();
-
-            //if (_clientService.User.TokenExpired())
-            //{
-            //    switch (_clientService.User.LoginStatus)
-            //    {
-            //        case LoginStatus.None:
-            //            break;
-            //        case LoginStatus.Credentials:
-            //            LoginAsync();
-            //            break;
-            //        case LoginStatus.Google:
-            //            _pageNavigator.OpenLoginWithGooglePage();
-            //            break;
-            //        case LoginStatus.Facebook:
-            //            _pageNavigator.OpenLoginWithFacebookPage();
-            //            break;
-            //    }
-            //}
         }
 
         #endregion
@@ -70,9 +52,6 @@ namespace My9GAG.ViewModels
             set { SetProperty(ref _loginErrorMessage, value); }
         }
 
-        private string password = "";
-        private string userName = "";
-
         #endregion
 
         #region Methods
@@ -88,10 +67,7 @@ namespace My9GAG.ViewModels
 
                 if (requestStatus.IsSuccessful)
                 {
-                    Device.BeginInvokeOnMainThread(() =>
-                    {
-                        _pageNavigator.OpenPostsPage();
-                    });
+                    _pageNavigator.GoToPostsPage(null, false);
                 }
                 else
                 {
@@ -143,11 +119,11 @@ namespace My9GAG.ViewModels
                 () => LoginAsync(),
                 () => !string.IsNullOrEmpty(Password) && !string.IsNullOrEmpty(UserName));
             LoginWithGoogleCommand = new Command(
-                () => _pageNavigator.OpenLoginWithGooglePage());
+                () => _pageNavigator.GoToLoginWithGooglePage());
             LoginWithFacebookCommand = new Command(
-                () => _pageNavigator.OpenLoginWithFacebookPage());
+                () => _pageNavigator.GoToLoginWithFacebookPage());
             RegisterCommand = new Command(
-                () => _pageNavigator.OpenRegistrationPage());
+                () => _pageNavigator.GoToRegistrationPage());
 
             CommandList = new List<ICommand>()
             {
@@ -176,6 +152,9 @@ namespace My9GAG.ViewModels
         private string _loginErrorMessage;
         private IClientService _clientService;
         private IPageNavigator _pageNavigator;
+
+        private string password = "";
+        private string userName = "";
 
         #endregion
     }

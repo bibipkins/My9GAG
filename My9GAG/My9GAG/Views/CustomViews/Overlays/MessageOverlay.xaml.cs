@@ -1,7 +1,7 @@
 ﻿using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace My9GAG.Views.CustomViews
+namespace My9GAG.Views.CustomViews.Overlays
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class MessageOverlay : ContentView

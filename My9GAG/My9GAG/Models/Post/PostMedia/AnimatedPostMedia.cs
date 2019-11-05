@@ -48,11 +48,11 @@ namespace My9GAG.Models.Post.Media
         }
         public void Stop()
         {
-            //(View as VideoPlayer).Stop();
+            (View as VideoPlayer).Stop();
         }
         public void Pause()
         {
-            //(View as VideoPlayer).Pause();
+            (View as VideoPlayer).Pause();
         }
         public void Reload()
         {

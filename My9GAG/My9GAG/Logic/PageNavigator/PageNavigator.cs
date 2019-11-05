@@ -1,18 +1,24 @@
-﻿using System;
+﻿using My9GAG.ViewModels;
+using System;
+using Xamarin.Forms;
 
 namespace My9GAG.Logic.PageNavigator
 {
+    /// <summary>
+    /// All of the navigational oprations should be wrapped in Device.BeginInvokeOnMainThread()
+    /// in order to avoid exceptions as ui-related operations must be performed on ui-thread
+    /// </summary>
     public class PageNavigator : IPageNavigator
     {
         #region Actions
 
         public Action OnGoBack;
-        public Action OnOpenPostsPage;
-        public Action OnOpenCommentsPage;
-        public Action OnOpenLoginPage;
-        public Action OnOpenLoginWithGooglePage;
-        public Action OnOpenLoginWithFacebookPage;
-        public Action OnOpenRegistrationPage;
+        public Action<PostsPageViewModel, bool> OnOpenPostsPage;
+        public Action<CommentsPageViewModel, bool> OnOpenCommentsPage;
+        public Action<LoginPageViewModel, bool> OnOpenLoginPage;
+        public Action<LoginWithGooglePageViewModel, bool> OnOpenLoginWithGooglePage;
+        public Action<LoginWithFacebookPageViewModel, bool> OnOpenLoginWithFacebookPage;
+        public Action<RegistrationPageViewModel, bool> OnOpenRegistrationPage;
 
         #endregion
 
@@ -20,31 +26,38 @@ namespace My9GAG.Logic.PageNavigator
 
         public void GoBack()
         {
-            OnGoBack?.Invoke();
+            Device.BeginInvokeOnMainThread(() => 
+                OnGoBack?.Invoke());
         }
-        public void OpenPostsPage()
+        public void GoToPostsPage(PostsPageViewModel viewModel, bool canGoBack)
         {
-            OnOpenPostsPage?.Invoke();
+            Device.BeginInvokeOnMainThread(() => 
+                OnOpenPostsPage?.Invoke(viewModel, canGoBack));
         }
-        public void OpenCommentsPage()
+        public void GoToCommentsPage(CommentsPageViewModel viewModel, bool canGoBack)
         {
-            OnOpenCommentsPage?.Invoke();
+            Device.BeginInvokeOnMainThread(() => 
+                OnOpenCommentsPage?.Invoke(viewModel, canGoBack));
         }
-        public void OpenLoginPage()
+        public void GoToLoginPage(LoginPageViewModel viewModel, bool canGoBack)
         {
-            OnOpenLoginPage?.Invoke();
+            Device.BeginInvokeOnMainThread(() => 
+                OnOpenLoginPage?.Invoke(viewModel, canGoBack));
         }
-        public void OpenLoginWithGooglePage()
+        public void GoToLoginWithGooglePage(LoginWithGooglePageViewModel viewModel, bool canGoBack)
         {
-            OnOpenLoginWithGooglePage?.Invoke();
+            Device.BeginInvokeOnMainThread(() => 
+                OnOpenLoginWithGooglePage?.Invoke(viewModel, canGoBack));
         }
-        public void OpenLoginWithFacebookPage()
+        public void GoToLoginWithFacebookPage(LoginWithFacebookPageViewModel viewModel, bool canGoBack)
         {
-            OnOpenLoginWithFacebookPage?.Invoke();
+            Device.BeginInvokeOnMainThread(() => 
+                OnOpenLoginWithFacebookPage?.Invoke(viewModel, canGoBack));
         }
-        public void OpenRegistrationPage()
+        public void GoToRegistrationPage(RegistrationPageViewModel viewModel, bool canGoBack)
         {
-            OnOpenRegistrationPage?.Invoke();
+            Device.BeginInvokeOnMainThread(() => 
+                OnOpenRegistrationPage?.Invoke(viewModel, canGoBack));
         }
 
         #endregion

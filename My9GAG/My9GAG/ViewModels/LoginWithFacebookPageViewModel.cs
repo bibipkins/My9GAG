@@ -53,20 +53,12 @@ namespace My9GAG.ViewModels
                 if (requestStatus.IsSuccessful)
                 {
                     await Task.Delay(ViewModelConstants.LOGIN_DELAY);
-
-                    Device.BeginInvokeOnMainThread(() =>
-                    {
-                        _pageNavigator.OpenPostsPage();
-                    });
+                    _pageNavigator.GoToPostsPage(null, false);
                 }
                 else
                 {
                     await ShowMessage(ViewModelConstants.LOGIN_FAILED_MESSAGE, ViewModelConstants.MESSAGE_DELAY);
-
-                    Device.BeginInvokeOnMainThread(() =>
-                    {
-                        _pageNavigator.GoBack();
-                    });
+                    _pageNavigator.GoBack();
                 }
             });
 
@@ -105,13 +97,8 @@ namespace My9GAG.ViewModels
                 if (!string.IsNullOrWhiteSpace(error))
                 {
                     e.Cancel = true;
-
                     await ShowMessage(ViewModelConstants.LOGIN_WITH_FACEBOOK_FAILED_MESSAGE, ViewModelConstants.MESSAGE_DELAY);
-
-                    Device.BeginInvokeOnMainThread(() =>
-                    {
-                        _pageNavigator.GoBack();
-                    });
+                    _pageNavigator.GoBack();
                 }
             });
         }
@@ -123,6 +110,7 @@ namespace My9GAG.ViewModels
         private IFacebookAuthenticationService _facebookAuthenticationService;
         private IClientService _clientService;
         private IPageNavigator _pageNavigator;
+
         private string _pageUrl;
         private string _state;
 

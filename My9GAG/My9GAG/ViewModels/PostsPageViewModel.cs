@@ -1,6 +1,7 @@
 ﻿using My9GAG.Logic.Client;
 using My9GAG.Logic.DownloadManager;
 using My9GAG.Logic.PageNavigator;
+using My9GAG.Models.Comment;
 using My9GAG.Models.Post;
 using My9GAG.Models.Request;
 using System;
@@ -20,19 +21,15 @@ namespace My9GAG.ViewModels
         public PostsPageViewModel(IClientService clientService, IPageNavigator pageNavigator)
         {
             _clientService = clientService;
+            _pageNavigator = pageNavigator;
             _currentCategory = PostCategory.Hot;
+
             Posts = new ObservableCollection<Post>();
 
             InitCommands();
 
             GetPostsAsync(_currentCategory);
         }
-
-        #endregion
-
-        #region Events
-
-        public EventHandler<CommentsPageViewModel> OnOpenCommentsPage;
 
         #endregion
 
@@ -79,19 +76,14 @@ namespace My9GAG.ViewModels
             {
                 if (SetProperty(ref _position, value))
                 {
+                    Debug.WriteLine($"Position: {value}, Count: {Posts.Count}");
+
                     if (Posts.Count > _lastPosition && _lastPosition >= 0)
                     {
-                        Posts[_lastPosition].PostMedia.Stop();
+                        Posts[_lastPosition].PostMedia.Pause();
                     }
 
                     _lastPosition = value;
-
-                    //if (value - _startPosition >= NUMBER_OF_POSTS_BEFORE_UNLOADING_OLD)
-                    //{
-                    //    Debug.WriteLine($"{value}, from:{_startPosition}, to:{_startPosition + NUMBER_OF_POSTS_TO_UNLOAD}");
-                    //    UnloadPosts(_startPosition, _startPosition + NUMBER_OF_POSTS_TO_UNLOAD);
-                    //    _startPosition += NUMBER_OF_POSTS_TO_UNLOAD;
-                    //}
 
                     if (Posts.Count > 0 && value > 0 && value >= Posts.Count - NUMBER_OF_POSTS_BEFORE_LOADING_MORE)
                     {
@@ -141,11 +133,9 @@ namespace My9GAG.ViewModels
                 {
                     StopWorkIndication();
                     string message = requestStatus == null ? ViewModelConstants.REQUEST_FAILED_MESSAGE : requestStatus.Message;
-                    ShowMessage(message, ViewModelConstants.MESSAGE_DELAY);
+                    await ShowMessage(message, ViewModelConstants.MESSAGE_DELAY);
                 }
             });
-
-            Debug.WriteLine(Posts.Count);
 
             StopWorkIndication();
         }
@@ -153,7 +143,7 @@ namespace My9GAG.ViewModels
         {
             if (Posts.Count < 1)
             {
-                ShowMessage(ViewModelConstants.EMPTY_POST_LIST_MESSAGE, ViewModelConstants.MESSAGE_DELAY);
+                await ShowMessage(ViewModelConstants.EMPTY_POST_LIST_MESSAGE, ViewModelConstants.MESSAGE_DELAY);
                 return;
             }
 
@@ -176,17 +166,16 @@ namespace My9GAG.ViewModels
                 else
                 {
                     string message = requestStatus == null ? ViewModelConstants.REQUEST_FAILED_MESSAGE : requestStatus.Message;
-                    ShowMessage(message, ViewModelConstants.MESSAGE_DELAY);
+                    await ShowMessage(message, ViewModelConstants.MESSAGE_DELAY);
                 }
             });
         }
         public async Task GetCommentsAsync()
         {
-            StartWorkIndication("Getting comments");
+            StartWorkIndication(ViewModelConstants.LOADING_COMMENTS);
 
-            await Task.Run((Func<Task>)(async () =>
+            await Task.Run(async () =>
             {
-                Debug.WriteLine("Started GetComments");
                 uint count = (uint)Posts[Position].CommentCount;
                 string postUrl = Posts[Position].Url;
                 RequestStatus requestStatus = await this._clientService.GetCommentsAsync(postUrl, count);
@@ -195,17 +184,17 @@ namespace My9GAG.ViewModels
                 {
                     var viewModel = new CommentsPageViewModel()
                     {
-                        Title = Posts[Position].Title
+                        Title = Posts[Position].Title,
+                        Comments = new ObservableCollection<Comment>(_clientService.Comments)
                     };
-                    OnOpenCommentsPage(this, viewModel);
+
+                    _pageNavigator.GoToCommentsPage(viewModel);
                 }
                 else
                 {
-                    ShowMessage(requestStatus.Message, ViewModelConstants.MESSAGE_DELAY);
+                    await ShowMessage(requestStatus.Message, ViewModelConstants.MESSAGE_DELAY);
                 }
-
-                Debug.WriteLine("Finished GetComments");
-            }));
+            });
 
             StopWorkIndication();
         }
@@ -291,23 +280,15 @@ namespace My9GAG.ViewModels
             get;
             protected set;
         }
+        public ICommand PositionChangedCommand
+        {
+            get;
+            protected set;
+        }
 
         #endregion
 
         #region Implementation
-
-        protected void UnloadPosts(int from, int to)
-        {
-            if (from >= to || from < 0 || to > Posts.Count)
-            {
-                return;
-            }
-
-            for (int i = from; i < to; i++)
-            {
-                Posts[i].PostMedia.Unload();
-            }
-        }
 
         protected void InitCommands()
         {
@@ -396,10 +377,8 @@ namespace My9GAG.ViewModels
 
         #region Constants
 
-        private const int NUMBER_OF_POSTS = 10;
-        private const int NUMBER_OF_POSTS_BEFORE_LOADING_MORE = 5;
-        private const int NUMBER_OF_POSTS_BEFORE_UNLOADING_OLD = 30;
-        private const int NUMBER_OF_POSTS_TO_UNLOAD = 10;
+        private const int NUMBER_OF_POSTS = 20;
+        private const int NUMBER_OF_POSTS_BEFORE_LOADING_MORE = 10;
 
         #endregion
     }

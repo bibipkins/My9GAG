@@ -1,10 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:views="clr-namespace:My9GAG.Views.CustomViews"
+             xmlns:overlays="clr-namespace:My9GAG.Views.CustomViews.Overlays"
              x:Class="My9GAG.Views.RegistrationPage"
              SizeChanged="OnLayoutSizeChanged"
              Title="Join us!">
+  
     <ContentPage.Resources>
         <ResourceDictionary>
             <Style TargetType="Label">
@@ -62,13 +63,13 @@
             </AbsoluteLayout>
         </ScrollView>
 
-        <views:WorkIndicationOverlay 
+        <overlays:WorkIndicationOverlay 
             AbsoluteLayout.LayoutBounds="0,0,1,1"
             AbsoluteLayout.LayoutFlags="All"
             IsVisible="{Binding IsWorkIndicationVisible}"
             Text="{Binding WorkIndicationText}"/>
 
-        <views:MessageOverlay 
+        <overlays:MessageOverlay 
             AbsoluteLayout.LayoutBounds="0,0,1,1"
             AbsoluteLayout.LayoutFlags="All"
             IsVisible="{Binding IsMessageVisible}"

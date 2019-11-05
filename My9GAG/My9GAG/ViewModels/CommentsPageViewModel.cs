@@ -24,14 +24,8 @@ namespace My9GAG.ViewModels
         }
         public ObservableCollection<Comment> Comments
         {
-            get
-            {
-                return _comments;
-            }
-            private set
-            {
-                SetProperty(ref _comments, value);
-            }
+            get { return _comments; }
+            set { SetProperty(ref _comments, value); }
         }
 
         #endregion
