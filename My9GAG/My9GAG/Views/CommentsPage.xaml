@@ -11,19 +11,21 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Label Text="{Binding Title}"
-               Grid.Row="0"
-               Margin="5"
-               VerticalOptions="Center"
-               HorizontalOptions="Center"
-               VerticalTextAlignment="Center"
-               HorizontalTextAlignment="Center"
-               TextColor="White"/>
+        <Label 
+            Text="{Binding Title}"
+            Grid.Row="0"
+            Margin="5"
+            VerticalOptions="Center"
+            HorizontalOptions="Center"
+            VerticalTextAlignment="Center"
+            HorizontalTextAlignment="Center"
+            TextColor="White"/>
 
-        <ListView ItemsSource="{Binding Comments}"
-                  Grid.Row="1"
-                  Margin="0,10"
-                  HasUnevenRows="True">
+        <ListView 
+            ItemsSource="{Binding Comments}"
+            Grid.Row="1"
+            Margin="0,10"
+            HasUnevenRows="True">
             <ListView.Resources>
                 <ResourceDictionary>
                     <Style TargetType="Label">
@@ -34,32 +36,56 @@
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>
-                        <ContentView>
-                            <StackLayout Orientation="Horizontal"
-                                         Padding="5,8">
-                                <Image Source="{Binding UserAvatar}"
-                                       VerticalOptions="StartAndExpand"
-                                       HorizontalOptions="Start"
-                                       Margin="0,5,0,0"
-                                       WidthRequest="50"/>
-                                <StackLayout HorizontalOptions="FillAndExpand"
-                                             VerticalOptions="FillAndExpand"
-                                             Margin="10,0,0,0">
-                                    <Label Text="{Binding UserName}"
-                                           FontAttributes="Bold"
-                                           TextColor="LightSkyBlue"
-                                           VerticalOptions="Start"
-                                           VerticalTextAlignment="Start"/>
-                                    <Label Text="{Binding Text}"
-                                           VerticalOptions="StartAndExpand"
-                                           VerticalTextAlignment="Start"/>
-                                    <Label Text="{Binding LikesCount}"
-                                           VerticalOptions="End"
-                                           VerticalTextAlignment="End"
-                                           TextColor="White"/>
-                                </StackLayout>
+                        <StackLayout
+                            Orientation="Horizontal"
+                            Padding="10,8">
+                            <Image
+                                Source="{Binding User.UserAvatar}"
+                                VerticalOptions="StartAndExpand"
+                                HorizontalOptions="Start"
+                                Margin="0,5,0,0"
+                                WidthRequest="50"/>
+                            <StackLayout
+                                HorizontalOptions="FillAndExpand"
+                                VerticalOptions="FillAndExpand"
+                                Margin="5,0,5,0">
+                                <Label
+                                    Text="{Binding User.UserName}"
+                                    FontAttributes="Bold"
+                                    TextColor="LightSkyBlue"
+                                    VerticalOptions="Start"
+                                    VerticalTextAlignment="Start"/>
+                                <Label
+                                    Text="{Binding Text}"
+                                    IsVisible="{Binding IsTextVisible}"
+                                    VerticalOptions="StartAndExpand"
+                                    VerticalTextAlignment="Start"/>
+                                <ListView
+                                    ItemsSource="{Binding MediaList}"
+                                    IsVisible="{Binding IsMediaListVisible}"
+                                    HeightRequest="{Binding MediaListHeight}"
+                                    HasUnevenRows="True">
+                                    <ListView.ItemTemplate>
+                                        <DataTemplate>
+                                            <ViewCell>
+                                                <StackLayout
+                                                   VerticalOptions="Start">
+                                                    <Image
+                                                        Source="{Binding ImageMetaByType.Image.Url}"
+                                                        VerticalOptions="StartAndExpand"
+                                                        HorizontalOptions="Start"/>
+                                                </StackLayout>
+                                            </ViewCell>
+                                        </DataTemplate>
+                                    </ListView.ItemTemplate>
+                                </ListView>
+                                <Label
+                                    Text="{Binding LikesCount}"
+                                    VerticalOptions="End"
+                                    VerticalTextAlignment="End"
+                                    TextColor="White"/>
                             </StackLayout>
-                        </ContentView>
+                        </StackLayout>
                     </ViewCell>
                 </DataTemplate>
             </ListView.ItemTemplate>

@@ -1,4 +1,5 @@
-﻿using My9GAG.Models.Comment;
+﻿using My9GAG.Logic.Logger;
+using My9GAG.Models.Comment;
 using My9GAG.Models.Post;
 using My9GAG.Models.Post.Media;
 using My9GAG.Models.Request;
@@ -8,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -17,8 +19,10 @@ namespace My9GAG.Logic.Client
     {
         #region Constructors
 
-        public ClientService()
+        public ClientService(ILogger logger)
         {
+            _logger = logger;
+
             _timestamp  = RequestUtils.GetTimestamp();
             _appId      = RequestUtils.APP_ID;
             _token      = RequestUtils.GetSha1(_timestamp);
@@ -118,10 +122,6 @@ namespace My9GAG.Logic.Client
             HttpWebRequest request = FormRequest(RequestUtils.API, RequestUtils.POSTS_PATH, args);
             RequestStatus requestStatus = new RequestStatus();
 
-            Debug.WriteLine("TOKEN: " + _token);
-            Debug.WriteLine("APP_ID: " + _generatedAppId);
-            Debug.WriteLine(request.Address.ToString());
-
             try
             {
                 using (HttpWebResponse response = (HttpWebResponse)(await request.GetResponseAsync()))
@@ -129,10 +129,6 @@ namespace My9GAG.Logic.Client
                 using (StreamReader reader = new StreamReader(stream))
                 {
                     string responseText = await reader.ReadToEndAsync();
-
-                    Debug.WriteLine("");
-                    Debug.WriteLine(responseText);
-
                     requestStatus = ValidateResponse(responseText);
 
                     if (requestStatus.IsSuccessful)
@@ -162,10 +158,8 @@ namespace My9GAG.Logic.Client
                                     break;
                             }
                             
-                            //post.PostMedia = PostMediaFactory.CreatePostMedia(PostType.Video, "bF9zOykErJ4");
                             post.PostMedia = PostMediaFactory.CreatePostMedia(post.Type, url);
                             Posts.Add(post);
-                            //break;
                         }
                     }
                 }
@@ -175,11 +169,7 @@ namespace My9GAG.Logic.Client
                 requestStatus.IsSuccessful = false;
                 requestStatus.Message = e.Message;
 
-                Debug.WriteLine("-----------------------------------");
-                Debug.WriteLine("EXCEPRION: " + e.Message);
-                Debug.WriteLine(e.StackTrace);
-                Debug.WriteLine("EXCEPRION: ");
-                Debug.WriteLine("-----------------------------------");
+                _logger.LogIntoConsole(e.Message, e.StackTrace);
             }
 
             return requestStatus;
@@ -209,7 +199,6 @@ namespace My9GAG.Logic.Client
                     if (requestStatus.IsSuccessful)
                     {
                         Comments = new List<Comment>();
-                        Debug.WriteLine(responseText);
                         var jsonData = JObject.Parse(responseText);
                         var comments = jsonData["payload"]["data"][0]["comments"];
 
@@ -225,6 +214,8 @@ namespace My9GAG.Logic.Client
             {
                 requestStatus.IsSuccessful = false;
                 requestStatus.Message = e.Message;
+
+                _logger.LogIntoConsole(e.Message, e.StackTrace);
             }
 
             return requestStatus;
@@ -285,8 +276,7 @@ namespace My9GAG.Logic.Client
             request.ContentType = "application/json";
             request.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
             request.Accept = "*/*";
-            Debug.WriteLine(request.RequestUri);
-            Debug.WriteLine(request.Address);
+
             return request;
         }
         private RequestStatus ValidateResponse(string response)
@@ -344,7 +334,6 @@ namespace My9GAG.Logic.Client
                 using (StreamReader reader = new StreamReader(stream))
                 {
                     string responseText = await reader.ReadToEndAsync();
-                    Debug.WriteLine(responseText);
                     loginStatus = ValidateResponse(responseText);
 
                     if (loginStatus.IsSuccessful)
@@ -364,6 +353,8 @@ namespace My9GAG.Logic.Client
             {
                 loginStatus.IsSuccessful = false;
                 loginStatus.Message = e.Message;
+
+
             }
 
             return loginStatus;
@@ -381,6 +372,8 @@ namespace My9GAG.Logic.Client
         #endregion
 
         #region Fields
+
+        private ILogger _logger;
 
         private string _timestamp = "";
         private string _appId = "";

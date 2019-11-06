@@ -5,6 +5,7 @@ using Microsoft.AppCenter.Crashes;
 using My9GAG.Logic.Client;
 using My9GAG.Logic.FacebookAuthentication;
 using My9GAG.Logic.GoogleAuthentication;
+using My9GAG.Logic.Logger;
 using My9GAG.Logic.PageNavigator;
 using My9GAG.ViewModels;
 using My9GAG.Views;
@@ -112,6 +113,7 @@ namespace My9GAG
         {
             var builder = new ContainerBuilder();
 
+            builder.RegisterType<My9GAGLogger>().As<ILogger>();
             builder.RegisterType<GoogleAuthenticationService>().As<IGoogleAuthenticationService>();
             builder.RegisterType<FacebookAuthenticationService>().As<IFacebookAuthenticationService>();
             builder.RegisterType<ClientService>().As<IClientService>().SingleInstance();

@@ -33,7 +33,7 @@ namespace My9GAG.Models.Post
             get;
             set;
         }
-        public int CommentCount
+        public int CommentsCount
         {
             get;
             set;
@@ -68,7 +68,7 @@ namespace My9GAG.Models.Post
         public override string ToString()
         {
             return $"{Id}, {Title}, URL: {Url}, MediaURL: {PostMedia?.Url}, " +
-                $"CommentsCount: {CommentCount}, UpvoteCount: {UpvoteCount}, " +
+                $"CommentsCount: {CommentsCount}, UpvoteCount: {UpvoteCount}, " +
                 $"DownvoteCount: {DownvoteCount}, Type: {Type.ToString()}, NSFW: {IsNsfw}, " +
                 $"Section: {Section?.Name}";
         }

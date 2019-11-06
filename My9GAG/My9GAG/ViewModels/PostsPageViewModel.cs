@@ -176,7 +176,7 @@ namespace My9GAG.ViewModels
 
             await Task.Run(async () =>
             {
-                uint count = (uint)Posts[Position].CommentCount;
+                uint count = (uint)Posts[Position].CommentsCount;
                 string postUrl = Posts[Position].Url;
                 RequestStatus requestStatus = await this._clientService.GetCommentsAsync(postUrl, count);
 
