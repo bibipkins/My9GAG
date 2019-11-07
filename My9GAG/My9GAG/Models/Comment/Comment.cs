@@ -1,6 +1,4 @@
 ﻿using Newtonsoft.Json;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 
 namespace My9GAG.Models.Comment
@@ -60,29 +58,14 @@ namespace My9GAG.Models.Comment
             get { return !string.IsNullOrEmpty(Text); }
         }
 
-        [JsonProperty(PropertyName = "media")]
-        public IEnumerable<CommentMedia> MediaList
+        public string MediaUrl
         {
             get;
             set;
         }
-        public bool IsMediaListVisible
+        public bool IsMediaPresent
         {
-            get { return (MediaList != null && MediaList.Count() > 0); }
-        }
-        public double MediaListHeight
-        {
-            get
-            {
-                if (IsMediaListVisible)
-                {
-                    return MediaList.Count() * MediaList.First().ImageMetaByType.Image.Height;
-                }
-                else
-                {
-                    return 0;
-                }
-            }
+            get { return !string.IsNullOrEmpty(MediaUrl); }
         }
 
         #endregion

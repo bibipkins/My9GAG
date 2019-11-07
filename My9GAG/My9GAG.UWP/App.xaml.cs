@@ -41,7 +41,7 @@ namespace My9GAG.UWP
                 Xamarin.Forms.Forms.SetFlags("CollectionView_Experimental");
                 Xamarin.Forms.Forms.Init(e);
 
-                ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.FullScreen;
+                ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.Auto;
                 Window.Current.Content = rootFrame;
             }
 

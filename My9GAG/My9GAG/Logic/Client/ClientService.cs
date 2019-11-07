@@ -7,7 +7,6 @@ using My9GAG.Models.User;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -119,14 +118,14 @@ namespace My9GAG.Logic.Client
             if (!string.IsNullOrEmpty(olderThan))
                 args["olderThan"] = olderThan;
             
-            HttpWebRequest request = FormRequest(RequestUtils.API, RequestUtils.POSTS_PATH, args);
-            RequestStatus requestStatus = new RequestStatus();
+            var request = FormRequest(RequestUtils.API, RequestUtils.POSTS_PATH, args);
+            var requestStatus = new RequestStatus();
 
             try
             {
-                using (HttpWebResponse response = (HttpWebResponse)(await request.GetResponseAsync()))
-                using (Stream stream = response.GetResponseStream())
-                using (StreamReader reader = new StreamReader(stream))
+                using (var response = (HttpWebResponse)(await request.GetResponseAsync()))
+                using (var stream = response.GetResponseStream())
+                using (var reader = new StreamReader(stream))
                 {
                     string responseText = await reader.ReadToEndAsync();
                     requestStatus = ValidateResponse(responseText);
@@ -178,20 +177,21 @@ namespace My9GAG.Logic.Client
         {
             var args = new Dictionary<string, string>();
 
-            string path = "v1/topComments.json?" +
+            string path = 
+                "v1/topComments.json?" +
                 "appId=a_dd8f2b7d304a10edaf6f29517ea0ca4100a43d1b" +
                 "&urls=" + postUrl +
                 "&commentL1=" + count +
                 "&pretty=0";
 
-            HttpWebRequest request = FormRequest(RequestUtils.COMMENT_CDN, path, args);
-            RequestStatus requestStatus = new RequestStatus();
+            var request = FormRequest(RequestUtils.COMMENT_CDN, path, args);
+            var requestStatus = new RequestStatus();
 
             try
             {
-                using (HttpWebResponse response = (HttpWebResponse)(await request.GetResponseAsync()))
-                using (Stream stream = response.GetResponseStream())
-                using (StreamReader reader = new StreamReader(stream))
+                using (var response = (HttpWebResponse)(await request.GetResponseAsync()))
+                using (var stream = response.GetResponseStream())
+                using (var reader = new StreamReader(stream))
                 {
                     string responseText = await reader.ReadToEndAsync();
                     requestStatus = ValidateResponse(responseText);
@@ -200,13 +200,16 @@ namespace My9GAG.Logic.Client
                     {
                         Comments = new List<Comment>();
                         var jsonData = JObject.Parse(responseText);
-                        var comments = jsonData["payload"]["data"][0]["comments"];
+                        var comments = jsonData.SelectToken("payload.data.[0].comments");
 
                         foreach (var item in comments)
                         {
-                            Comment comment = item.ToObject<Comment>();                            
+                            Comment comment = item.ToObject<Comment>();    
+                            comment.MediaUrl = (item.SelectToken("media.[0].imageMetaByType.image.url") ?? string.Empty).ToString();
                             Comments.Add(comment);
                         }
+
+                        Comments = Comments.OrderByDescending(c => c.LikesCount).ToList();
                     }
                 }
             }
@@ -220,6 +223,7 @@ namespace My9GAG.Logic.Client
 
             return requestStatus;
         }
+
         public void SaveState(IDictionary<string, object> dictionary)
         {
             dictionary["User"] = User;
@@ -235,7 +239,7 @@ namespace My9GAG.Logic.Client
 
         private HttpWebRequest FormRequest(string api, string path, Dictionary<string, string> args)
         {
-            Dictionary<string, string> headers = new Dictionary<string, string>()
+            var headers = new Dictionary<string, string>()
             {
                 { "9GAG-9GAG_TOKEN", _token },
                 { "9GAG-TIMESTAMP", _timestamp },
@@ -248,24 +252,25 @@ namespace My9GAG.Logic.Client
                 { "9GAG-REQUEST-SIGNATURE", _signature }
             };
 
-            List<string> argsStrings = new List<string>();
+            var argsStrings = new List<string>();
 
-            foreach (KeyValuePair<string, string> entry in args)
+            foreach (var entry in args)
             {
                 argsStrings.Add(String.Format("{0}/{1}", entry.Key, entry.Value));
             }
 
-            List<string> urlItems = new List<string>()
+            var urlItems = new List<string>()
             {
                 api,
                 path,
                 String.Join("/", argsStrings)
             };
+
             string url = String.Join("/", urlItems);
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
             var headerCollection = new WebHeaderCollection();
 
-            foreach (KeyValuePair<string, string> entry in headers)
+            foreach (var entry in headers)
             {
                 headerCollection.Add(entry.Key, entry.Value);
             }
@@ -281,7 +286,7 @@ namespace My9GAG.Logic.Client
         }
         private RequestStatus ValidateResponse(string response)
         {
-            RequestStatus requestStatus = new RequestStatus();
+            var requestStatus = new RequestStatus();
 
             try
             {
@@ -318,20 +323,22 @@ namespace My9GAG.Logic.Client
             {
                 requestStatus.IsSuccessful = false;
                 requestStatus.Message = e.Message;
+
+                _logger.LogIntoConsole(e.Message, e.StackTrace);
             }
 
             return requestStatus;
         }
         private async Task<RequestStatus> LoginAsync(Dictionary<string, string> args)
         {
-            HttpWebRequest request = FormRequest(RequestUtils.API, RequestUtils.LOGIN_PATH, args);
-            RequestStatus loginStatus = new RequestStatus();
+            var request = FormRequest(RequestUtils.API, RequestUtils.LOGIN_PATH, args);
+            var loginStatus = new RequestStatus();
 
             try
             {
-                using (HttpWebResponse response = (HttpWebResponse)(await request.GetResponseAsync()))
-                using (Stream stream = response.GetResponseStream())
-                using (StreamReader reader = new StreamReader(stream))
+                using (var response = (HttpWebResponse)(await request.GetResponseAsync()))
+                using (var stream = response.GetResponseStream())
+                using (var reader = new StreamReader(stream))
                 {
                     string responseText = await reader.ReadToEndAsync();
                     loginStatus = ValidateResponse(responseText);
@@ -354,7 +361,7 @@ namespace My9GAG.Logic.Client
                 loginStatus.IsSuccessful = false;
                 loginStatus.Message = e.Message;
 
-
+                _logger.LogIntoConsole(e.Message, e.StackTrace);
             }
 
             return loginStatus;
