@@ -8,12 +8,12 @@
              Title="Posts">
 
     <ContentPage.Padding>
-        <OnPlatform 
+        <OnPlatform
             x:TypeArguments="Thickness"
-            iOS="0,20,0,0"/>
+            iOS="0,20,0,0" />
     </ContentPage.Padding>
     <ContentPage.ToolbarItems>
-        <ToolbarItem 
+        <ToolbarItem
             Text="Hot"
             Order="Primary"
             Command="{Binding GetHotPostsCommand}">
@@ -25,7 +25,7 @@
                 </OnPlatform>
             </ToolbarItem.Icon>
         </ToolbarItem>
-        <ToolbarItem 
+        <ToolbarItem
             Text="Trending"
             Order="Primary"
             Command="{Binding GetTrendingPostsCommand}">
@@ -49,21 +49,25 @@
                 </OnPlatform>
             </ToolbarItem.Icon>
         </ToolbarItem>
-        <ToolbarItem 
+        <ToolbarItem
+            Text="Open in browser"
+            Order="Secondary"
+            Command="{Binding OpenInBrowserCommand}" />
+        <ToolbarItem
             Text="Download"
             Order="Secondary"
-            Command="{Binding DownloadCommand}"/>
-        <ToolbarItem 
+            Command="{Binding DownloadCommand}" />
+        <ToolbarItem
             Text="Comments"
             Order="Secondary"
-            Command="{Binding CommentsCommand}"/>
-        <ToolbarItem 
+            Command="{Binding CommentsCommand}" />
+        <ToolbarItem
             Text="Log in"
             Order="Secondary"
-            Command="{Binding RelogInCommand}"/>
+            Command="{Binding RelogInCommand}" />
     </ContentPage.ToolbarItems>
 
-    <AbsoluteLayout 
+    <AbsoluteLayout
         HorizontalOptions="FillAndExpand"
         VerticalOptions="FillAndExpand">
         <CarouselView
@@ -89,7 +93,7 @@
                                 HorizontalOptions="Center"
                                 VerticalTextAlignment="Center"
                                 HorizontalTextAlignment="Center"
-                                TextColor="White"/>
+                                TextColor="White" />
                             <ContentView
                                 Grid.Row="1"
                                 Content="{Binding PostMedia.View}" />
@@ -141,13 +145,13 @@
             </CarouselView.ItemTemplate>
         </CarouselView>
         
-        <overlays:WorkIndicationOverlay 
+        <overlays:WorkIndicationOverlay
             AbsoluteLayout.LayoutBounds="0,0,1,1"
             AbsoluteLayout.LayoutFlags="All"
             IsVisible="{Binding IsWorkIndicationVisible}"
             Text="{Binding WorkIndicationText}" />
 
-        <overlays:MessageOverlay 
+        <overlays:MessageOverlay
             AbsoluteLayout.LayoutBounds="0,0,1,1"
             AbsoluteLayout.LayoutFlags="All"
             IsVisible="{Binding IsMessageVisible}"

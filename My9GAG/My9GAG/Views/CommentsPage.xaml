@@ -12,18 +12,18 @@
         </Grid.RowDefinitions>
 
         <Label
-            Text="{Binding Title}"
             Grid.Row="0"
+            Text="{Binding Title}"
             Margin="5"
             VerticalOptions="Center"
             HorizontalOptions="Center"
             VerticalTextAlignment="Center"
             HorizontalTextAlignment="Center"
-            TextColor="White"/>
+            TextColor="White" />
 
         <ListView
-            ItemsSource="{Binding Comments}"
             Grid.Row="1"
+            ItemsSource="{Binding Comments}"
             Margin="0,10"
             HasUnevenRows="True">
             <ListView.Resources>
@@ -47,7 +47,7 @@
                                 VerticalOptions="StartAndExpand"
                                 HorizontalOptions="Start"
                                 Margin="0,5,0,0"
-                                WidthRequest="50"/>
+                                WidthRequest="50" />
                             <Grid
                                 Grid.Column="1"
                                 HorizontalOptions="FillAndExpand"
@@ -65,19 +65,19 @@
                                     FontAttributes="Bold"
                                     TextColor="White"
                                     VerticalOptions="Start"
-                                    VerticalTextAlignment="Start"/>
+                                    VerticalTextAlignment="Start" />
                                 <Label
                                     Grid.Row="1"
                                     Text="{Binding Text}"
                                     IsVisible="{Binding IsTextVisible}"
                                     VerticalOptions="StartAndExpand"
-                                    VerticalTextAlignment="Start"/>
-                                <Image 
+                                    VerticalTextAlignment="Start" />
+                                <Image
                                     Grid.Row="2"
                                     Source="{Binding MediaUrl}"
                                     IsVisible="{Binding IsMediaPresent}"
                                     VerticalOptions="Start"
-                                    HorizontalOptions="Start"/>
+                                    HorizontalOptions="Start" />
                                 <StackLayout
                                     Grid.Row="3"
                                     Orientation="Horizontal">
@@ -96,7 +96,7 @@
                                         Text="{Binding LikesCount}"
                                         VerticalOptions="Center"
                                         VerticalTextAlignment="Center"
-                                        TextColor="White"/>
+                                        TextColor="White" />
                                 </StackLayout>
                             </Grid>
                         </Grid>

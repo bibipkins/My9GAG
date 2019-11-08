@@ -3,6 +3,8 @@ using Android.Content.PM;
 using Android.OS;
 using Android.Views;
 using Xamarin.Forms;
+using Xamarin.Essentials;
+using Android.Runtime;
 
 namespace My9GAG.Droid
 {
@@ -24,10 +26,18 @@ namespace My9GAG.Droid
 
             base.OnCreate(bundle);
 
+            Platform.Init(this, bundle);
+
             Forms.SetFlags("CollectionView_Experimental");
             Forms.Init(this, bundle);
 
             LoadApplication(new App());
+        }
+
+        public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Permission[] grantResults)
+        {
+            Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+            base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
 }

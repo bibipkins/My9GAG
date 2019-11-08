@@ -11,6 +11,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
+using Xamarin.Essentials;
 
 namespace My9GAG.ViewModels
 {
@@ -260,7 +261,8 @@ namespace My9GAG.ViewModels
             get;
             protected set;
         }
-        public ICommand SearchCommand
+
+        public ICommand OpenInBrowserCommand
         {
             get;
             protected set;
@@ -303,6 +305,9 @@ namespace My9GAG.ViewModels
             GetFreshPostsCommand = new Command(
                 () => { GetPostsAsync(PostCategory.Vote); }, 
                 () => { return !IsNotLoggedIn && !IsWorkIndicationVisible; });
+            OpenInBrowserCommand = new Command(
+                () => { Launcher.OpenAsync(new Uri(Posts[Position].Url)); },
+                () => { return !IsNotLoggedIn && !IsWorkIndicationVisible; });
             DownloadCommand = new Command(
                 () => { DownloadCurrentPost(); },
                 () => { return !IsNotLoggedIn && !IsWorkIndicationVisible; });
@@ -319,6 +324,7 @@ namespace My9GAG.ViewModels
                 GetHotPostsCommand,
                 GetTrendingPostsCommand,
                 GetFreshPostsCommand,
+                OpenInBrowserCommand,
                 DownloadCommand,
                 CommentsCommand,
                 RelogInCommand
