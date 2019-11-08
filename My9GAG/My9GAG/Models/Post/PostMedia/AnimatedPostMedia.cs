@@ -1,7 +1,7 @@
-﻿using My9GAG.Views;
+﻿using My9GAG.Views.CustomViews.VideoPlayer;
 using Xamarin.Forms;
 
-namespace My9GAG.Models
+namespace My9GAG.Models.Post.Media
 {
     public class AnimatedPostMedia : IPostMedia
     {
@@ -10,7 +10,13 @@ namespace My9GAG.Models
         public AnimatedPostMedia(string url)
         {
             Url = url;
-            View = new VideoPlayer();
+            View = new VideoPlayer()
+            {
+                Source = new UriVideoSource()
+                {
+                    Uri = url
+                }
+            };
         }
 
         #endregion
@@ -38,7 +44,7 @@ namespace My9GAG.Models
 
         public void Start()
         {
-            (View as VideoPlayer).Start();
+            //(View as VideoPlayer).Start();
         }
         public void Stop()
         {
@@ -50,7 +56,11 @@ namespace My9GAG.Models
         }
         public void Reload()
         {
-            (View as VideoPlayer).Source = Url;
+            //(View as VideoPlayer).Source = Url;
+        }
+        public void Unload()
+        {
+
         }
 
         #endregion

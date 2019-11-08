@@ -1,37 +1,37 @@
+using Autofac;
 using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
+using My9GAG.Logic.Client;
+using My9GAG.Logic.FacebookAuthentication;
+using My9GAG.Logic.GoogleAuthentication;
+using My9GAG.Logic.Logger;
+using My9GAG.Logic.PageNavigator;
 using My9GAG.ViewModels;
+using My9GAG.Views;
+using System.Diagnostics;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
+
 namespace My9GAG
 {
     public partial class App : Application
 	{
+        #region Constructors
+
         public App()
         {
             InitializeComponent();
-
-            _viewModel = new PostsPageViewModel();
-            _viewModel.RestoreState(Current.Properties);
-            _viewModel.OnOpenCommentsPage += OpenCommentsPage;
-            MainPage = new NavigationPage(new My9GAG.Views.PostsPage(_viewModel))
-            {
-                BarBackgroundColor = Color.Black,
-                BarTextColor = Color.White,
-                BackgroundColor = Color.Black,
-                Title = "My9GAG"
-            };
+            RegisterContainer();
+            SetupPages();
         }
 
-        public void OpenCommentsPage(object sender, CommentsPageViewModel viewModel)
-        {
-            var commentsPage = new Views.CommentsPage(viewModel);
-            NavigationPage.SetHasBackButton(commentsPage, true);
-            MainPage.Navigation.PushAsync(commentsPage);
-        }
+        #endregion
+
+        #region Lifecycle
 
         protected override void OnStart()
         {
@@ -43,13 +43,147 @@ namespace My9GAG
         }
         protected override void OnSleep()
         {
-            _viewModel.SaveState(Current.Properties);
+            var clientService = _container.Resolve<IClientService>();
+            clientService.SaveState(Current.Properties);
         }
         protected override void OnResume()
         {
-            // Handle when your app resumes
+
         }
 
-        private PostsPageViewModel _viewModel;
+        #endregion
+
+        #region Methods
+
+        public async void GoBack()
+        {
+            if (MainPage.Navigation.NavigationStack.Count > 1)
+            {
+                await MainPage.Navigation.PopAsync();
+            }
+        }
+        public async void GoToPostsPage(PostsPageViewModel viewModel, bool canGoBack)
+        {
+            await GoToPage(new PostsPage()
+            {
+                BindingContext = viewModel == null ? _container.Resolve<PostsPageViewModel>() : viewModel
+            }, canGoBack);
+        }
+        public async void GoToCommentsPage(CommentsPageViewModel viewModel, bool canGoBack)
+        {
+            await GoToPage(new CommentsPage()
+            {
+                BindingContext = viewModel == null ? _container.Resolve<CommentsPageViewModel>() : viewModel
+            }, canGoBack);
+        }
+        public async void GoToLoginPage(LoginPageViewModel viewModel, bool canGoBack)
+        {
+            await GoToPage(new LoginPage()
+            {
+                BindingContext = viewModel == null ? _container.Resolve<LoginPageViewModel>() : viewModel
+            }, canGoBack);
+        }
+        public async void GoToLoginWithGooglePage(LoginWithGooglePageViewModel viewModel, bool canGoBack)
+        {
+            await GoToPage(new LoginWithGooglePage()
+            {
+                BindingContext = viewModel == null ? _container.Resolve<LoginWithGooglePageViewModel>() : viewModel
+            }, canGoBack);
+        }
+        public async void GoToLoginWithFacebookPage(LoginWithFacebookPageViewModel viewModel, bool canGoBack)
+        {
+            await GoToPage(new LoginWithFacebookPage()
+            {
+                BindingContext = viewModel == null ? _container.Resolve<LoginWithFacebookPageViewModel>() : viewModel
+            }, canGoBack);
+        }
+        public async void GoToRegistrationPage(RegistrationPageViewModel viewModel, bool canGoBack)
+        {
+            await GoToPage(new RegistrationPage()
+            {
+                BindingContext = viewModel == null ? _container.Resolve<RegistrationPageViewModel>() : viewModel
+            }, canGoBack);
+        }
+
+        #endregion
+
+        #region Implementation
+
+        private void RegisterContainer()
+        {
+            var builder = new ContainerBuilder();
+
+            builder.RegisterType<My9GAGLogger>().As<ILogger>();
+            builder.RegisterType<GoogleAuthenticationService>().As<IGoogleAuthenticationService>();
+            builder.RegisterType<FacebookAuthenticationService>().As<IFacebookAuthenticationService>();
+            builder.RegisterType<ClientService>().As<IClientService>().SingleInstance();
+            builder.Register(navigator => new PageNavigator()
+            {
+                OnGoBack = GoBack,
+                OnOpenPostsPage = GoToPostsPage,
+                OnOpenCommentsPage = GoToCommentsPage,
+                OnOpenLoginPage = GoToLoginPage,
+                OnOpenLoginWithGooglePage = GoToLoginWithGooglePage,
+                OnOpenLoginWithFacebookPage = GoToLoginWithFacebookPage,
+                OnOpenRegistrationPage = GoToRegistrationPage
+            }).As<IPageNavigator>().SingleInstance();
+
+            builder.RegisterType<LoginPageViewModel>();
+            builder.RegisterType<LoginWithGooglePageViewModel>();
+            builder.RegisterType<LoginWithFacebookPageViewModel>();
+            builder.RegisterType<RegistrationPageViewModel>();
+            builder.RegisterType<PostsPageViewModel>();
+            builder.RegisterType<CommentsPageViewModel>();
+
+            _container = builder.Build();
+        }
+        private void SetupPages()
+        {
+            MainPage = new NavigationPage()
+            {
+                BarBackgroundColor = Color.Black,
+                BarTextColor = Color.White,
+                BackgroundColor = Color.Black,
+                Title = APP_NAME
+            };
+
+            MainPage.Navigation.PushAsync(new LoginPage()
+            {
+                BindingContext = _container.Resolve<LoginPageViewModel>()
+            });
+
+            var clientService = _container.Resolve<IClientService>();
+            clientService.RestoreState(Current.Properties);
+            var user = clientService.User;
+        }
+        private async Task GoToPage(ContentPage page, bool canGoBack)
+        {
+            NavigationPage.SetHasBackButton(page, canGoBack);
+            
+            if (canGoBack)
+            {
+                await MainPage.Navigation.PushAsync(page);
+            }
+            else
+            {
+                MainPage.Navigation.InsertPageBefore(page, MainPage.Navigation.NavigationStack[0]);
+                await MainPage.Navigation.PopToRootAsync();
+            }
+        }
+
+        #endregion
+
+        #region Fields
+
+        private IContainer _container;
+
+        #endregion
+
+        #region Constants
+
+        private const string APP_NAME = "My9GAG";
+        private const string USER_LOGGED_IN_KEY = "isUserLoggedIn";
+
+        #endregion
     }
 }

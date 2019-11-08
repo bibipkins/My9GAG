@@ -1,20 +1,22 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:cv="clr-namespace:CarouselView.FormsPlugin.Abstractions;assembly=CarouselView.FormsPlugin.Abstractions"
              xmlns:local="clr-namespace:My9GAG.Views"
-             x:Class="My9GAG.Views.PostsPage"
-             Title="Posts"
-             BackgroundColor="Black">
-    
+             xmlns:overlays="clr-namespace:My9GAG.Views.CustomViews.Overlays"
+             x:Class="My9GAG.Views.PostsPage"             
+             BackgroundColor="Black"
+             Title="Posts">
+
     <ContentPage.Padding>
-        <OnPlatform x:TypeArguments="Thickness"
-                    iOS="0,20,0,0"/>
+        <OnPlatform
+            x:TypeArguments="Thickness"
+            iOS="0,20,0,0" />
     </ContentPage.Padding>
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Hot"
-                     Order="Primary"
-                     Command="{Binding GetHotPostsCommand}">
+        <ToolbarItem
+            Text="Hot"
+            Order="Primary"
+            Command="{Binding GetHotPostsCommand}">
             <ToolbarItem.Icon>
                 <OnPlatform x:TypeArguments="FileImageSource">
                     <On Platform="iOS" Value="hot.png"></On>
@@ -23,9 +25,10 @@
                 </OnPlatform>
             </ToolbarItem.Icon>
         </ToolbarItem>
-        <ToolbarItem Text="Trending"
-                     Order="Primary"
-                     Command="{Binding GetTrendingPostsCommand}">
+        <ToolbarItem
+            Text="Trending"
+            Order="Primary"
+            Command="{Binding GetTrendingPostsCommand}">
             <ToolbarItem.Icon>
                 <OnPlatform x:TypeArguments="FileImageSource">
                     <On Platform="iOS" Value="trending.png"></On>
@@ -34,9 +37,10 @@
                 </OnPlatform>
             </ToolbarItem.Icon>
         </ToolbarItem>
-        <ToolbarItem Text="Fresh"
-                     Order="Primary"
-                     Command="{Binding GetFreshPostsCommand}">
+        <ToolbarItem 
+            Text="Fresh"
+            Order="Primary"
+            Command="{Binding GetFreshPostsCommand}">
             <ToolbarItem.Icon>
                 <OnPlatform x:TypeArguments="FileImageSource">
                     <On Platform="iOS" Value="fresh.png"></On>
@@ -45,32 +49,34 @@
                 </OnPlatform>
             </ToolbarItem.Icon>
         </ToolbarItem>
-        <ToolbarItem Text="Download"
-                     Order="Secondary"
-                     Command="{Binding DownloadCommand}"/>
-        <ToolbarItem Text="Comments"
-                     Order="Secondary"
-                     Command="{Binding CommentsCommand}"/>
-        <ToolbarItem Text="Log in"
-                     Order="Secondary"
-                     Command="{Binding RelogInCommand}"/>
+        <ToolbarItem
+            Text="Open in browser"
+            Order="Secondary"
+            Command="{Binding OpenInBrowserCommand}" />
+        <ToolbarItem
+            Text="Download"
+            Order="Secondary"
+            Command="{Binding DownloadCommand}" />
+        <ToolbarItem
+            Text="Comments"
+            Order="Secondary"
+            Command="{Binding CommentsCommand}" />
+        <ToolbarItem
+            Text="Log in"
+            Order="Secondary"
+            Command="{Binding RelogInCommand}" />
     </ContentPage.ToolbarItems>
-    
-    <AbsoluteLayout HorizontalOptions="FillAndExpand"
-                    VerticalOptions="FillAndExpand">
-        <cv:CarouselViewControl x:Name="carousel"
-                                AbsoluteLayout.LayoutBounds="0,0,1,1"
-                                AbsoluteLayout.LayoutFlags="All"
-                                ItemsSource="{Binding Posts}"
-                                Position="{Binding Position}"
-                                HorizontalOptions="FillAndExpand"
-                                VerticalOptions="FillAndExpand"
-                                AnimateTransition="True"
-                                ShowIndicators="False"
-                                BackgroundColor="Black"
-                                InterPageSpacing="0"
-                                Orientation="Horizontal">
-            <cv:CarouselViewControl.ItemTemplate>
+
+    <AbsoluteLayout
+        HorizontalOptions="FillAndExpand"
+        VerticalOptions="FillAndExpand">
+        <CarouselView
+            AbsoluteLayout.LayoutBounds="0,0,1,1"
+            AbsoluteLayout.LayoutFlags="All"
+            HorizontalOptions="FillAndExpand"
+            VerticalOptions="FillAndExpand"
+            ItemsSource="{Binding Posts}">
+            <CarouselView.ItemTemplate>
                 <DataTemplate>
                     <ContentView>
                         <Grid>
@@ -80,21 +86,25 @@
                                 <RowDefinition Height="40"/>
                             </Grid.RowDefinitions>
 
-                            <Label Text="{Binding Title}"
-                                   Margin="5"
-                                   VerticalOptions="Center"
-                                   HorizontalOptions="Center"
-                                   VerticalTextAlignment="Center"
-                                   HorizontalTextAlignment="Center"
-                                   TextColor="White"/>
-                            <ContentView x:Name="mediaView"
-                                         Content="{Binding PostMedia.View}"
-                                         Grid.Row="1"/>
-                            <StackLayout Orientation="Horizontal"
-                                         Grid.Row="2"
-                                         VerticalOptions="Center"
-                                         Padding="10,5,0,5">
-                                <Image VerticalOptions="Center">
+                            <Label
+                                Text="{Binding Title}"
+                                Margin="5"
+                                VerticalOptions="Center"
+                                HorizontalOptions="Center"
+                                VerticalTextAlignment="Center"
+                                HorizontalTextAlignment="Center"
+                                TextColor="White" />
+                            <ContentView
+                                Grid.Row="1"
+                                Content="{Binding PostMedia.View}" />
+                            <StackLayout
+                                Orientation="Horizontal"
+                                Grid.Row="2"
+                                VerticalOptions="Center"
+                                Padding="10,5,0,5">
+                                <Image
+                                    VerticalOptions="Center"
+                                    WidthRequest="20">
                                     <Image.Source>
                                         <OnPlatform x:TypeArguments="ImageSource">
                                             <On Platform="iOS" Value="likes.png"></On>
@@ -103,12 +113,16 @@
                                         </OnPlatform>
                                     </Image.Source>
                                 </Image>
-                                <Label Text="{Binding UpvoteCount}"
-                                       VerticalTextAlignment="Center"
-                                       HorizontalTextAlignment="Start"
-                                       Margin="2,0,5,0"
-                                       TextColor="White"/>
-                                <Image VerticalOptions="Center">
+                                <Label
+                                    Text="{Binding UpvoteCount}"
+                                    VerticalOptions="Center"
+                                    VerticalTextAlignment="Center"
+                                    HorizontalTextAlignment="Start"
+                                    Margin="2,0,5,0"
+                                    TextColor="White" />
+                                <Image
+                                    VerticalOptions="Center"
+                                    WidthRequest="20">
                                     <Image.Source>
                                         <OnPlatform x:TypeArguments="ImageSource">
                                             <On Platform="iOS" Value="comments.png"></On>
@@ -117,99 +131,30 @@
                                         </OnPlatform>
                                     </Image.Source>
                                 </Image>
-                                <Label Text="{Binding CommentCount}"
-                                       VerticalTextAlignment="Center"
-                                       HorizontalTextAlignment="Start"
-                                       Margin="2,0,5,0"
-                                       TextColor="White"/>
+                                <Label
+                                    Text="{Binding CommentsCount}"
+                                    VerticalOptions="Center"
+                                    VerticalTextAlignment="Center"
+                                    HorizontalTextAlignment="Start"
+                                    Margin="2,0,5,0"
+                                    TextColor="White" />
                             </StackLayout>
                         </Grid>
                     </ContentView>
                 </DataTemplate>
-            </cv:CarouselViewControl.ItemTemplate>
-        </cv:CarouselViewControl>
+            </CarouselView.ItemTemplate>
+        </CarouselView>
+        
+        <overlays:WorkIndicationOverlay
+            AbsoluteLayout.LayoutBounds="0,0,1,1"
+            AbsoluteLayout.LayoutFlags="All"
+            IsVisible="{Binding IsWorkIndicationVisible}"
+            Text="{Binding WorkIndicationText}" />
 
-        <AbsoluteLayout x:Name="loginOverlay"
-                        AbsoluteLayout.LayoutBounds="0,0,1,1"
-                        AbsoluteLayout.LayoutFlags="All"
-                        BackgroundColor="Black"
-                        Opacity="0.9"
-                        IsVisible="{Binding IsNotLoggedIn}">
-            <Grid AbsoluteLayout.LayoutBounds="0.5,0.5,0.8,0.8"
-                  AbsoluteLayout.LayoutFlags="All"
-                  BackgroundColor="White"
-                  VerticalOptions="CenterAndExpand"
-                  Padding="30,50">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="50"/>
-                    <RowDefinition Height="50"/>
-                    <RowDefinition Height="50"/>
-                    <RowDefinition Height="50"/>
-                </Grid.RowDefinitions>
-
-                <Entry Text="{Binding UserName}"
-                       Placeholder="Login"
-                       Keyboard="Email"
-                       BackgroundColor="White"
-                       TextColor="Black"
-                       IsSpellCheckEnabled="False"
-                       HorizontalTextAlignment="Center"/>
-                <Entry Text="{Binding Password}"
-                       Placeholder="Password"
-                       BackgroundColor="White"
-                       TextColor="Black"
-                       IsSpellCheckEnabled="False"
-                       HorizontalTextAlignment="Center"
-                       Grid.Row="1"
-                       IsPassword="True"/>
-
-                <Label Text="{Binding LogInErrorMessage}"
-                       TextColor="Red"
-                       VerticalOptions="CenterAndExpand"
-                       HorizontalOptions="CenterAndExpand"
-                       VerticalTextAlignment="Center"
-                       HorizontalTextAlignment="Center"
-                       Grid.Row="2"/>
-                <Button Text="Submit"
-                        BackgroundColor="Black"
-                        TextColor="White"
-                        Grid.Row="3"
-                        Command="{Binding LogInCommand}"/>
-            </Grid>
-        </AbsoluteLayout>
-
-        <ContentView x:Name="workingOverlay"
-                     AbsoluteLayout.LayoutBounds="0,0,1,1"
-                     AbsoluteLayout.LayoutFlags="All"
-                     BackgroundColor="Black"
-                     Opacity="0.8"
-                     IsVisible="{Binding IsWorkIndicationVisible}">
-            <StackLayout Orientation="Vertical"
-                         VerticalOptions="CenterAndExpand">
-                <ActivityIndicator VerticalOptions="Center"
-                                   IsRunning="{Binding IsWorkIndicationVisible}"
-                                   Color="White"/>
-                <Label Text="{Binding WorkIndicationText}"
-                       VerticalOptions="Center"
-                       VerticalTextAlignment="Center"
-                       HorizontalTextAlignment="Center"
-                       TextColor="White"
-                       FontSize="Large"
-                       Margin="0,10,0,0"/>
-            </StackLayout>            
-        </ContentView>
-
-        <ContentView x:Name="messageOverlay"
-                     AbsoluteLayout.LayoutBounds="0,0,1,1"
-                     AbsoluteLayout.LayoutFlags="All"
-                     BackgroundColor="Black"
-                     Opacity="0.8"
-                     IsVisible="{Binding IsMessageVisible}">
-            <Label Text="{Binding MessageText}"
-                   VerticalTextAlignment="Center"
-                   HorizontalTextAlignment="Center"
-                   TextColor="Red"
-                   FontSize="Large"/>
-        </ContentView>
+        <overlays:MessageOverlay
+            AbsoluteLayout.LayoutBounds="0,0,1,1"
+            AbsoluteLayout.LayoutFlags="All"
+            IsVisible="{Binding IsMessageVisible}"
+            Text="{Binding MessageText}" />
     </AbsoluteLayout>
 </ContentPage>

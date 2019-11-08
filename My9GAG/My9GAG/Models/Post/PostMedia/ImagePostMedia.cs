@@ -1,7 +1,7 @@
-﻿using My9GAG.Views;
+﻿using My9GAG.Views.CustomViews;
 using Xamarin.Forms;
 
-namespace My9GAG.Models
+namespace My9GAG.Models.Post.Media
 {
     public class ImagePostMedia : IPostMedia
     {
@@ -39,24 +39,25 @@ namespace My9GAG.Models
 
         #region Methods
 
-        public void Pause()
-        {
-
-        }
-        public void Reload()
-        {
-            View = new ZoomableImage()
-            {
-                Source = Url
-            };
-        }
         public void Start()
         {
-
+            // No implementation
         }
         public void Stop()
         {
-
+            // No implementation
+        }
+        public void Pause()
+        {
+            // No implementation
+        }
+        public void Reload()
+        {
+            (View as ZoomableImage).Source = Url;
+        }
+        public void Unload()
+        {
+            (View as ZoomableImage).Source = null;
         }
 
         #endregion

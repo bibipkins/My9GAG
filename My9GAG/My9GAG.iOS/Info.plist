@@ -33,6 +33,6 @@
 	<key>CFBundleName</key>
 	<string>My9GAG</string>
 	<key>XSAppIconAssets</key>
-	<string>Assets.xcassets/AppIcon.appiconset</string>
+	<string>Resources/Assets.xcassets/AppIcons.appiconset</string>
 </dict>
 </plist>

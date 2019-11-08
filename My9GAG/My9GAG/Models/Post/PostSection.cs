@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace My9GAG.Models
+namespace My9GAG.Models.Post
 {
     public class PostSection
     {

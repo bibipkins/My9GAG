@@ -1,5 +1,9 @@
-﻿using My9GAG.Logic;
-using My9GAG.Models;
+﻿using My9GAG.Logic.Client;
+using My9GAG.Logic.DownloadManager;
+using My9GAG.Logic.PageNavigator;
+using My9GAG.Models.Comment;
+using My9GAG.Models.Post;
+using My9GAG.Models.Request;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -7,6 +11,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
+using Xamarin.Essentials;
 
 namespace My9GAG.ViewModels
 {
@@ -14,191 +19,17 @@ namespace My9GAG.ViewModels
     {
         #region Constructors
 
-        public PostsPageViewModel()
+        public PostsPageViewModel(IClientService clientService, IPageNavigator pageNavigator)
         {
-            _my9GAGClient = new Client();
+            _clientService = clientService;
+            _pageNavigator = pageNavigator;
             _currentCategory = PostCategory.Hot;
+
             Posts = new ObservableCollection<Post>();
+
             InitCommands();
-        }
 
-        #endregion
-
-        #region Events
-
-        public EventHandler<CommentsPageViewModel> OnOpenCommentsPage;
-
-        #endregion
-
-        #region Methods
-
-        public async Task LoginAsync()
-        {
-            StartWorkIndication(ViewModelConstants.LOGIN_MESSAGE);
-
-            await Task.Run(async () =>
-            {
-                var requestStatus = await _my9GAGClient.LoginAsync(_userName, _password);
-
-                StopWorkIndication();
-                IsNotLoggedIn = !requestStatus.IsSuccessful;
-                LogInErrorMessage = requestStatus.Message;
-
-                await Task.Delay(1000);
-
-                if (requestStatus.IsSuccessful && Posts.Count == 0)
-                {
-                    await GetPostsAsync(_currentCategory);
-                }
-            });
-
-            StopWorkIndication();
-        }
-        public async Task GetPostsAsync(PostCategory postCategory)
-        {
-            switch (postCategory)
-            {
-                case PostCategory.Hot:
-                    StartWorkIndication(ViewModelConstants.LOADING_HOT_MESSAGE);
-                    break;
-                case PostCategory.Trending:
-                    StartWorkIndication(ViewModelConstants.LOADING_TRENDING_MESSAGE);
-                    break;
-                case PostCategory.Vote:
-                    StartWorkIndication(ViewModelConstants.LOADING_FRESH_MESSAGE);
-                    break;
-            }
-
-            await Task.Run(async () =>
-            {
-                RequestStatus requestStatus = await _my9GAGClient.GetPostsAsync(postCategory, NUMBER_OF_POSTS);
-
-                if (requestStatus != null && requestStatus.IsSuccessful)
-                {
-                    var loadedPosts = new ObservableCollection<Post>(_my9GAGClient.Posts);
-                    _currentCategory = postCategory;
-
-                    Device.BeginInvokeOnMainThread(() =>
-                    {
-                        Position = 0;
-                        Posts = loadedPosts;
-                    });
-
-                    if (Posts.Count > 0 && Posts[0].Type == PostType.Animated)
-                    {
-                        Posts[0].PostMedia.Reload();
-                    }
-
-                    await Task.Delay(1500);
-                }
-                else
-                {
-                    StopWorkIndication();
-                    string message = requestStatus == null ? ViewModelConstants.REQUEST_FAILED_MESSAGE : requestStatus.Message;
-                    ShowMessage(message, ViewModelConstants.MESSAGE_DELAY);
-                }
-            });
-
-            StopWorkIndication();
-        }
-        public async Task GetMorePostsAsync()
-        {
-            if (Posts.Count < 1)
-            {
-                ShowMessage(ViewModelConstants.EMPTY_POST_LIST_MESSAGE, ViewModelConstants.MESSAGE_DELAY);
-                return;
-            }
-
-            await Task.Run(async () =>
-            {
-                RequestStatus requestStatus = await _my9GAGClient.GetPostsAsync(_currentCategory, NUMBER_OF_POSTS, Posts[Posts.Count - 1].Id);
-                
-                if (requestStatus != null && requestStatus.IsSuccessful)
-                {
-                    var loadedPosts = new ObservableCollection<Post>(_my9GAGClient.Posts);
-
-                    Device.BeginInvokeOnMainThread(() =>
-                    {
-                        foreach (var post in loadedPosts)
-                        {
-                            Posts.Add(post);
-                        }
-                    });
-                }
-                else
-                {
-                    string message = requestStatus == null ? ViewModelConstants.REQUEST_FAILED_MESSAGE : requestStatus.Message;
-                    ShowMessage(message, ViewModelConstants.MESSAGE_DELAY);
-                }
-            });
-        }
-        public async Task GetCommentsAsync()
-        {
-            StartWorkIndication("Getting comments");
-
-            await Task.Run(async () =>
-            {
-                Debug.WriteLine("Started GetComments");
-                uint count = (uint)Posts[Position].CommentCount;
-                string postUrl = Posts[Position].Url;
-                RequestStatus requestStatus = await _my9GAGClient.GetCommentsAsync(postUrl, count);
-
-                if (requestStatus != null && requestStatus.IsSuccessful)
-                {
-                    var viewModel = new CommentsPageViewModel(_my9GAGClient.Comments)
-                    {
-                        Title = Posts[Position].Title
-                    };
-                    OnOpenCommentsPage(this, viewModel);
-                }
-                else
-                {
-                    ShowMessage(requestStatus.Message, ViewModelConstants.MESSAGE_DELAY);
-                }
-
-                StopWorkIndication();
-                Debug.WriteLine("Finished GetComments");
-                return false;
-            });
-        }
-
-        public void DownloadCurrentPost()
-        {
-            Device.StartTimer(TimeSpan.FromMilliseconds(10), () =>
-            {
-                if (Posts == null || Posts.Count <= Position)
-                    return false;
-
-                string url = Posts[Position].PostMedia.Url;
-                string fileName = GetPostFileName(Posts[Position]);
-
-                var downloadManager = DependencyService.Get<IDownloadManager>();
-
-                try
-                {
-                    downloadManager.DownloadFile(url, fileName);
-                }
-                catch (Exception e)
-                {
-                    ShowMessage(e.Message, ViewModelConstants.MESSAGE_DELAY);
-                }
-
-                return false;
-            });
-        }
-        public void SaveState(IDictionary<string, object> dictionary)
-        {
-            dictionary["isNotLoggedIn"] = IsNotLoggedIn;
-            dictionary["userName"] = UserName;
-            dictionary["password"] = Password;
-        }
-        public void RestoreState(IDictionary<string, object> dictionary)
-        {
-            IsNotLoggedIn = GetDictionaryEntry(dictionary, "isNotLoggedIn", true);
-            UserName = GetDictionaryEntry(dictionary, "userName", "");
-            Password = GetDictionaryEntry(dictionary, "password", "");
-
-            LoginAsync();
+            GetPostsAsync(_currentCategory);
         }
 
         #endregion
@@ -208,7 +39,7 @@ namespace My9GAG.ViewModels
         public ObservableCollection<Post> Posts
         {
             get { return _posts; }
-            private set { SetProperty<ObservableCollection<Post>>(ref _posts, value); }
+            private set { SetProperty(ref _posts, value); Debug.WriteLine(""); Debug.WriteLine("NUMBER OF POSTS: " + _posts.Count); }
         }
         public bool IsNotLoggedIn
         {
@@ -246,21 +77,14 @@ namespace My9GAG.ViewModels
             {
                 if (SetProperty(ref _position, value))
                 {
+                    Debug.WriteLine($"Position: {value}, Count: {Posts.Count}");
+
                     if (Posts.Count > _lastPosition && _lastPosition >= 0)
                     {
-                        Posts[_lastPosition].PostMedia.Stop();
+                        Posts[_lastPosition].PostMedia.Pause();
                     }
 
                     _lastPosition = value;
-
-                    if (value >= 0 && value < Posts.Count && Posts[value].Type == PostType.Animated)
-                    {
-                        Device.StartTimer(TimeSpan.FromMilliseconds(10), () =>
-                        {
-                            Posts[value].PostMedia.Reload();
-                            return false;
-                        });
-                    }
 
                     if (Posts.Count > 0 && value > 0 && value >= Posts.Count - NUMBER_OF_POSTS_BEFORE_LOADING_MORE)
                     {
@@ -268,7 +92,150 @@ namespace My9GAG.ViewModels
                     }
                 }
             }
-        }        
+        }
+
+        #endregion
+
+        #region Methods
+
+        public async Task GetPostsAsync(PostCategory postCategory)
+        {
+            switch (postCategory)
+            {
+                case PostCategory.Hot:
+                    StartWorkIndication(ViewModelConstants.LOADING_HOT_MESSAGE);
+                    break;
+                case PostCategory.Trending:
+                    StartWorkIndication(ViewModelConstants.LOADING_TRENDING_MESSAGE);
+                    break;
+                case PostCategory.Vote:
+                    StartWorkIndication(ViewModelConstants.LOADING_FRESH_MESSAGE);
+                    break;
+            }
+
+            await Task.Run(async () =>
+            {
+                RequestStatus requestStatus = await _clientService.GetPostsAsync(postCategory, NUMBER_OF_POSTS);
+
+                if (requestStatus != null && requestStatus.IsSuccessful)
+                {
+                    var loadedPosts = new ObservableCollection<Post>(_clientService.Posts);
+                    _currentCategory = postCategory;
+
+                    Device.BeginInvokeOnMainThread(() =>
+                    {
+                        Position = 0;
+                        Posts = loadedPosts;
+                    });
+
+                    await Task.Delay(ViewModelConstants.GET_POSTS_DELAY);
+                }
+                else
+                {
+                    StopWorkIndication();
+                    string message = requestStatus == null ? ViewModelConstants.REQUEST_FAILED_MESSAGE : requestStatus.Message;
+                    await ShowMessage(message, ViewModelConstants.MESSAGE_DELAY);
+                }
+            });
+
+            StopWorkIndication();
+        }
+        public async Task GetMorePostsAsync()
+        {
+            if (Posts.Count < 1)
+            {
+                await ShowMessage(ViewModelConstants.EMPTY_POST_LIST_MESSAGE, ViewModelConstants.MESSAGE_DELAY);
+                return;
+            }
+
+            await Task.Run(async () =>
+            {
+                RequestStatus requestStatus = await _clientService.GetPostsAsync(_currentCategory, NUMBER_OF_POSTS, Posts[Posts.Count - 1].Id);
+                
+                if (requestStatus != null && requestStatus.IsSuccessful)
+                {
+                    var loadedPosts = new ObservableCollection<Post>(_clientService.Posts);
+
+                    Device.BeginInvokeOnMainThread(() =>
+                    {
+                        foreach (var post in loadedPosts)
+                        {
+                            Posts.Add(post);
+                        }
+                    });
+                }
+                else
+                {
+                    string message = requestStatus == null ? ViewModelConstants.REQUEST_FAILED_MESSAGE : requestStatus.Message;
+                    await ShowMessage(message, ViewModelConstants.MESSAGE_DELAY);
+                }
+            });
+        }
+        public async Task GetCommentsAsync()
+        {
+            StartWorkIndication(ViewModelConstants.LOADING_COMMENTS);
+
+            await Task.Run(async () =>
+            {
+                uint count = (uint)Posts[Position].CommentsCount;
+                string postUrl = Posts[Position].Url;
+                RequestStatus requestStatus = await this._clientService.GetCommentsAsync(postUrl, count);
+
+                if (requestStatus != null && requestStatus.IsSuccessful)
+                {
+                    var viewModel = new CommentsPageViewModel()
+                    {
+                        Title = Posts[Position].Title,
+                        Comments = new ObservableCollection<Comment>(_clientService.Comments)
+                    };
+
+                    _pageNavigator.GoToCommentsPage(viewModel);
+                }
+                else
+                {
+                    await ShowMessage(requestStatus.Message, ViewModelConstants.MESSAGE_DELAY);
+                }
+            });
+
+            StopWorkIndication();
+        }
+
+        public void DownloadCurrentPost()
+        {
+            Device.StartTimer(TimeSpan.FromMilliseconds(10), () =>
+            {
+                if (Posts == null || Posts.Count <= Position)
+                    return false;
+
+                string url = Posts[Position].PostMedia.Url;
+                string fileName = GetPostFileName(Posts[Position]);
+
+                var downloadManager = DependencyService.Get<IDownloadManager>();
+
+                try
+                {
+                    downloadManager.DownloadFile(url, fileName);
+                }
+                catch (Exception e)
+                {
+                    ShowMessage(e.Message, ViewModelConstants.MESSAGE_DELAY);
+                }
+
+                return false;
+            });
+        }
+        public void SaveState(IDictionary<string, object> dictionary)
+        {
+            dictionary["isNotLoggedIn"] = IsNotLoggedIn;
+            dictionary["userName"] = UserName;
+            dictionary["password"] = Password;
+        }
+        public void RestoreState(IDictionary<string, object> dictionary)
+        {
+            IsNotLoggedIn = GetDictionaryEntry(dictionary, "isNotLoggedIn", true);
+            UserName = GetDictionaryEntry(dictionary, "userName", "");
+            Password = GetDictionaryEntry(dictionary, "password", "");
+        }
 
         #endregion
 
@@ -294,7 +261,8 @@ namespace My9GAG.ViewModels
             get;
             protected set;
         }
-        public ICommand SearchCommand
+
+        public ICommand OpenInBrowserCommand
         {
             get;
             protected set;
@@ -314,6 +282,11 @@ namespace My9GAG.ViewModels
             get;
             protected set;
         }
+        public ICommand PositionChangedCommand
+        {
+            get;
+            protected set;
+        }
 
         #endregion
 
@@ -322,7 +295,7 @@ namespace My9GAG.ViewModels
         protected void InitCommands()
         {
             LogInCommand = new Command(
-                () => { LoginAsync(); });
+                () => {  });
             GetHotPostsCommand = new Command(
                 () => { GetPostsAsync(PostCategory.Hot); }, 
                 () => { return !IsNotLoggedIn && !IsWorkIndicationVisible; });
@@ -331,6 +304,9 @@ namespace My9GAG.ViewModels
                 () => { return !IsNotLoggedIn && !IsWorkIndicationVisible; });
             GetFreshPostsCommand = new Command(
                 () => { GetPostsAsync(PostCategory.Vote); }, 
+                () => { return !IsNotLoggedIn && !IsWorkIndicationVisible; });
+            OpenInBrowserCommand = new Command(
+                () => { Launcher.OpenAsync(new Uri(Posts[Position].Url)); },
                 () => { return !IsNotLoggedIn && !IsWorkIndicationVisible; });
             DownloadCommand = new Command(
                 () => { DownloadCurrentPost(); },
@@ -348,6 +324,7 @@ namespace My9GAG.ViewModels
                 GetHotPostsCommand,
                 GetTrendingPostsCommand,
                 GetFreshPostsCommand,
+                OpenInBrowserCommand,
                 DownloadCommand,
                 CommentsCommand,
                 RelogInCommand
@@ -387,24 +364,27 @@ namespace My9GAG.ViewModels
 
         #region Fields
 
-        private Client _my9GAGClient;
+        private IClientService _clientService;
+        private IPageNavigator _pageNavigator;
+        private PostCategory _currentCategory;
+        private ObservableCollection<Post> _posts;
+
         private bool _isNotLoggedIn;
         private string _logInErrorMessage;
         private string _userName;
         private string _password;
         private int _position = 0;
         private int _lastPosition = 0;
+        private int _startPosition = 0;
+        private int _endPosition = 0;
         private List<ICommand> _commands;
-
-        private PostCategory _currentCategory;
-        private ObservableCollection<Post> _posts;
 
         #endregion
 
         #region Constants
 
-        private const uint NUMBER_OF_POSTS = 10;
-        private const int NUMBER_OF_POSTS_BEFORE_LOADING_MORE = 5;
+        private const int NUMBER_OF_POSTS = 20;
+        private const int NUMBER_OF_POSTS_BEFORE_LOADING_MORE = 10;
 
         #endregion
     }

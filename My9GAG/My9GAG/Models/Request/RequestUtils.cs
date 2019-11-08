@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace My9GAG.Models
+namespace My9GAG.Models.Request
 {
     public static class RequestUtils
     {
@@ -18,18 +19,52 @@ namespace My9GAG.Models
         }
         public static string GetSha1(string data)
         {
-            using (var sha1 = new SHA1Managed())
-                return (BitConverter.ToString(sha1.ComputeHash(Encoding.UTF8.GetBytes(data)))).Replace("-", String.Empty).ToLower();
+            if (!String.IsNullOrEmpty(data))
+            {
+                using (var sha1 = new SHA1Managed())
+                    return (BitConverter.ToString(sha1.ComputeHash(Encoding.UTF8.GetBytes(data)))).Replace("-", String.Empty).ToLower();
+            }
+            else
+            {
+                return "";
+            }
         }
         public static string GetMd5(string data)
         {
-            using (var md5 = new MD5CryptoServiceProvider())
-                return (BitConverter.ToString(md5.ComputeHash(Encoding.UTF8.GetBytes(data)))).Replace("-", String.Empty).ToLower();
+            if (!String.IsNullOrEmpty(data))
+            {
+                using (var md5 = new MD5CryptoServiceProvider())
+                    return (BitConverter.ToString(md5.ComputeHash(Encoding.UTF8.GetBytes(data)))).Replace("-", String.Empty).ToLower();
+            }
+            else
+            {
+                return "";
+            }
         }
         public static string GetSignature(string timestamp, string appId, string deviceUuid)
         {
             string data = String.Format("*{0}_._{1}._.{2}9GAG", timestamp, appId, deviceUuid);
             return GetSha1(data);
+        }
+        public static string ExtractValueFromUrl(string url, string key)
+        {
+            string value = string.Empty;
+            char attributeDivider = '&';
+            char keyValueDivider = '=';
+            string fullKey = key + keyValueDivider;
+
+            if (url.Contains(fullKey))
+            {
+                var attributes = url.Split(attributeDivider);
+                var keyValuePair = attributes.FirstOrDefault(s => s.Contains(fullKey)).Split(keyValueDivider);
+
+                if (keyValuePair.Length > 1)
+                {
+                    value = keyValuePair[1];
+                }
+            }
+
+            return value;
         }
 
         #endregion

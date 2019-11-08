@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Net;
 
-namespace My9GAG.Models
+namespace My9GAG.Models.Comment
 {
     public class Comment
     {
@@ -19,12 +19,14 @@ namespace My9GAG.Models
             get;
             set;
         }
-        public int LikeCount
+        [JsonProperty(PropertyName = "likeCount")]
+        public int LikesCount
         {
             get;
             set;
         }
-        public int DislikeCount
+        [JsonProperty(PropertyName = "dislikeCount")]
+        public int DislikesCount
         {
             get;
             set;
@@ -34,7 +36,7 @@ namespace My9GAG.Models
             get;
             set;
         }
-        public User User
+        public User.User User
         {
             get;
             set;
@@ -44,10 +46,26 @@ namespace My9GAG.Models
             get;
             set;
         }
+
+        [JsonProperty(PropertyName = "mediaText")]
         public string Text
         {
             get { return _text; }
             set { _text = WebUtility.HtmlDecode(value); }
+        }
+        public bool IsTextVisible
+        {
+            get { return !string.IsNullOrEmpty(Text); }
+        }
+
+        public string MediaUrl
+        {
+            get;
+            set;
+        }
+        public bool IsMediaPresent
+        {
+            get { return !string.IsNullOrEmpty(MediaUrl); }
         }
 
         #endregion

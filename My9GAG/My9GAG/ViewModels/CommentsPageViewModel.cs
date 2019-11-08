@@ -1,5 +1,5 @@
-﻿using My9GAG.Models;
-using System.Collections.Generic;
+﻿using My9GAG.Logic.Client;
+using My9GAG.Models.Comment;
 using System.Collections.ObjectModel;
 
 namespace My9GAG.ViewModels
@@ -8,9 +8,9 @@ namespace My9GAG.ViewModels
     {
         #region Constructor
 
-        public CommentsPageViewModel(IEnumerable<Comment> comments)
+        public CommentsPageViewModel()
         {
-            Comments = new ObservableCollection<Comment>(comments);
+            Comments = new ObservableCollection<Comment>();
         }
 
         #endregion
@@ -24,14 +24,8 @@ namespace My9GAG.ViewModels
         }
         public ObservableCollection<Comment> Comments
         {
-            get
-            {
-                return _comments;
-            }
-            private set
-            {
-                SetProperty(ref _comments, value);
-            }
+            get { return _comments; }
+            set { SetProperty(ref _comments, value); }
         }
 
         #endregion

@@ -1,7 +1,8 @@
-﻿using Newtonsoft.Json;
+﻿using My9GAG.Models.Post.Media;
+using Newtonsoft.Json;
 using System.Net;
 
-namespace My9GAG.Models
+namespace My9GAG.Models.Post
 {
     public class Post
     {
@@ -32,7 +33,7 @@ namespace My9GAG.Models
             get;
             set;
         }
-        public int CommentCount
+        public int CommentsCount
         {
             get;
             set;
@@ -67,7 +68,7 @@ namespace My9GAG.Models
         public override string ToString()
         {
             return $"{Id}, {Title}, URL: {Url}, MediaURL: {PostMedia?.Url}, " +
-                $"CommentsCount: {CommentCount}, UpvoteCount: {UpvoteCount}, " +
+                $"CommentsCount: {CommentsCount}, UpvoteCount: {UpvoteCount}, " +
                 $"DownvoteCount: {DownvoteCount}, Type: {Type.ToString()}, NSFW: {IsNsfw}, " +
                 $"Section: {Section?.Name}";
         }
