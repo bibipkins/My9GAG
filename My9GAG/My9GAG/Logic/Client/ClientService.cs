@@ -204,8 +204,8 @@ namespace My9GAG.Logic.Client
 
                         foreach (var item in comments)
                         {
-                            Comment comment = item.ToObject<Comment>();    
-                            comment.MediaUrl = (item.SelectToken("media.[0].imageMetaByType.image.url") ?? string.Empty).ToString();
+                            Comment comment = item.ToObject<Comment>();
+                            comment.MediaUrl = GetUrlFromJsonComment(item);
                             Comments.Add(comment);
                         }
 
@@ -236,6 +236,16 @@ namespace My9GAG.Logic.Client
         #endregion
 
         #region Implementation
+
+        protected T GetDictionaryEntry<T>(IDictionary<string, object> dictionary, string key, T defaultValue)
+        {
+            if (dictionary.ContainsKey(key))
+            {
+                return (T)dictionary[key];
+            }
+
+            return defaultValue;
+        }
 
         private HttpWebRequest FormRequest(string api, string path, Dictionary<string, string> args)
         {
@@ -366,14 +376,14 @@ namespace My9GAG.Logic.Client
 
             return loginStatus;
         }
-        protected T GetDictionaryEntry<T>(IDictionary<string, object> dictionary, string key, T defaultValue)
+        private string GetUrlFromJsonComment(JToken token)
         {
-            if (dictionary.ContainsKey(key))
-            {
-                return (T)dictionary[key];
-            }
+            var urlToken = 
+                token.SelectToken("media.[0].imageMetaByType.animated.url") ??
+                token.SelectToken("media.[0].imageMetaByType.image.url") ??
+                string.Empty;
 
-            return defaultValue;
+            return urlToken.ToString();
         }
 
         #endregion

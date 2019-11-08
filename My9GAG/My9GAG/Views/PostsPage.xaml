@@ -8,13 +8,15 @@
              Title="Posts">
 
     <ContentPage.Padding>
-        <OnPlatform x:TypeArguments="Thickness"
-                    iOS="0,20,0,0"/>
+        <OnPlatform 
+            x:TypeArguments="Thickness"
+            iOS="0,20,0,0"/>
     </ContentPage.Padding>
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Hot"
-                     Order="Primary"
-                     Command="{Binding GetHotPostsCommand}">
+        <ToolbarItem 
+            Text="Hot"
+            Order="Primary"
+            Command="{Binding GetHotPostsCommand}">
             <ToolbarItem.Icon>
                 <OnPlatform x:TypeArguments="FileImageSource">
                     <On Platform="iOS" Value="hot.png"></On>
@@ -23,9 +25,10 @@
                 </OnPlatform>
             </ToolbarItem.Icon>
         </ToolbarItem>
-        <ToolbarItem Text="Trending"
-                     Order="Primary"
-                     Command="{Binding GetTrendingPostsCommand}">
+        <ToolbarItem 
+            Text="Trending"
+            Order="Primary"
+            Command="{Binding GetTrendingPostsCommand}">
             <ToolbarItem.Icon>
                 <OnPlatform x:TypeArguments="FileImageSource">
                     <On Platform="iOS" Value="trending.png"></On>
@@ -34,9 +37,10 @@
                 </OnPlatform>
             </ToolbarItem.Icon>
         </ToolbarItem>
-        <ToolbarItem Text="Fresh"
-                     Order="Primary"
-                     Command="{Binding GetFreshPostsCommand}">
+        <ToolbarItem 
+            Text="Fresh"
+            Order="Primary"
+            Command="{Binding GetFreshPostsCommand}">
             <ToolbarItem.Icon>
                 <OnPlatform x:TypeArguments="FileImageSource">
                     <On Platform="iOS" Value="fresh.png"></On>
@@ -45,19 +49,23 @@
                 </OnPlatform>
             </ToolbarItem.Icon>
         </ToolbarItem>
-        <ToolbarItem Text="Download"
-                     Order="Secondary"
-                     Command="{Binding DownloadCommand}"/>
-        <ToolbarItem Text="Comments"
-                     Order="Secondary"
-                     Command="{Binding CommentsCommand}"/>
-        <ToolbarItem Text="Log in"
-                     Order="Secondary"
-                     Command="{Binding RelogInCommand}"/>
+        <ToolbarItem 
+            Text="Download"
+            Order="Secondary"
+            Command="{Binding DownloadCommand}"/>
+        <ToolbarItem 
+            Text="Comments"
+            Order="Secondary"
+            Command="{Binding CommentsCommand}"/>
+        <ToolbarItem 
+            Text="Log in"
+            Order="Secondary"
+            Command="{Binding RelogInCommand}"/>
     </ContentPage.ToolbarItems>
 
-    <AbsoluteLayout HorizontalOptions="FillAndExpand"
-                    VerticalOptions="FillAndExpand">
+    <AbsoluteLayout 
+        HorizontalOptions="FillAndExpand"
+        VerticalOptions="FillAndExpand">
         <CarouselView
             AbsoluteLayout.LayoutBounds="0,0,1,1"
             AbsoluteLayout.LayoutFlags="All"
@@ -74,20 +82,25 @@
                                 <RowDefinition Height="40"/>
                             </Grid.RowDefinitions>
 
-                            <Label Text="{Binding Title}"
-                                   Margin="5"
-                                   VerticalOptions="Center"
-                                   HorizontalOptions="Center"
-                                   VerticalTextAlignment="Center"
-                                   HorizontalTextAlignment="Center"
-                                   TextColor="White"/>
-                            <ContentView Content="{Binding PostMedia.View}"
-                                         Grid.Row="1"/>
-                            <StackLayout Orientation="Horizontal"
-                                         Grid.Row="2"
-                                         VerticalOptions="Center"
-                                         Padding="10,5,0,5">
-                                <Image VerticalOptions="Center" BackgroundColor="Yellow">
+                            <Label
+                                Text="{Binding Title}"
+                                Margin="5"
+                                VerticalOptions="Center"
+                                HorizontalOptions="Center"
+                                VerticalTextAlignment="Center"
+                                HorizontalTextAlignment="Center"
+                                TextColor="White"/>
+                            <ContentView
+                                Grid.Row="1"
+                                Content="{Binding PostMedia.View}" />
+                            <StackLayout
+                                Orientation="Horizontal"
+                                Grid.Row="2"
+                                VerticalOptions="Center"
+                                Padding="10,5,0,5">
+                                <Image
+                                    VerticalOptions="Center"
+                                    WidthRequest="20">
                                     <Image.Source>
                                         <OnPlatform x:TypeArguments="ImageSource">
                                             <On Platform="iOS" Value="likes.png"></On>
@@ -96,14 +109,16 @@
                                         </OnPlatform>
                                     </Image.Source>
                                 </Image>
-                                <Label Text="{Binding UpvoteCount}"
-                                       VerticalOptions="Center"
-                                       VerticalTextAlignment="Center"
-                                       HorizontalTextAlignment="Start"
-                                       Margin="2,0,5,0"
-                                       TextColor="White"
-                                       BackgroundColor="Red"/>
-                                <Image VerticalOptions="Center" BackgroundColor="Blue">
+                                <Label
+                                    Text="{Binding UpvoteCount}"
+                                    VerticalOptions="Center"
+                                    VerticalTextAlignment="Center"
+                                    HorizontalTextAlignment="Start"
+                                    Margin="2,0,5,0"
+                                    TextColor="White" />
+                                <Image
+                                    VerticalOptions="Center"
+                                    WidthRequest="20">
                                     <Image.Source>
                                         <OnPlatform x:TypeArguments="ImageSource">
                                             <On Platform="iOS" Value="comments.png"></On>
@@ -112,13 +127,13 @@
                                         </OnPlatform>
                                     </Image.Source>
                                 </Image>
-                                <Label Text="{Binding CommentsCount}"
-                                       VerticalOptions="Center"
-                                       VerticalTextAlignment="Center"
-                                       HorizontalTextAlignment="Start"
-                                       Margin="2,0,5,0"
-                                       TextColor="White"
-                                       BackgroundColor="Green"/>
+                                <Label
+                                    Text="{Binding CommentsCount}"
+                                    VerticalOptions="Center"
+                                    VerticalTextAlignment="Center"
+                                    HorizontalTextAlignment="Start"
+                                    Margin="2,0,5,0"
+                                    TextColor="White" />
                             </StackLayout>
                         </Grid>
                     </ContentView>
@@ -130,12 +145,12 @@
             AbsoluteLayout.LayoutBounds="0,0,1,1"
             AbsoluteLayout.LayoutFlags="All"
             IsVisible="{Binding IsWorkIndicationVisible}"
-            Text="{Binding WorkIndicationText}"/>
+            Text="{Binding WorkIndicationText}" />
 
         <overlays:MessageOverlay 
             AbsoluteLayout.LayoutBounds="0,0,1,1"
             AbsoluteLayout.LayoutFlags="All"
             IsVisible="{Binding IsMessageVisible}"
-            Text="{Binding MessageText}"/>
+            Text="{Binding MessageText}" />
     </AbsoluteLayout>
 </ContentPage>

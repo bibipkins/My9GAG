@@ -8,9 +8,9 @@ namespace My9GAG.Views.CustomViews
     [XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class ZoomableImage : ContentView
 	{
-		public ZoomableImage ()
+		public ZoomableImage()
 		{
-			InitializeComponent ();
+			InitializeComponent();
         }
 
         public static readonly BindableProperty SourceProperty =
@@ -18,7 +18,7 @@ namespace My9GAG.Views.CustomViews
                 Image.SourceProperty.DefaultBindingMode,
                 propertyChanged: (BindableObject bindable, object oldValue, object newValue) =>
                 {
-                    ZoomableImage zoomableImage = bindable as ZoomableImage;
+                    var zoomableImage = bindable as ZoomableImage;
 
                     if (zoomableImage == null)
                         return;
@@ -28,14 +28,8 @@ namespace My9GAG.Views.CustomViews
 
         public string Source
         {
-            get
-            {
-                return (string)GetValue(SourceProperty);
-            }
-            set
-            {
-                SetValue(SourceProperty, value);
-            }
+            get { return (string)GetValue(SourceProperty); }
+            set { SetValue(SourceProperty, value); }
         }
 
         private void OnPinchUpdated(object sender, PinchGestureUpdatedEventArgs e)

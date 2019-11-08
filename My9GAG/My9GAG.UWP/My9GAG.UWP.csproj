@@ -174,8 +174,10 @@
     <Content Include="Assets\Wide\Wide310x150Logo.scale-200.png" />
     <Content Include="Assets\Wide\Wide310x150Logo.scale-400.png" />
     <Content Include="Images\comments.scale-100.png" />
+    <Content Include="Images\comments.scale-150.png" />
     <Content Include="Images\comments.scale-200.png" />
     <Content Include="Images\comments.scale-300.png" />
+    <Content Include="Images\comments.scale-400.png" />
     <Content Include="Images\fresh.scale-100.png" />
     <Content Include="Images\fresh.scale-125.png" />
     <Content Include="Images\fresh.scale-150.png" />
@@ -187,8 +189,10 @@
     <Content Include="Images\hot.scale-200.png" />
     <Content Include="Images\hot.scale-400.png" />
     <Content Include="Images\likes.scale-100.png" />
+    <Content Include="Images\likes.scale-150.png" />
     <Content Include="Images\likes.scale-200.png" />
     <Content Include="Images\likes.scale-300.png" />
+    <Content Include="Images\likes.scale-400.png" />
     <Content Include="Images\pause.scale-100.png" />
     <Content Include="Images\pause.scale-200.png" />
     <Content Include="Images\pause.scale-300.png" />

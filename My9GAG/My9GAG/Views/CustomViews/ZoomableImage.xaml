@@ -6,10 +6,10 @@
              IsClippedToBounds="True">
     
     <ContentView.GestureRecognizers>
-        <PinchGestureRecognizer PinchUpdated="OnPinchUpdated"/>
+        <PinchGestureRecognizer PinchUpdated="OnPinchUpdated" />
     </ContentView.GestureRecognizers>
 
     <ContentView.Content>
-        <Image x:Name="image"/>
+        <Image x:Name="image" />
     </ContentView.Content>
 </ContentView>
