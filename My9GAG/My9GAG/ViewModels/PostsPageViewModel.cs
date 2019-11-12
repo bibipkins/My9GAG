@@ -8,10 +8,12 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Xamarin.Forms;
 using Xamarin.Essentials;
+using Xamarin.Forms;
 
 namespace My9GAG.ViewModels
 {
@@ -199,16 +201,18 @@ namespace My9GAG.ViewModels
 
             StopWorkIndication();
         }
-
-        public void DownloadCurrentPost()
+        public async Task DownloadCurrentPostAsync()
         {
-            Device.StartTimer(TimeSpan.FromMilliseconds(10), () =>
+            if (Posts == null || Posts.Count <= Position)
             {
-                if (Posts == null || Posts.Count <= Position)
-                    return false;
+                await ShowMessage(ViewModelConstants.DOWNLOAD_FAILED_MESSAGE, ViewModelConstants.MESSAGE_DELAY);
+                return;
+            }
 
+            await Task.Run(async () =>
+            {
                 string url = Posts[Position].PostMedia.Url;
-                string fileName = GetPostFileName(Posts[Position]);
+                string fileName = GenerateFileName(Posts[Position]);
 
                 var downloadManager = DependencyService.Get<IDownloadManager>();
 
@@ -218,11 +222,15 @@ namespace My9GAG.ViewModels
                 }
                 catch (Exception e)
                 {
-                    ShowMessage(e.Message, ViewModelConstants.MESSAGE_DELAY);
+                    await ShowMessage(e.Message, ViewModelConstants.MESSAGE_DELAY);
                 }
-
-                return false;
             });
+        }
+
+        public void RelogIn()
+        {
+            IsNotLoggedIn = true;
+            _pageNavigator.GoToLoginPage(null, true);
         }
         public void SaveState(IDictionary<string, object> dictionary)
         {
@@ -309,13 +317,13 @@ namespace My9GAG.ViewModels
                 () => { Launcher.OpenAsync(new Uri(Posts[Position].Url)); },
                 () => { return !IsNotLoggedIn && !IsWorkIndicationVisible; });
             DownloadCommand = new Command(
-                () => { DownloadCurrentPost(); },
+                () => { DownloadCurrentPostAsync(); },
                 () => { return !IsNotLoggedIn && !IsWorkIndicationVisible; });
             CommentsCommand = new Command(
                 () => { GetCommentsAsync(); },
                 () => { return !IsNotLoggedIn && !IsWorkIndicationVisible; });
             RelogInCommand = new Command(
-                () => { IsNotLoggedIn = true; },
+                () => { RelogIn(); },
                 () => { return !IsWorkIndicationVisible; });
 
             _commands = new List<ICommand>()
@@ -347,17 +355,14 @@ namespace My9GAG.ViewModels
 
             return defaultValue;
         }
-        protected string GetPostFileName(Post post)
+
+        private string GenerateFileName(Post post)
         {
-            if (post == null)
-            {
-                return String.Empty;
-            }
+            string title = post.Title.Trim().Replace(' ', '-');
+            string name = Regex.Replace(title, "[^0-9a-zA-Z]+", ""); 
+            string extention = post.PostMedia.Url.Split('.').Last();
 
-            string[] splittedUrl = post.PostMedia.Url.Split('/');
-            var result = splittedUrl[splittedUrl.Length - 1];
-
-            return result;
+            return $"{name}.{extention}";
         }
 
         #endregion
@@ -368,6 +373,7 @@ namespace My9GAG.ViewModels
         private IPageNavigator _pageNavigator;
         private PostCategory _currentCategory;
         private ObservableCollection<Post> _posts;
+        private List<ICommand> _commands;
 
         private bool _isNotLoggedIn;
         private string _logInErrorMessage;
@@ -377,7 +383,6 @@ namespace My9GAG.ViewModels
         private int _lastPosition = 0;
         private int _startPosition = 0;
         private int _endPosition = 0;
-        private List<ICommand> _commands;
 
         #endregion
 

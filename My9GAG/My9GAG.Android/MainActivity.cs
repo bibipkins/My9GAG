@@ -1,10 +1,11 @@
 ﻿using Android.App;
 using Android.Content.PM;
 using Android.OS;
-using Android.Views;
-using Xamarin.Forms;
-using Xamarin.Essentials;
 using Android.Runtime;
+using Android.Views;
+using Plugin.Permissions;
+using Xamarin.Essentials;
+using Xamarin.Forms;
 
 namespace My9GAG.Droid
 {
@@ -37,6 +38,8 @@ namespace My9GAG.Droid
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Permission[] grantResults)
         {
             Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+            PermissionsImplementation.Current.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }

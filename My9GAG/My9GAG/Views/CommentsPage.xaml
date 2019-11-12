@@ -7,8 +7,8 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
         <Label
@@ -29,7 +29,7 @@
             <ListView.Resources>
                 <ResourceDictionary>
                     <Style TargetType="Label">
-                        <Setter Property="TextColor" Value="White"/>
+                        <Setter Property="TextColor" Value="White" />
                     </Style>
                 </ResourceDictionary>
             </ListView.Resources>
@@ -54,10 +54,10 @@
                                 VerticalOptions="FillAndExpand"
                                 Margin="5,0,5,0">
                                 <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
                                 </Grid.RowDefinitions>
                                 <Label
                                     Grid.Row="0"
@@ -76,12 +76,13 @@
                                     Grid.Row="2"
                                     Source="{Binding MediaUrl}"
                                     IsVisible="{Binding IsMediaPresent}"
+                                    Margin="0,0,0,5"
                                     VerticalOptions="Start"
                                     HorizontalOptions="Start" />
                                 <StackLayout
                                     Grid.Row="3"
                                     Orientation="Horizontal">
-                                    <Image 
+                                    <Image
                                         VerticalOptions="Center"
                                         WidthRequest="20">
                                         <Image.Source>

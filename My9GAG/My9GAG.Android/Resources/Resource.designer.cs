@@ -852,13 +852,7 @@ namespace My9GAG.Droid
 			global::Xamarin.Forms.Platform.Android.Resource.Drawable.abc_textfield_search_material = global::My9GAG.Droid.Resource.Drawable.abc_textfield_search_material;
 			global::Xamarin.Forms.Platform.Android.Resource.Drawable.abc_vector_test = global::My9GAG.Droid.Resource.Drawable.abc_vector_test;
 			global::Xamarin.Forms.Platform.Android.Resource.Drawable.avd_hide_password = global::My9GAG.Droid.Resource.Drawable.avd_hide_password;
-			global::Xamarin.Forms.Platform.Android.Resource.Drawable.avd_hide_password_1 = global::My9GAG.Droid.Resource.Drawable.avd_hide_password_1;
-			global::Xamarin.Forms.Platform.Android.Resource.Drawable.avd_hide_password_2 = global::My9GAG.Droid.Resource.Drawable.avd_hide_password_2;
-			global::Xamarin.Forms.Platform.Android.Resource.Drawable.avd_hide_password_3 = global::My9GAG.Droid.Resource.Drawable.avd_hide_password_3;
 			global::Xamarin.Forms.Platform.Android.Resource.Drawable.avd_show_password = global::My9GAG.Droid.Resource.Drawable.avd_show_password;
-			global::Xamarin.Forms.Platform.Android.Resource.Drawable.avd_show_password_1 = global::My9GAG.Droid.Resource.Drawable.avd_show_password_1;
-			global::Xamarin.Forms.Platform.Android.Resource.Drawable.avd_show_password_2 = global::My9GAG.Droid.Resource.Drawable.avd_show_password_2;
-			global::Xamarin.Forms.Platform.Android.Resource.Drawable.avd_show_password_3 = global::My9GAG.Droid.Resource.Drawable.avd_show_password_3;
 			global::Xamarin.Forms.Platform.Android.Resource.Drawable.design_bottom_navigation_item_background = global::My9GAG.Droid.Resource.Drawable.design_bottom_navigation_item_background;
 			global::Xamarin.Forms.Platform.Android.Resource.Drawable.design_fab_background = global::My9GAG.Droid.Resource.Drawable.design_fab_background;
 			global::Xamarin.Forms.Platform.Android.Resource.Drawable.design_ic_visibility = global::My9GAG.Droid.Resource.Drawable.design_ic_visibility;
@@ -4394,26 +4388,8 @@ namespace My9GAG.Droid
 			// aapt resource value: 0x7f020053
 			public const int avd_hide_password = 2130837587;
 			
-			// aapt resource value: 0x7f020070
-			public const int avd_hide_password_1 = 2130837616;
-			
-			// aapt resource value: 0x7f020071
-			public const int avd_hide_password_2 = 2130837617;
-			
-			// aapt resource value: 0x7f020072
-			public const int avd_hide_password_3 = 2130837618;
-			
 			// aapt resource value: 0x7f020054
 			public const int avd_show_password = 2130837588;
-			
-			// aapt resource value: 0x7f020073
-			public const int avd_show_password_1 = 2130837619;
-			
-			// aapt resource value: 0x7f020074
-			public const int avd_show_password_2 = 2130837620;
-			
-			// aapt resource value: 0x7f020075
-			public const int avd_show_password_3 = 2130837621;
 			
 			// aapt resource value: 0x7f020055
 			public const int comments = 2130837589;
