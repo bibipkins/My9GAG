@@ -7,9 +7,9 @@ using My9GAG.Logic.FacebookAuthentication;
 using My9GAG.Logic.GoogleAuthentication;
 using My9GAG.Logic.Logger;
 using My9GAG.Logic.PageNavigator;
+using My9GAG.Logic.SecureStorage;
 using My9GAG.ViewModels;
 using My9GAG.Views;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -66,42 +66,42 @@ namespace My9GAG
         {
             await GoToPage(new PostsPage()
             {
-                BindingContext = viewModel == null ? _container.Resolve<PostsPageViewModel>() : viewModel
+                BindingContext = viewModel ?? _container.Resolve<PostsPageViewModel>()
             }, canGoBack);
         }
         public async void GoToCommentsPage(CommentsPageViewModel viewModel, bool canGoBack)
         {
             await GoToPage(new CommentsPage()
             {
-                BindingContext = viewModel == null ? _container.Resolve<CommentsPageViewModel>() : viewModel
+                BindingContext = viewModel ?? _container.Resolve<CommentsPageViewModel>()
             }, canGoBack);
         }
         public async void GoToLoginPage(LoginPageViewModel viewModel, bool canGoBack)
         {
             await GoToPage(new LoginPage()
             {
-                BindingContext = viewModel == null ? _container.Resolve<LoginPageViewModel>() : viewModel
+                BindingContext = viewModel ?? _container.Resolve<LoginPageViewModel>()
             }, canGoBack);
         }
         public async void GoToLoginWithGooglePage(LoginWithGooglePageViewModel viewModel, bool canGoBack)
         {
             await GoToPage(new LoginWithGooglePage()
             {
-                BindingContext = viewModel == null ? _container.Resolve<LoginWithGooglePageViewModel>() : viewModel
+                BindingContext = viewModel ?? _container.Resolve<LoginWithGooglePageViewModel>()
             }, canGoBack);
         }
         public async void GoToLoginWithFacebookPage(LoginWithFacebookPageViewModel viewModel, bool canGoBack)
         {
             await GoToPage(new LoginWithFacebookPage()
             {
-                BindingContext = viewModel == null ? _container.Resolve<LoginWithFacebookPageViewModel>() : viewModel
+                BindingContext = viewModel ?? _container.Resolve<LoginWithFacebookPageViewModel>()
             }, canGoBack);
         }
         public async void GoToRegistrationPage(RegistrationPageViewModel viewModel, bool canGoBack)
         {
             await GoToPage(new RegistrationPage()
             {
-                BindingContext = viewModel == null ? _container.Resolve<RegistrationPageViewModel>() : viewModel
+                BindingContext = viewModel ?? _container.Resolve<RegistrationPageViewModel>()
             }, canGoBack);
         }
 
@@ -113,9 +113,10 @@ namespace My9GAG
         {
             var builder = new ContainerBuilder();
 
-            builder.RegisterType<My9GAGLogger>().As<ILogger>();
+            builder.RegisterType<ConsoleLogger>().As<ILogger>();
             builder.RegisterType<GoogleAuthenticationService>().As<IGoogleAuthenticationService>();
             builder.RegisterType<FacebookAuthenticationService>().As<IFacebookAuthenticationService>();
+            builder.RegisterType<SecureStorage>().As<ISecureStorage>();
             builder.RegisterType<ClientService>().As<IClientService>().SingleInstance();
             builder.Register(navigator => new PageNavigator()
             {
@@ -154,7 +155,6 @@ namespace My9GAG
 
             var clientService = _container.Resolve<IClientService>();
             clientService.RestoreState(Current.Properties);
-            var user = clientService.User;
         }
         private async Task GoToPage(ContentPage page, bool canGoBack)
         {

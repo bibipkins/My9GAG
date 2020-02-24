@@ -2,9 +2,9 @@
 
 namespace My9GAG.Logic.Logger
 {
-    public class My9GAGLogger : ILogger
+    public class ConsoleLogger : ILogger
     {
-        public void LogIntoConsole(params string[] info)
+        public void Log(params string[] info)
         {
             Debug.WriteLine("");
             Debug.WriteLine("----------------------------------------");

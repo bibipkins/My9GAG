@@ -17,6 +17,6 @@ namespace My9GAG.ViewModels
 
         public const int MESSAGE_DELAY = 2500;
         public const int GET_POSTS_DELAY = 2000;
-        public const int LOGIN_DELAY = 2000;
+        public const int LOGIN_DELAY = 1500;
     }
 }

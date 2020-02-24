@@ -8,22 +8,48 @@ namespace My9GAG.Views.CustomViews
     [XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class ZoomableImage : ContentView
 	{
-		public ZoomableImage()
+        #region Constructors
+
+        public ZoomableImage(double width, double height)
 		{
 			InitializeComponent();
+
+            double factor = 2;
+            image = new Image();
+
+            if (height > width * factor)
+            {
+                image.Aspect = Aspect.AspectFill;
+
+                var scrollView = new ScrollView()
+                {
+                    Content = image
+                };
+
+                this.Content = scrollView;
+            }
+            else
+            {
+                image.Aspect = Aspect.AspectFit;
+                this.Content = image;
+            }
         }
+
+        #endregion
+
+        #region BindableProperties
+
+        #region Source
 
         public static readonly BindableProperty SourceProperty =
             BindableProperty.Create("Source", typeof(string), typeof(ZoomableImage), Image.SourceProperty.DefaultValue,
                 Image.SourceProperty.DefaultBindingMode,
                 propertyChanged: (BindableObject bindable, object oldValue, object newValue) =>
                 {
-                    var zoomableImage = bindable as ZoomableImage;
-
-                    if (zoomableImage == null)
-                        return;
-
-                    zoomableImage.image.Source = (string)newValue;
+                    if (bindable is ZoomableImage zoomableImage)
+                    {
+                        zoomableImage.image.Source = (string)newValue;
+                    }
                 });
 
         public string Source
@@ -32,71 +58,105 @@ namespace My9GAG.Views.CustomViews
             set { SetValue(SourceProperty, value); }
         }
 
-        private void OnPinchUpdated(object sender, PinchGestureUpdatedEventArgs e)
-        {
-            if (e.Status == GestureStatus.Started)
-            {
-                startScale = Content.Scale;
-                Content.AnchorX = 0;
-                Content.AnchorY = 0;
-            }
-            if (e.Status == GestureStatus.Running)
-            {
-                // Calculate the scale factor to be applied.
-                currentScale += (e.Scale - 1) * startScale;
-                currentScale = Math.Max(1, currentScale);
+        #endregion
 
-                // The ScaleOrigin is in relative coordinates to the wrapped user interface element,
-                // so get the X pixel coordinate.
-                double renderedX = Content.X + xOffset;
-                double deltaX = renderedX / Width;
-                double deltaWidth = Width / (Content.Width * startScale);
-                double originX = (e.ScaleOrigin.X - deltaX) * deltaWidth;
+        #region Aspect
 
-                // The ScaleOrigin is in relative coordinates to the wrapped user interface element,
-                // so get the Y pixel coordinate.
-                double renderedY = Content.Y + yOffset;
-                double deltaY = renderedY / Height;
-                double deltaHeight = Height / (Content.Height * startScale);
-                double originY = (e.ScaleOrigin.Y - deltaY) * deltaHeight;
-
-                // Calculate the transformed element pixel coordinates.
-                double targetX = xOffset - (originX * Content.Width) * (currentScale - startScale);
-                double targetY = yOffset - (originY * Content.Height) * (currentScale - startScale);
-
-                // Apply translation based on the change in origin.
-                Content.TranslationX = targetX.Clamp(-Content.Width * (currentScale - 1), 0);
-                Content.TranslationY = targetY.Clamp(-Content.Height * (currentScale - 1), 0);
-
-                Content.Scale = currentScale;
-            }
-            if (e.Status == GestureStatus.Completed)
-            {
-                if (Scale > maxScale)
+        public static readonly BindableProperty AspectProperty =
+            BindableProperty.Create("Aspect", typeof(Aspect), typeof(ZoomableImage), Image.AspectProperty.DefaultValue,
+                Image.AspectProperty.DefaultBindingMode,
+                propertyChanged: (BindableObject bindable, object oldValue, object newValue) =>
                 {
-                    Debug.WriteLine("-----" + Scale + "-----");
-                    this.ScaleTo(startScale, 250, Easing.SpringOut);
-                    return;
-                }
+                    if (bindable is ZoomableImage zoomableImage)
+                    {
+                        zoomableImage.image.Aspect = (Aspect)newValue;
+                    }
+                });
 
-                // Store the translation delta's of the wrapped user interface element.
-                xOffset = Content.TranslationX;
-                yOffset = Content.TranslationY;
+        public Aspect Aspect
+        {
+            get { return (Aspect)GetValue(AspectProperty); }
+            set { SetValue(AspectProperty, value); }
+        }
+
+        #endregion
+
+        #endregion
+
+        #region Properties
+
+        public double OriginalWidth
+        {
+            get;
+            set;
+        }
+        public double OriginalHeight
+        {
+            get;
+            set;
+        }
+
+        #endregion
+
+        #region Handlers
+
+        private void OnPanUpdated(object sender, PanUpdatedEventArgs e)
+        {
+            if (!isZoomed)
+            {
+                return;
+            }
+
+            switch (e.StatusType)
+            {
+                case GestureStatus.Running:
+                    var translationX = panX + e.TotalX;
+
+                    if (Math.Abs(translationX) < ((image.Width * 2.5) / 2))
+                    {
+                        image.TranslationX = translationX;
+                    }
+
+                    var translationY = panY + e.TotalY;
+
+                    if (Math.Abs(translationY) < ((image.Height * 2.5) / 2))
+                    {
+                        image.TranslationY = translationY;
+                    }
+
+                    break;
+                case GestureStatus.Completed:
+                    panX = image.TranslationX;
+                    panY = image.TranslationY;
+                    break;
             }
         }
 
-        private double currentScale = 1;
-        private double startScale = 1;
-        private double maxScale = 2;
-        private double xOffset = 0;
-        private double yOffset = 0;
-    }
-
-    public static class DoubleExtensions
-    {
-        public static double Clamp(this double self, double min, double max)
+        private void OnDoubleTapped(object sender, EventArgs e)
         {
-            return Math.Min(max, Math.Max(self, min));
+            if (isZoomed)
+            {
+                image.ScaleTo(1, easing: Easing.CubicOut);
+                image.TranslateTo(0, 0, easing: Easing.CubicInOut);
+                panX = panY = 0;
+                isZoomed = false;
+            }
+            else
+            {
+                image.ScaleTo(2, easing: Easing.CubicOut);
+                isZoomed = true;
+            }
         }
+
+        #endregion
+
+        #region Fields
+
+        private double panX = 0.0;
+        private double panY = 0.0;
+        private bool isZoomed = false;
+        Image image = null;
+
+        #endregion
     }
 }

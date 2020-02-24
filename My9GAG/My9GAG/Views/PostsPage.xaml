@@ -62,9 +62,9 @@
             Order="Secondary"
             Command="{Binding CommentsCommand}" />
         <ToolbarItem
-            Text="Log in"
+            Text="Log out"
             Order="Secondary"
-            Command="{Binding RelogInCommand}" />
+            Command="{Binding LogoutCommand}" />
     </ContentPage.ToolbarItems>
 
     <AbsoluteLayout
@@ -75,7 +75,9 @@
             AbsoluteLayout.LayoutFlags="All"
             HorizontalOptions="FillAndExpand"
             VerticalOptions="FillAndExpand"
-            ItemsSource="{Binding Posts}">
+            ItemsUpdatingScrollMode="KeepScrollOffset"
+            ItemsSource="{Binding Posts}"
+            CurrentItem="{Binding CurrentPost}">
             <CarouselView.ItemTemplate>
                 <DataTemplate>
                     <ContentView>

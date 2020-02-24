@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using My9GAG.Models.Authentication;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -11,23 +12,23 @@ namespace My9GAG.Logic.GoogleAuthentication
 
         public string GetAuthenticationPageUrl()
         {
-            string url = AUTHENTICATION_PAGE_BASE_URL +
-                "?response_type=code" +
-                "&scope=openid" +
-                "&prompt=select_account" + 
-                "&redirect_uri=" + REDIRECT_URL +
-                "&client_id=" + CLIENT_ID;
+            string url = AUTHENTICATION_PAGE_BASE_URL 
+                + "?response_type=code"
+                + "&scope=openid"
+                + "&prompt=select_account"
+                + "&redirect_uri=" + REDIRECT_URL
+                + "&client_id=" + AuthenticationSecrets.GoogleClientId;
 
             return url;
         }
         public async Task<string> GetAccessTokenAsync(string code)
         {
             string requestUrl = "https://www.googleapis.com/oauth2/v4/token"
-                         + "?code=" + code
-                         + "&client_id=" + CLIENT_ID
-                         + "&client_secret=" + CLIENT_SECRET
-                         + "&redirect_uri=" + System.Net.WebUtility.UrlEncode(REDIRECT_URL)
-                         + "&grant_type=authorization_code";
+                + "?code=" + code
+                + "&client_id=" + AuthenticationSecrets.GoogleClientId
+                + "&client_secret=" + AuthenticationSecrets.GoogleClientSecret
+                + "&redirect_uri=" + System.Net.WebUtility.UrlEncode(REDIRECT_URL)
+                + "&grant_type=authorization_code";
 
             var client = new HttpClient();
             var response = await client.PostAsync(requestUrl, null);
@@ -41,8 +42,6 @@ namespace My9GAG.Logic.GoogleAuthentication
         #region Constants
 
         private const string AUTHENTICATION_PAGE_BASE_URL = "https://accounts.google.com/o/oauth2/v2/auth";
-        private const string CLIENT_ID = "508189286171-qjcsbu5l43noibpcg70t8sdp29no2dn0.apps.googleusercontent.com";
-        private const string CLIENT_SECRET = "F1MTmepVSpWBaE4l7SNOSwDf";
         private const string REDIRECT_URL = "https://9gag.com/";
         private const string JSON_ACCESS_TOKEN_KEY = "access_token";
 

@@ -5,29 +5,8 @@ namespace My9GAG.Models.Post.Media
 {
     public class AnimatedPostMedia : IPostMedia
     {
-        #region Constructors
-
-        public AnimatedPostMedia(string url)
-        {
-            Url = url;
-            View = new VideoPlayer()
-            {
-                Source = new UriVideoSource()
-                {
-                    Uri = url
-                }
-            };
-        }
-
-        #endregion
-
         #region Properties
 
-        public string Url
-        {
-            get;
-            set;
-        }
         public View View
         {
             get;
@@ -37,11 +16,36 @@ namespace My9GAG.Models.Post.Media
         {
             get { return PostType.Animated; }
         }
+        public string Url
+        {
+            get;
+            set;
+        }
+        public double Width 
+        { 
+            get;
+            set;
+        }
+        public double Height 
+        { 
+            get;
+            set;
+        }
 
         #endregion
 
         #region Methods
 
+        public void GenerateView()
+        {
+            View = new VideoPlayer()
+            {
+                Source = new UriVideoSource()
+                {
+                    Uri = Url
+                }
+            };
+        }
         public void Start()
         {
             //(View as VideoPlayer).Start();
@@ -62,7 +66,7 @@ namespace My9GAG.Models.Post.Media
         {
 
         }
-
+        
         #endregion
     }
 }
