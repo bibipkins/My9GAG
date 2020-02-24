@@ -3,7 +3,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace My9GAG.Models.Request
+namespace My9GAG.Logic.Request
 {
     public static class RequestUtils
     {
@@ -11,7 +11,7 @@ namespace My9GAG.Models.Request
 
         public static string GetTimestamp()
         {
-            return ((long)(DateTime.Now.Subtract(DateTime.MinValue.AddYears(1969)).TotalMilliseconds)).ToString();
+            return ((long)(DateTime.UtcNow.Subtract(DateTime.MinValue.AddYears(1969)).TotalMilliseconds)).ToString();
         }
         public static string GetUuid()
         {
@@ -43,7 +43,7 @@ namespace My9GAG.Models.Request
         }
         public static string GetSignature(string timestamp, string appId, string deviceUuid)
         {
-            string data = String.Format("*{0}_._{1}._.{2}9GAG", timestamp, appId, deviceUuid);
+            string data = $"*{timestamp}_._{appId}._.{deviceUuid}9GAG";
             return GetSha1(data);
         }
         public static string ExtractValueFromUrl(string url, string key)
@@ -77,10 +77,10 @@ namespace My9GAG.Models.Request
         public static string NOTIFY =      "http://notify.9gag.com";
         public static string AD =          "http://ad.9gag.com";
         public static string ADMIN =       "http://admin.9gag.com";
-        public static string APP_ID =      "com.ninegag.android.app";
 
-        public static string LOGIN_PATH =   "v2/user-token";
-        public static string POSTS_PATH =   "v2/post-list";
+        public static string LOGIN_PATH =  "v2/user-token";
+        public static string POSTS_PATH =  "v2/post-list";
+        public static string GROUPS_PATH = "v2/group-list";
 
         #endregion
     }

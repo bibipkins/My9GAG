@@ -34,11 +34,11 @@
                            VerticalOptions="Start" 
                            HorizontalOptions="Start"
                            Margin="0,0,0,5"/>
-                    <Entry Text="{Binding UserName}"
+                    <Entry Text="{Binding UserLogin}"
                            Placeholder="Login"
                            Keyboard="Email"
                            HorizontalTextAlignment="Center"/>
-                    <Entry Text="{Binding Password}"
+                    <Entry Text="{Binding UserPassword}"
                            Placeholder="Password"
                            HorizontalTextAlignment="Center"
                            IsPassword="True"/>

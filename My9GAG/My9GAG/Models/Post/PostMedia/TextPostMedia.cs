@@ -4,36 +4,8 @@ namespace My9GAG.Models.Post.Media
 {
     public class TextPostMedia : IPostMedia
     {
-        #region Constructors
-
-        public TextPostMedia(string text)
-        {
-            Url = "";
-            Text = text;
-            View = new Label()
-            {
-                Text = Text,
-                VerticalTextAlignment = TextAlignment.Center,
-                HorizontalTextAlignment = TextAlignment.Center,
-                BackgroundColor = Color.Black,
-                TextColor = Color.White
-            };
-        }
-
-        #endregion
-
         #region Properties
 
-        public string Text
-        {
-            get;
-            set;
-        }
-        public string Url
-        {
-            get;
-            set;
-        }
         public View View
         {
             get;
@@ -43,11 +15,42 @@ namespace My9GAG.Models.Post.Media
         {
             get { return PostType.Other; }
         }
-
+        public string Url
+        {
+            get;
+            set;
+        }
+        public double Width
+        {
+            get;
+            set;
+        }
+        public double Height
+        {
+            get;
+            set;
+        }
+        public string Text
+        {
+            get;
+            set;
+        }
+        
         #endregion
 
         #region Methods
 
+        public void GenerateView()
+        {
+            View = new Label()
+            {
+                Text = Text,
+                VerticalTextAlignment = TextAlignment.Center,
+                HorizontalTextAlignment = TextAlignment.Center,
+                BackgroundColor = Color.Black,
+                TextColor = Color.White
+            };
+        }
         public void Pause()
         {
 

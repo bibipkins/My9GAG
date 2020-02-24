@@ -1,7 +1,7 @@
 ﻿using My9GAG.Logic.Client;
 using My9GAG.Logic.FacebookAuthentication;
 using My9GAG.Logic.PageNavigator;
-using My9GAG.Models.Request;
+using My9GAG.Logic.Request;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
@@ -57,7 +57,7 @@ namespace My9GAG.ViewModels
                 }
                 else
                 {
-                    await ShowMessage(ViewModelConstants.LOGIN_FAILED_MESSAGE, ViewModelConstants.MESSAGE_DELAY);
+                    await ShowMessage(ViewModelConstants.LOGIN_FAILED_MESSAGE);
                     _pageNavigator.GoBack();
                 }
             });
@@ -97,7 +97,7 @@ namespace My9GAG.ViewModels
                 if (!string.IsNullOrWhiteSpace(error))
                 {
                     e.Cancel = true;
-                    await ShowMessage(ViewModelConstants.LOGIN_WITH_FACEBOOK_FAILED_MESSAGE, ViewModelConstants.MESSAGE_DELAY);
+                    await ShowMessage(ViewModelConstants.LOGIN_WITH_FACEBOOK_FAILED_MESSAGE);
                     _pageNavigator.GoBack();
                 }
             });

@@ -70,7 +70,7 @@ namespace My9GAG.ViewModels
             OnPropertyChanged(propertyName);
             return true;
         }
-        protected Task ShowMessage(string message, int timespan)
+        protected Task ShowMessage(string message, int timespan = ViewModelConstants.MESSAGE_DELAY)
         {
             return Task.Run(async () =>
             {

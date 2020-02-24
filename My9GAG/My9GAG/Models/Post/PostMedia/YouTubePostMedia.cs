@@ -4,30 +4,8 @@ namespace My9GAG.Models.Post.Media
 {
     public class YouTubePostMedia : IPostMedia
     {
-        #region Constructors
-
-        public YouTubePostMedia(string url)
-        {
-            Url = url;
-            var html = new HtmlWebViewSource
-            {
-                Html = GenerateHtml()
-            };
-            View = new WebView()
-            {
-                Source = html
-            };
-        }
-
-        #endregion
-
         #region Properties
 
-        public string Url
-        {
-            get;
-            set;
-        }
         public View View
         {
             get;
@@ -37,11 +15,36 @@ namespace My9GAG.Models.Post.Media
         {
             get { return PostType.Video; }
         }
+        public string Url
+        {
+            get;
+            set;
+        }
+        public double Width
+        {
+            get;
+            set;
+        }
+        public double Height
+        {
+            get;
+            set;
+        }
 
         #endregion
 
         #region Methods
 
+        public void GenerateView()
+        {
+            View = new WebView()
+            {
+                Source = new HtmlWebViewSource
+                {
+                    Html = GenerateHtml()
+                }
+            };
+        }
         public void Pause()
         {
             

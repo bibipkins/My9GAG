@@ -4,12 +4,12 @@
              x:Class="My9GAG.Views.CustomViews.ZoomableImage"
              BackgroundColor="Black"
              IsClippedToBounds="True">
-    
-    <ContentView.GestureRecognizers>
-        <PinchGestureRecognizer PinchUpdated="OnPinchUpdated" />
-    </ContentView.GestureRecognizers>
 
-    <ContentView.Content>
-        <Image x:Name="image" />
-    </ContentView.Content>
+    <ContentView.GestureRecognizers>
+        <!--<TapGestureRecognizer 
+            NumberOfTapsRequired="2" 
+            Tapped="OnDoubleTapped" />-->
+        <PanGestureRecognizer
+            PanUpdated="OnPanUpdated" />
+    </ContentView.GestureRecognizers>
 </ContentView>

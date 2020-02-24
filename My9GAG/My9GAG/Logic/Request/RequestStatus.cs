@@ -1,5 +1,5 @@
 ﻿
-namespace My9GAG.Models.Request
+namespace My9GAG.Logic.Request
 {
     public class RequestStatus
     {

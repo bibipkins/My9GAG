@@ -1,7 +1,7 @@
 ﻿
-namespace My9GAG.Models.User
+namespace My9GAG.Models.Authentication
 {
-    public enum LoginStatus
+    public enum AuthenticationType
     {
         None,
         Credentials,

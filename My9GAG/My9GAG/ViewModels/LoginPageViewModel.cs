@@ -1,6 +1,5 @@
 ﻿using My9GAG.Logic.Client;
 using My9GAG.Logic.PageNavigator;
-using My9GAG.Models.User;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -18,29 +17,38 @@ namespace My9GAG.ViewModels
             _pageNavigator = pageNavigator;
 
             InitCommands();
+            LoadAuthenticationInfo();
+
+            if (_clientService.AuthenticationInfo.IsAuthenticated)
+            {
+                _pageNavigator.GoToPostsPage(null, false);
+            }
+
+            UserLogin = _clientService.AuthenticationInfo.UserLogin;
+            UserPassword = _clientService.AuthenticationInfo.UserPassword;
         }
 
         #endregion
-        
+
         #region Properties
 
-        public string UserName
+        public string UserLogin
         {
-            get { return userName; }
+            get { return _userLogin; }
             set
             {
-                if (SetProperty(ref userName, value))
+                if (SetProperty(ref _userLogin, value))
                 {
                     UpdateCommands();
                 }
             }
         }
-        public string Password
+        public string UserPassword
         {
-            get { return password; }
+            get { return _userPassword; }
             set
             {
-                if (SetProperty(ref password, value))
+                if (SetProperty(ref _userPassword, value))
                 {
                     UpdateCommands();
                 }
@@ -56,13 +64,13 @@ namespace My9GAG.ViewModels
 
         #region Methods
 
-        public async Task LoginAsync()
+        public async void LoginAsync()
         {
             StartWorkIndication(ViewModelConstants.LOGIN_MESSAGE);
             
             await Task.Run(async () =>
             {
-                var requestStatus = await _clientService.LoginWithCredentialsAsync(userName, password);
+                var requestStatus = await _clientService.LoginWithCredentialsAsync(_userLogin, _userPassword);
                 await Task.Delay(ViewModelConstants.LOGIN_DELAY);                
 
                 if (requestStatus.IsSuccessful)
@@ -72,7 +80,7 @@ namespace My9GAG.ViewModels
                 else
                 {
                     LoginErrorMessage = requestStatus.Message;
-                }                
+                }
             });
             
             StopWorkIndication();
@@ -117,7 +125,7 @@ namespace My9GAG.ViewModels
         {
             LoginCommand = new Command(
                 () => LoginAsync(),
-                () => !string.IsNullOrEmpty(Password) && !string.IsNullOrEmpty(UserName));
+                () => !string.IsNullOrEmpty(UserPassword) && !string.IsNullOrEmpty(UserLogin));
             LoginWithGoogleCommand = new Command(
                 () => _pageNavigator.GoToLoginWithGooglePage());
             LoginWithFacebookCommand = new Command(
@@ -144,17 +152,23 @@ namespace My9GAG.ViewModels
             }
         }
 
+        private void LoadAuthenticationInfo()
+        {
+            var loadTask = Task.Run(async () => await _clientService.LoadAuthenticationInfoAsync());
+            loadTask.ConfigureAwait(true);
+            loadTask.Wait();
+        }
+
         #endregion
 
         #region Fields
 
-        private User _user;
-        private string _loginErrorMessage;
-        private IClientService _clientService;
-        private IPageNavigator _pageNavigator;
+        private readonly IClientService _clientService;
+        private readonly IPageNavigator _pageNavigator;
 
-        private string password = "";
-        private string userName = "";
+        private string _loginErrorMessage;
+        private string _userPassword = "";
+        private string _userLogin = "";
 
         #endregion
     }
