@@ -1,5 +1,6 @@
 ﻿using My9GAG.Logic.Client;
 using My9GAG.Logic.PageNavigator;
+using My9GAG.Models.Authentication;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -19,13 +20,31 @@ namespace My9GAG.ViewModels
             InitCommands();
             LoadAuthenticationInfo();
 
-            if (_clientService.AuthenticationInfo.IsAuthenticated)
+            var authenticationInfo = _clientService.AuthenticationInfo;
+
+            UserLogin = authenticationInfo.UserLogin;
+            UserPassword = authenticationInfo.UserPassword;
+
+            if (authenticationInfo.IsAuthenticated)
             {
                 _pageNavigator.GoToPostsPage(null, false);
+                return;
             }
 
-            UserLogin = _clientService.AuthenticationInfo.UserLogin;
-            UserPassword = _clientService.AuthenticationInfo.UserPassword;
+            switch (authenticationInfo.LastAuthenticationType)
+            {
+                case AuthenticationType.Credentials when authenticationInfo.AreCredentialsPresent:
+                    LoginAsync();
+                    break;
+                case AuthenticationType.Google:
+                    _pageNavigator.GoToLoginWithGooglePage();
+                    break;
+                case AuthenticationType.Facebook:
+                    _pageNavigator.GoToLoginWithFacebookPage();
+                    break;
+                default:
+                    break;
+            }
         }
 
         #endregion
