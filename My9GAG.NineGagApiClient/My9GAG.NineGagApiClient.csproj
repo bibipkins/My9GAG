@@ -11,9 +11,9 @@
     <PackageReleaseNotes>First release, this is extracted from the My9GAG app, it was designed to not break My9GAG and be usuable by others as well.</PackageReleaseNotes>
     <Copyright>2020 Bibipkins, Rora</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <AssemblyVersion>1.0.1.0</AssemblyVersion>
-    <FileVersion>1.0.1.0</FileVersion>
-    <Version>1.0.1</Version>
+    <AssemblyVersion>1.0.2.0</AssemblyVersion>
+    <FileVersion>1.0.2.0</FileVersion>
+    <Version>1.0.2</Version>
   </PropertyGroup>
 
   <ItemGroup>
