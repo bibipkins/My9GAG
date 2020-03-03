@@ -32,7 +32,7 @@ namespace My9GAG.NineGagApiClient
 
         #region Api Functionality
 
-        public async Task<IList<SimplePost>> GetPostsAsync(PostCategory postCategory, int count, string olderThanPostId = "")
+        public virtual async Task<IList<SimplePost>> GetPostsAsync(PostCategory postCategory, int count, string olderThanPostId = "")
         {
             string type = postCategory.ToString().ToLower();
             var args = new Dictionary<string, string>()
@@ -73,7 +73,7 @@ namespace My9GAG.NineGagApiClient
             return post;
         }
 
-        public async Task<IList<Comment>> GetCommentsAsync(string postUrl, int count)
+        public virtual async Task<IList<Comment>> GetCommentsAsync(string postUrl, int count)
         {
             string path =
                 "v1/topComments.json?" +
@@ -101,7 +101,7 @@ namespace My9GAG.NineGagApiClient
 
             return comments;
         }
-        private string GetUrlFromJsonComment(JToken token)
+        protected virtual string GetUrlFromJsonComment(JToken token)
         {
             var urlToken =
                 token.SelectToken("media.[0].imageMetaByType.animated.url") ??
@@ -135,7 +135,7 @@ namespace My9GAG.NineGagApiClient
             AuthenticationInfo.UserPassword = password;
         }
 
-        public async Task LoginWithGoogleAsync(string token)
+        public virtual async Task LoginWithGoogleAsync(string token)
         {
             var args = new Dictionary<string, string>()
                 {
@@ -148,7 +148,7 @@ namespace My9GAG.NineGagApiClient
             await LoginAsync(args, AuthenticationType.Google);
         }
 
-        public async Task LoginWithFacebookAsync(string token)
+        public virtual async Task LoginWithFacebookAsync(string token)
         {
             var args = new Dictionary<string, string>()
             {
@@ -160,7 +160,7 @@ namespace My9GAG.NineGagApiClient
 
             await LoginAsync(args, AuthenticationType.Facebook);
         }
-        public void Logout()
+        public virtual void Logout()
         {
             AuthenticationInfo.ClearToken();
         }
@@ -185,7 +185,7 @@ namespace My9GAG.NineGagApiClient
         #endregion
 
         #region Helpers
-        private async Task ExecuteRequestAsync(HttpRequestMessage request, Action<string> onSuccess = null)
+        protected virtual async Task ExecuteRequestAsync(HttpRequestMessage request, Action<string> onSuccess = null)
         {
             using (var response = await _httpClient.SendAsync(request))
             {
@@ -195,7 +195,7 @@ namespace My9GAG.NineGagApiClient
                 onSuccess?.Invoke(responseText);
             }
         }
-        private HttpRequestMessage FormRequest(string api, string path, Dictionary<string, string> args)
+        protected virtual HttpRequestMessage FormRequest(string api, string path, Dictionary<string, string> args)
         {
             var timestamp = RequestUtils.GetTimestamp();
 
@@ -240,7 +240,7 @@ namespace My9GAG.NineGagApiClient
             return request;
         }
 
-        private void ValidateResponse(string response)
+        protected virtual void ValidateResponse(string response)
         {
             var jsonData = JObject.Parse(response);
 
@@ -261,7 +261,7 @@ namespace My9GAG.NineGagApiClient
             }
         }
 
-        public void Dispose()
+        public virtual void Dispose()
         {
             _httpClient.Dispose();
         }
