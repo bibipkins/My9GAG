@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace My9GAG.IntegrationTest
+namespace My9GAG.IntegrationTest.My9GAG
 {
     [TestClass]
     public class ClientServiceTest
@@ -17,7 +17,7 @@ namespace My9GAG.IntegrationTest
         [TestInitialize]
         public void TestInit()
         {
-            if(!File.Exists(_TestCredentialsPath))
+            if (!File.Exists(_TestCredentialsPath))
             {
                 throw new Exception($"{_TestCredentialsPath} not found, make sure that you've created this file and entered test credentials in it. First line should be username, second line should be password. This file is added to the gitignore and won't be commited");
             }
@@ -39,13 +39,14 @@ namespace My9GAG.IntegrationTest
             Assert.IsTrue(resp.IsSuccessful);
 
             var result = await clientService.GetPostsAsync(Models.Post.PostCategory.Hot, 10);
-            
-            if(!result.IsSuccessful)
+
+            if (!result.IsSuccessful)
             {
                 throw new InvalidOperationException("Get posts failed: " + result.Message);
             }
 
-            Assert.AreNotEqual(String.Empty, clientService.Posts.First().Title);
+            Assert.AreEqual(10, clientService.Posts.Count);
+            Assert.AreNotEqual(string.Empty, clientService.Posts.First().Title);
         }
     }
 }

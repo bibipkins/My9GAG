@@ -98,57 +98,26 @@ namespace My9GAG.Logic.Client
             return await ExecuteAndReturnRequestStatusAsync(async () =>
             {
                 await base.LoginWithCredentialsAsync(userName, password);
-                SetAuthenticationType(AuthenticationType.Credentials);
-
                 await SaveAuthenticationInfoAsync();
             });
         }
 
-        public async Task<RequestStatus> LoginWithGoogleAsync(string token)
+        public new async Task<RequestStatus> LoginWithGoogleAsync(string token)
         {
             return await ExecuteAndReturnRequestStatusAsync(async () =>
             {
-                var args = new Dictionary<string, string>()
-                {
-                    { "userAccessToken", token },
-                    { "loginMethod", "google-plus" },
-                    { "language", "en_US" },
-                    { "pushToken", AuthenticationInfo.Token }
-                };
-
-                await LoginAsync(args);
-                SetAuthenticationType(AuthenticationType.Google);
-
+                await base.LoginWithGoogleAsync(token);
                 await SaveAuthenticationInfoAsync();
             });
         }
 
-        public async Task<RequestStatus> LoginWithFacebookAsync(string token)
+        public new async Task<RequestStatus> LoginWithFacebookAsync(string token)
         {
             return await ExecuteAndReturnRequestStatusAsync(async () =>
             {
-                var args = new Dictionary<string, string>()
-            {
-                { "loginMethod", "facebook" },
-                { "userAccessToken", token },
-                { "language", "en_US" },
-                { "pushToken", AuthenticationInfo.Token }
-            };
-
-                await LoginAsync(args);
-                SetAuthenticationType(AuthenticationType.Facebook);
-
+                await base.LoginWithFacebookAsync(token);
                 await SaveAuthenticationInfoAsync();
             });
-        }
-        protected override SimpleAuthenticationInfo CreateAuthenticationInfo()
-        {
-            return new AuthenticationInfo();
-        }
-
-        private void SetAuthenticationType(AuthenticationType authenticationType)
-        {
-            ((AuthenticationInfo)this.AuthenticationInfo).LastAuthenticationType = authenticationType;
         }
 
         public async Task SaveAuthenticationInfoAsync()

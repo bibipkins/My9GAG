@@ -1,4 +1,5 @@
-﻿using My9GAG.Models.Comment;
+﻿using My9GAG.Models.Authentication;
+using My9GAG.Models.Comment;
 using My9GAG.Models.Post;
 using My9GAG.Models.Post.Media;
 using My9GAG.NineGagApiClient.Models.Authentication;
@@ -13,9 +14,9 @@ using System.Threading.Tasks;
 
 namespace My9GAG.NineGagApiClient
 {
-    public class ApiClient
+    public class ApiClient : IApiClient
     {
-        public SimpleAuthenticationInfo AuthenticationInfo { get; protected set; }
+        public AuthenticationInfo AuthenticationInfo { get; protected set; }
 
         public ApiClient()
         {
@@ -45,18 +46,18 @@ namespace My9GAG.NineGagApiClient
 
             var posts = new List<SimplePost>();
             var request = FormRequest(RequestUtils.API, RequestUtils.POSTS_PATH, args);
-             await ExecuteRequestAsync(request, responseText =>
-            {
+            await ExecuteRequestAsync(request, responseText =>
+           {
 
-                var jsonData = JObject.Parse(responseText);
-                var rawPosts = jsonData["data"]["posts"];
+               var jsonData = JObject.Parse(responseText);
+               var rawPosts = jsonData["data"]["posts"];
 
-                foreach (var item in rawPosts)
-                {
-                    var post = CreatePost(item);
-                    posts.Add(post);
-                }
-            });
+               foreach (var item in rawPosts)
+               {
+                   var post = CreatePost(item);
+                   posts.Add(post);
+               }
+           });
 
             return posts;
         }
@@ -109,14 +110,14 @@ namespace My9GAG.NineGagApiClient
         public async Task GetGroupsAsync()
         {//TODO figure out why this is here
             var request = FormRequest(RequestUtils.API, RequestUtils.GROUPS_PATH);
-            await ExecuteRequestAsync(request, null);
+            await ExecuteRequestAsync(request);
         }
         #endregion
 
         #region Auth methods
-        protected virtual SimpleAuthenticationInfo CreateAuthenticationInfo()
+        protected virtual AuthenticationInfo CreateAuthenticationInfo()
         {
-            return new SimpleAuthenticationInfo();
+            return new AuthenticationInfo();
         }
 
         public virtual async Task LoginWithCredentialsAsync(string userName, string password)
@@ -130,17 +131,42 @@ namespace My9GAG.NineGagApiClient
                 { "pushToken", AuthenticationInfo.Token }
             };
 
-            await LoginAsync(args);
+            await LoginAsync(args, AuthenticationType.Credentials);
             AuthenticationInfo.UserLogin = userName;
             AuthenticationInfo.UserPassword = password;
         }
 
+        public async Task LoginWithGoogleAsync(string token)
+        {
+            var args = new Dictionary<string, string>()
+                {
+                    { "userAccessToken", token },
+                    { "loginMethod", "google-plus" },
+                    { "language", "en_US" },
+                    { "pushToken", AuthenticationInfo.Token }
+                };
+
+            await LoginAsync(args, AuthenticationType.Google);
+        }
+
+        public async Task LoginWithFacebookAsync(string token)
+        {
+            var args = new Dictionary<string, string>()
+            {
+                { "loginMethod", "facebook" },
+                { "userAccessToken", token },
+                { "language", "en_US" },
+                { "pushToken", AuthenticationInfo.Token }
+            };
+
+            await LoginAsync(args, AuthenticationType.Facebook);
+        }
         public void Logout()
         {
             AuthenticationInfo.ClearToken();
         }
 
-        protected async Task LoginAsync(Dictionary<string, string> args)
+        protected async Task LoginAsync(Dictionary<string, string> args, AuthenticationType authenticationType)
         {
             var request = FormRequest(RequestUtils.API, RequestUtils.LOGIN_PATH, args);
             await ExecuteRequestAsync(request, responseText =>
@@ -149,6 +175,7 @@ namespace My9GAG.NineGagApiClient
                 var authData = jsonData["data"];
 
                 AuthenticationInfo.Token = authData["userToken"].ToString();
+                AuthenticationInfo.LastAuthenticationType = authenticationType;
 
                 long.TryParse(authData["tokenExpiry"].ToString(), out long seconds);
                 AuthenticationInfo.TokenWillExpireAt = DateTimeOffset.FromUnixTimeSeconds(seconds).UtcDateTime;
@@ -225,6 +252,7 @@ namespace My9GAG.NineGagApiClient
 
             return request;
         }
+
         private void ValidateResponse(string response)
         {
             var jsonData = JObject.Parse(response);
@@ -244,7 +272,7 @@ namespace My9GAG.NineGagApiClient
 
                 }
             }
-        } 
+        }
         #endregion
     }
 }

@@ -1,19 +1,21 @@
-﻿using My9GAG.NineGagApiClient.Utils;
+﻿using My9GAG.Models.Authentication;
+using My9GAG.NineGagApiClient.Utils;
 using System;
 
 namespace My9GAG.NineGagApiClient.Models.Authentication
 {
-    public class SimpleAuthenticationInfo
+    public class AuthenticationInfo
     {
         #region Constructors
 
-        public SimpleAuthenticationInfo()
+        public AuthenticationInfo()
         {
             Timestamp = RequestUtils.GetTimestamp();
             Token = RequestUtils.GetSha1(Timestamp);
             DeviceUuid = RequestUtils.GetUuid();
             Signature = RequestUtils.GetSignature(Timestamp, AppId, DeviceUuid);
             TokenWillExpireAt = DateTime.UtcNow;
+            LastAuthenticationType = AuthenticationType.None;
         }
 
         #endregion
@@ -61,7 +63,7 @@ namespace My9GAG.NineGagApiClient.Models.Authentication
             get;
             set;
         }
-
+        public AuthenticationType LastAuthenticationType { get; set; }
         public bool HasTokenExpired
         {
             get => TokenWillExpireAt <= DateTime.UtcNow;

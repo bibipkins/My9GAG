@@ -2,6 +2,7 @@
 using My9GAG.Models.Authentication;
 using My9GAG.Models.Comment;
 using My9GAG.Models.Post;
+using My9GAG.NineGagApiClient.Models.Authentication;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
