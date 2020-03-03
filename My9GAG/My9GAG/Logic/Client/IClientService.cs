@@ -19,7 +19,6 @@ namespace My9GAG.Logic.Client
 
         Task<RequestStatus> GetPostsAsync(PostCategory postCategory, int count, string olderThan = "");
         Task<RequestStatus> GetCommentsAsync(string postUrl, int count);
-        Task<RequestStatus> GetGroupsAsync();
 
         Task LoadAuthenticationInfoAsync();
         Task SaveAuthenticationInfoAsync();

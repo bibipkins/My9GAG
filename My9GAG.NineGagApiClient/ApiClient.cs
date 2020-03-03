@@ -25,10 +25,8 @@ namespace My9GAG.NineGagApiClient
 
         #region Api Functionality
 
-        public async Task<IEnumerable<SimplePost>> GetPostsAsync(PostCategory postCategory, int count, string olderThanPostId = "")
+        public async Task<IList<SimplePost>> GetPostsAsync(PostCategory postCategory, int count, string olderThanPostId = "")
         {
-            await GetGroupsAsync();
-
             string type = postCategory.ToString().ToLower();
             var args = new Dictionary<string, string>()
             {
@@ -69,7 +67,7 @@ namespace My9GAG.NineGagApiClient
             return post;
         }
 
-        public async Task<IEnumerable<Comment>> GetCommentsAsync(string postUrl, int count)
+        public async Task<IList<Comment>> GetCommentsAsync(string postUrl, int count)
         {
             string path =
                 "v1/topComments.json?" +
@@ -107,11 +105,6 @@ namespace My9GAG.NineGagApiClient
             return urlToken.ToString();
         }
 
-        public async Task GetGroupsAsync()
-        {//TODO figure out why this is here
-            var request = FormRequest(RequestUtils.API, RequestUtils.GROUPS_PATH);
-            await ExecuteRequestAsync(request);
-        }
         #endregion
 
         #region Auth methods
@@ -197,11 +190,6 @@ namespace My9GAG.NineGagApiClient
 
                 onSuccess?.Invoke(responseText);
             }
-        }
-        private HttpWebRequest FormRequest(string api, string path)
-        {
-            var args = new Dictionary<string, string>();
-            return FormRequest(api, path, args);
         }
         private HttpWebRequest FormRequest(string api, string path, Dictionary<string, string> args)
         {

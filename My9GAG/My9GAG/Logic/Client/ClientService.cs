@@ -81,14 +81,6 @@ namespace My9GAG.Logic.Client
                 await base.GetCommentsAsync(postUrl, count);
             });
         }
-
-        async Task<RequestStatus> IClientService.GetGroupsAsync()
-        {
-            return await ExecuteAndReturnRequestStatusAsync(async () =>
-            {
-                await base.GetGroupsAsync();
-            });
-        } 
         #endregion
 
         #region Auth
