@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace My9GAG.IntegrationTest
 {
     [TestClass]
-    public class UnitTest1
+    public class ClientServiceTest
     {
         private const string _TestCredentialsPath = "TestCredentials.txt";
         private string _username;
@@ -27,21 +27,25 @@ namespace My9GAG.IntegrationTest
             _password = credentials[1].Trim();
         }
 
+        /// <summary>
+        /// Very basic test, more like a smoke test so that we can see if the happyflow returns anything and throws no errors
+        /// </summary>
         [TestMethod]
-        public async Task TestMethod1()
+        public async Task GetPostsAsync_HappyFlow_ShouldReturnPosts()
         {
-            var a = new ClientService(null, new DictionarySecureStorage());
+            var clientService = new ClientService(logger: null, new DictionarySecureStorage(), generatePostMediaOnLoad: false);
 
-            await a.LoginWithCredentialsAsync(_username, _password);
+            var resp = await clientService.LoginWithCredentialsAsync(_username, _password);
+            Assert.IsTrue(resp.IsSuccessful);
 
-            var result = await a.GetPostsAsync(Models.Post.PostCategory.Hot, 10);
+            var result = await clientService.GetPostsAsync(Models.Post.PostCategory.Hot, 10);
             
             if(!result.IsSuccessful)
             {
                 throw new InvalidOperationException("Get posts failed: " + result.Message);
             }
 
-            Assert.AreNotEqual(String.Empty, a.Posts.First().Title);
+            Assert.AreNotEqual(String.Empty, clientService.Posts.First().Title);
         }
     }
 }

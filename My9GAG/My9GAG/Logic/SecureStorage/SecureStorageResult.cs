@@ -1,5 +1,4 @@
-﻿
-namespace My9GAG.Logic.SecureStorage
+﻿namespace My9GAG.Logic.SecureStorage
 {
     public class SecureStorageResult
     {
