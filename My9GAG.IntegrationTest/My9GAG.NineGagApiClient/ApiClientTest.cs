@@ -14,7 +14,7 @@ namespace My9GAG.IntegrationTest.My9GAG.NineGagApiClient
         [TestMethod]
         public async Task GetPostsAsync_HappyFlow_10Posts()
         {
-            var apiClient = new ApiClient();
+            using var apiClient = new ApiClient();
             await apiClient.LoginWithCredentialsAsync(Username, Password);
 
             //Act
@@ -29,7 +29,7 @@ namespace My9GAG.IntegrationTest.My9GAG.NineGagApiClient
         [TestMethod]
         public async Task GetPostsAsync_PostsSince_OnlyPostsSince()
         {
-            var apiClient = new ApiClient();
+            using var apiClient = new ApiClient();
             await apiClient.LoginWithCredentialsAsync(Username, Password);
             var top10posts = await apiClient.GetPostsAsync(Models.Post.PostCategory.Hot, 10);
             var post5 = top10posts[4];

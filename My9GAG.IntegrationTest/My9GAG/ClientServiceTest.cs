@@ -16,7 +16,7 @@ namespace My9GAG.IntegrationTest.My9GAG
         [TestMethod]
         public async Task GetPostsAsync_HappyFlow_ShouldReturnPosts()
         {
-            var clientService = new ClientService(logger: null, new DictionarySecureStorage(), generatePostMediaOnLoad: false);
+            using var clientService = new ClientService(logger: null, new DictionarySecureStorage(), generatePostMediaOnLoad: false);
 
             var resp = await clientService.LoginWithCredentialsAsync(Username, Password);
             Assert.IsTrue(resp.IsSuccessful);

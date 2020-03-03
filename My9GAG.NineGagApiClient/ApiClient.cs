@@ -10,16 +10,23 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace My9GAG.NineGagApiClient
 {
-    public class ApiClient : IApiClient
+    public class ApiClient : IApiClient, IDisposable
     {
+        private readonly HttpClient _httpClient;
         public AuthenticationInfo AuthenticationInfo { get; protected set; }
 
-        public ApiClient()
+        public ApiClient() : this(new HttpClient())
         {
+        }
+
+        public ApiClient(HttpClient httpClient)
+        {
+            _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
             AuthenticationInfo = CreateAuthenticationInfo();
         }
 
@@ -45,17 +52,16 @@ namespace My9GAG.NineGagApiClient
             var posts = new List<SimplePost>();
             var request = FormRequest(RequestUtils.API, RequestUtils.POSTS_PATH, args);
             await ExecuteRequestAsync(request, responseText =>
-           {
+            {
+                var jsonData = JObject.Parse(responseText);
+                var rawPosts = jsonData["data"]["posts"];
 
-               var jsonData = JObject.Parse(responseText);
-               var rawPosts = jsonData["data"]["posts"];
-
-               foreach (var item in rawPosts)
-               {
-                   var post = CreatePost(item);
-                   posts.Add(post);
-               }
-           });
+                foreach (var item in rawPosts)
+                {
+                    var post = CreatePost(item);
+                    posts.Add(post);
+                }
+            });
 
             return posts;
         }
@@ -179,24 +185,25 @@ namespace My9GAG.NineGagApiClient
         #endregion
 
         #region Helpers
-        private async Task ExecuteRequestAsync(HttpWebRequest request, Action<string> onSuccess = null)
+        private async Task ExecuteRequestAsync(HttpRequestMessage request, Action<string> onSuccess = null)
         {
-            using (var response = (HttpWebResponse)(await request.GetResponseAsync()))
-            using (var stream = response.GetResponseStream())
-            using (var reader = new StreamReader(stream))
+            using (var response = await _httpClient.SendAsync(request))
             {
-                string responseText = await reader.ReadToEndAsync();
+                var responseText = await response.Content.ReadAsStringAsync();
                 ValidateResponse(responseText);
 
                 onSuccess?.Invoke(responseText);
             }
         }
-        private HttpWebRequest FormRequest(string api, string path, Dictionary<string, string> args)
+        private HttpRequestMessage FormRequest(string api, string path, Dictionary<string, string> args)
         {
             var timestamp = RequestUtils.GetTimestamp();
 
             var headers = new Dictionary<string, string>()
             {
+                { "User-Agent", ".NET" },
+                //{ "Content-Type", "application/json" },
+                { "Accept", " */*" },
                 { "9GAG-9GAG_TOKEN", AuthenticationInfo.Token },
                 { "9GAG-TIMESTAMP", timestamp },
                 { "9GAG-APP_ID", AuthenticationInfo.AppId },
@@ -212,31 +219,23 @@ namespace My9GAG.NineGagApiClient
 
             foreach (var entry in args)
             {
-                argsStrings.Add(String.Format("{0}/{1}", entry.Key, entry.Value));
+                argsStrings.Add(string.Format("{0}/{1}", entry.Key, entry.Value));
             }
 
             var urlItems = new List<string>()
             {
                 api,
                 path,
-                String.Join("/", argsStrings)
+                string.Join("/", argsStrings)
             };
 
-            string url = String.Join("/", urlItems);
-            var request = (HttpWebRequest)WebRequest.Create(url);
-            var headerCollection = new WebHeaderCollection();
+            var url = string.Join("/", urlItems);
+            var request = new HttpRequestMessage(HttpMethod.Get, url);
 
             foreach (var entry in headers)
             {
-                headerCollection.Add(entry.Key, entry.Value);
+                request.Headers.Add(entry.Key, entry.Value);
             }
-
-            request.Headers = headerCollection;
-            request.Method = WebRequestMethods.Http.Get;
-            request.UserAgent = ".NET";
-            request.ContentType = "application/json";
-            request.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
-            request.Accept = "*/*";
 
             return request;
         }
@@ -260,6 +259,11 @@ namespace My9GAG.NineGagApiClient
 
                 }
             }
+        }
+
+        public void Dispose()
+        {
+            _httpClient.Dispose();
         }
         #endregion
     }
