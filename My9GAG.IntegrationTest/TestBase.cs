@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace My9GAG.IntegrationTest
 {
@@ -13,11 +14,12 @@ namespace My9GAG.IntegrationTest
         protected string Password { get; set; }
 
         [TestInitialize]
-        public void TestInit()
+        public async Task TestInit()
         {
             if (!File.Exists(_TestCredentialsPath))
             {
-                throw new Exception($"{_TestCredentialsPath} not found, make sure that you've created this file and entered test credentials in it. First line should be username, second line should be password. This file is added to the gitignore and won't be commited");
+                await File.WriteAllLinesAsync(_TestCredentialsPath, new string[] { "username", "password" });
+                throw new Exception($"{_TestCredentialsPath} not found, created a dummy file please edit this. Enter test credentials in it. First line should be username, second line should be password. This file is added to the gitignore and won't be committed");
             }
 
             var credentials = File.ReadAllLines(_TestCredentialsPath);
