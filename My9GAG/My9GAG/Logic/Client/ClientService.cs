@@ -92,7 +92,7 @@ namespace My9GAG.Logic.Client
             var args = new Dictionary<string, string>()
             {
                 { "loginMethod", "facebook" },
-                { "userAccessToken", token },                
+                { "userAccessToken", token },
                 { "language", "en_US" },
                 { "pushToken", AuthenticationInfo.Token }
             };
@@ -124,7 +124,7 @@ namespace My9GAG.Logic.Client
             {
                 args["olderThan"] = olderThan;
             }
-            
+
             var request = FormRequest(RequestUtils.API, RequestUtils.POSTS_PATH, args);
             var requestStatus = await ExecuteRequestAsync(request, responseText =>
             {
@@ -137,7 +137,7 @@ namespace My9GAG.Logic.Client
                 {
                     Post post = item.ToObject<Post>();
                     post.PostMedia = PostMediaFactory.CreatePostMedia(post.Type, item);
-                    post.PostMedia.GenerateView();
+                    //post.PostMedia.GenerateView();
                     Posts.Add(post);
                 }
             });
@@ -146,7 +146,7 @@ namespace My9GAG.Logic.Client
         }
         public async Task<RequestStatus> GetCommentsAsync(string postUrl, int count)
         {
-            string path = 
+            string path =
                 "v1/topComments.json?" +
                 "appId=a_dd8f2b7d304a10edaf6f29517ea0ca4100a43d1b" +
                 "&urls=" + postUrl +
@@ -212,15 +212,6 @@ namespace My9GAG.Logic.Client
 
         #region Implementation
 
-        private T GetDictionaryEntry<T>(IDictionary<string, object> dictionary, string key, T defaultValue)
-        {
-            if (dictionary.ContainsKey(key))
-            {
-                return (T)dictionary[key];
-            }
-
-            return defaultValue;
-        }
         private async Task<RequestStatus> LoginAsync(Dictionary<string, string> args, AuthenticationType authenticationType)
         {
             var request = FormRequest(RequestUtils.API, RequestUtils.LOGIN_PATH, args);
@@ -236,7 +227,6 @@ namespace My9GAG.Logic.Client
                 AuthenticationInfo.TokenWillExpireAt = DateTimeOffset.FromUnixTimeSeconds(seconds).UtcDateTime;
 
                 string readStateParams = authData["noti"]["readStateParams"].ToString();
-                _generatedAppId = RequestUtils.ExtractValueFromUrl(readStateParams, "appId");
             });
 
             if (requestStatus.IsSuccessful)
@@ -281,17 +271,19 @@ namespace My9GAG.Logic.Client
         }
         private HttpWebRequest FormRequest(string api, string path, Dictionary<string, string> args)
         {
+            var timestamp = RequestUtils.GetTimestamp();
+
             var headers = new Dictionary<string, string>()
             {
                 { "9GAG-9GAG_TOKEN", AuthenticationInfo.Token },
-                { "9GAG-TIMESTAMP", AuthenticationInfo.Timestamp },
+                { "9GAG-TIMESTAMP", timestamp },
                 { "9GAG-APP_ID", AuthenticationInfo.AppId },
                 { "X-Package-ID", AuthenticationInfo.AppId },
                 { "9GAG-DEVICE_UUID", AuthenticationInfo.DeviceUuid },
                 { "X-Device-UUID", AuthenticationInfo.DeviceUuid },
                 { "9GAG-DEVICE_TYPE", "android" },
                 { "9GAG-BUCKET_NAME", "MAIN_RELEASE" },
-                { "9GAG-REQUEST-SIGNATURE", AuthenticationInfo.Signature }
+                { "9GAG-REQUEST-SIGNATURE", RequestUtils.GetSignature(timestamp, AuthenticationInfo.AppId, AuthenticationInfo.DeviceUuid) }
             };
 
             var argsStrings = new List<string>();
@@ -379,15 +371,13 @@ namespace My9GAG.Logic.Client
 
             return urlToken.ToString();
         }
-        
+
         #endregion
 
         #region Fields
 
         private readonly ILogger _logger;
         private readonly ISecureStorage _secureStorage;
-
-        private string _generatedAppId = "";
 
         #endregion
 

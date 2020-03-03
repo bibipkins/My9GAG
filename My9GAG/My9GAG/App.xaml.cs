@@ -182,7 +182,6 @@ namespace My9GAG
         #region Constants
 
         private const string APP_NAME = "My9GAG";
-        private const string USER_LOGGED_IN_KEY = "isUserLoggedIn";
 
         #endregion
     }
