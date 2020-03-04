@@ -119,6 +119,7 @@ namespace My9GAG.ViewModels
                     {
                         Posts.Clear();
                         Posts = new ObservableCollection<Post>(_clientService.Posts);
+                        CurrentPost = Posts.FirstOrDefault();
                     });
 
                     await Task.Delay(ViewModelConstants.GET_POSTS_DELAY);
@@ -131,7 +132,6 @@ namespace My9GAG.ViewModels
                 }
             });
 
-            CurrentPost = Posts.First();
             ArePostsLoading = false;
 
             StopWorkIndication();
@@ -351,7 +351,7 @@ namespace My9GAG.ViewModels
             string title = post.Title.Trim().Replace(' ', '-').ToLower();
             string name = title.Length > MAX_FILE_NAME_LENGTH ? title.Substring(0, MAX_FILE_NAME_LENGTH) : title;
             string extention = post.PostMedia.Url.Split('.').Last();
-            return $"{name}.{extention}";
+            return $"123.{extention}";//$"{name}.{extention}";
         }
 
         #endregion

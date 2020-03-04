@@ -7,15 +7,15 @@ using Xamarin.Forms.Platform.UWP;
 using MediaElement = Windows.UI.Xaml.Controls.MediaElement;
 using MediaElementState = Windows.UI.Xaml.Media.MediaElementState;
 
-[assembly: ExportRenderer(typeof(VideoPlayer), typeof(My9GAG.UWP.Renderers.VideoPlayerRenderer))]
+[assembly: ExportRenderer(typeof(VideoPlayerControl), typeof(My9GAG.UWP.Renderers.VideoPlayerRenderer))]
 
 namespace My9GAG.UWP.Renderers
 {
-    public class VideoPlayerRenderer : ViewRenderer<VideoPlayer, MediaElement>
+    public class VideoPlayerRenderer : ViewRenderer<VideoPlayerControl, MediaElement>
     {
         #region Handlers
 
-        protected override void OnElementChanged(ElementChangedEventArgs<VideoPlayer> args)
+        protected override void OnElementChanged(ElementChangedEventArgs<VideoPlayerControl> args)
         {
             base.OnElementChanged(args);
 
@@ -23,13 +23,14 @@ namespace My9GAG.UWP.Renderers
             {
                 if (Control == null)
                 {
-                    MediaElement mediaElement = new MediaElement();
+                    var mediaElement = new MediaElement();
                     SetNativeControl(mediaElement);
 
                     mediaElement.MediaOpened += OnMediaElementMediaOpened;
                     mediaElement.CurrentStateChanged += OnMediaElementCurrentStateChanged;
                 }
 
+                SetIsMuted();
                 SetAreTransportControlsEnabled();
                 SetSource();
                 SetAutoPlay();
@@ -53,24 +54,28 @@ namespace My9GAG.UWP.Renderers
         {
             base.OnElementPropertyChanged(sender, args);
 
-            if (args.PropertyName == VideoPlayer.AreTransportControlsEnabledProperty.PropertyName)
+            if (args.PropertyName == VideoPlayerControl.AreTransportControlsEnabledProperty.PropertyName)
             {
                 SetAreTransportControlsEnabled();
             }
-            else if (args.PropertyName == VideoPlayer.SourceProperty.PropertyName)
+            else if (args.PropertyName == VideoPlayerControl.SourceProperty.PropertyName)
             {
                 SetSource();
             }
-            else if (args.PropertyName == VideoPlayer.AutoPlayProperty.PropertyName)
+            else if (args.PropertyName == VideoPlayerControl.AutoPlayProperty.PropertyName)
             {
                 SetAutoPlay();
             }
-            else if (args.PropertyName == VideoPlayer.PositionProperty.PropertyName)
+            else if (args.PropertyName == VideoPlayerControl.PositionProperty.PropertyName)
             {
                 if (Math.Abs((Control.Position - Element.Position).TotalSeconds) > 1)
                 {
                     Control.Position = Element.Position;
                 }
+            }
+            else if (args.PropertyName == VideoPlayerControl.IsMutedProperty.PropertyName)
+            {
+                SetIsMuted();
             }
         }
 
@@ -99,7 +104,7 @@ namespace My9GAG.UWP.Renderers
 
         void OnUpdateStatus(object sender, EventArgs args)
         {
-            ((IElementController)Element).SetValueFromRenderer(VideoPlayer.PositionProperty, Control.Position);
+            ((IElementController)Element).SetValueFromRenderer(VideoPlayerControl.PositionProperty, Control.Position);
         }
 
         void OnPlayRequested(object sender, EventArgs args)
@@ -136,7 +141,6 @@ namespace My9GAG.UWP.Renderers
         {
             Control.AreTransportControlsEnabled = Element.AreTransportControlsEnabled;
         }
-
         private void SetSource()
         {
             bool hasSetSource = false;
@@ -157,10 +161,13 @@ namespace My9GAG.UWP.Renderers
                 Control.Source = null;
             }
         }
-
         private void SetAutoPlay()
         {
             Control.AutoPlay = Element.AutoPlay;
+        }
+        private void SetIsMuted()
+        {
+            Control.IsMuted = Element.IsMuted;
         }
 
         #endregion

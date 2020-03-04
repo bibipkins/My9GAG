@@ -48,7 +48,7 @@ namespace My9GAG.Models.Post.Media
         }
         public void Start()
         {
-            //(View as VideoPlayer).Start();
+            (View as VideoPlayer).Play();
         }
         public void Stop()
         {
@@ -60,11 +60,11 @@ namespace My9GAG.Models.Post.Media
         }
         public void Reload()
         {
-            //(View as VideoPlayer).Source = Url;
+            GenerateView();
         }
         public void Unload()
         {
-
+            View = null;
         }
         
         #endregion

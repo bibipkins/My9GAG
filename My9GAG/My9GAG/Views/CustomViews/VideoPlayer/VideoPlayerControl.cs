@@ -3,13 +3,17 @@ using Xamarin.Forms;
 
 namespace My9GAG.Views.CustomViews.VideoPlayer
 {
-    public class VideoPlayer : View, IVideoPlayer
+    public class VideoPlayerControl : View, IVideoPlayer
     {
         #region Constructors
 
-        public VideoPlayer()
+        public VideoPlayerControl()
         {
-            UpdateStatus?.Invoke(this, EventArgs.Empty);
+            Device.StartTimer(TimeSpan.FromMilliseconds(100), () =>
+            {
+                UpdateStatus?.Invoke(this, EventArgs.Empty);
+                return true;
+            });
         }
 
         #endregion
@@ -17,11 +21,8 @@ namespace My9GAG.Views.CustomViews.VideoPlayer
         #region Events
 
         public event EventHandler UpdateStatus;
-
         public event EventHandler PlayRequested;
-
         public event EventHandler PauseRequested;
-
         public event EventHandler StopRequested;
 
         #endregion
@@ -31,7 +32,7 @@ namespace My9GAG.Views.CustomViews.VideoPlayer
         #region AreTransportControlsEnabled
 
         public static readonly BindableProperty AreTransportControlsEnabledProperty =
-            BindableProperty.Create(nameof(AreTransportControlsEnabled), typeof(bool), typeof(VideoPlayer), true);
+            BindableProperty.Create(nameof(AreTransportControlsEnabled), typeof(bool), typeof(VideoPlayerControl), true);
 
         public bool AreTransportControlsEnabled
         {
@@ -44,7 +45,7 @@ namespace My9GAG.Views.CustomViews.VideoPlayer
         #region Source
 
         public static readonly BindableProperty SourceProperty =
-            BindableProperty.Create(nameof(Source), typeof(VideoSource), typeof(VideoPlayer), null);
+            BindableProperty.Create(nameof(Source), typeof(VideoSource), typeof(VideoPlayerControl), null);
 
         [TypeConverter(typeof(VideoSourceConverter))]
         public VideoSource Source
@@ -58,7 +59,7 @@ namespace My9GAG.Views.CustomViews.VideoPlayer
         #region AutoPlay
 
         public static readonly BindableProperty AutoPlayProperty =
-            BindableProperty.Create(nameof(AutoPlay), typeof(bool), typeof(VideoPlayer), false);
+            BindableProperty.Create(nameof(AutoPlay), typeof(bool), typeof(VideoPlayerControl), false);
 
         public bool AutoPlay
         {
@@ -71,7 +72,7 @@ namespace My9GAG.Views.CustomViews.VideoPlayer
         #region Status
 
         private static readonly BindablePropertyKey StatusPropertyKey =
-            BindableProperty.CreateReadOnly(nameof(Status), typeof(VideoPlayerStatus), typeof(VideoPlayer), VideoPlayerStatus.Loading);
+            BindableProperty.CreateReadOnly(nameof(Status), typeof(VideoPlayerStatus), typeof(VideoPlayerControl), VideoPlayerStatus.Loading);
 
         public static readonly BindableProperty StatusProperty = StatusPropertyKey.BindableProperty;
 
@@ -91,8 +92,8 @@ namespace My9GAG.Views.CustomViews.VideoPlayer
         #region Duration
 
         private static readonly BindablePropertyKey DurationPropertyKey =
-            BindableProperty.CreateReadOnly(nameof(Duration), typeof(TimeSpan), typeof(VideoPlayer), new TimeSpan(),
-                propertyChanged: (bindable, oldValue, newValue) => ((VideoPlayer)bindable).SetTimeToEnd());
+            BindableProperty.CreateReadOnly(nameof(Duration), typeof(TimeSpan), typeof(VideoPlayerControl), new TimeSpan(),
+                propertyChanged: (bindable, oldValue, newValue) => ((VideoPlayerControl)bindable).SetTimeToEnd());
 
         public static readonly BindableProperty DurationProperty = DurationPropertyKey.BindableProperty;
 
@@ -112,8 +113,8 @@ namespace My9GAG.Views.CustomViews.VideoPlayer
         #region Position
 
         public static readonly BindableProperty PositionProperty =
-            BindableProperty.Create(nameof(Position), typeof(TimeSpan), typeof(VideoPlayer), new TimeSpan(),
-                propertyChanged: (bindable, oldValue, newValue) => ((VideoPlayer)bindable).SetTimeToEnd());
+            BindableProperty.Create(nameof(Position), typeof(TimeSpan), typeof(VideoPlayerControl), new TimeSpan(),
+                propertyChanged: (bindable, oldValue, newValue) => ((VideoPlayerControl)bindable).SetTimeToEnd());
 
         public TimeSpan Position
         {
@@ -126,7 +127,7 @@ namespace My9GAG.Views.CustomViews.VideoPlayer
         #region TimeToEnd
 
         private static readonly BindablePropertyKey TimeToEndPropertyKey =
-            BindableProperty.CreateReadOnly(nameof(TimeToEnd), typeof(TimeSpan), typeof(VideoPlayer), new TimeSpan());
+            BindableProperty.CreateReadOnly(nameof(TimeToEnd), typeof(TimeSpan), typeof(VideoPlayerControl), new TimeSpan());
 
         public static readonly BindableProperty TimeToEndProperty = TimeToEndPropertyKey.BindableProperty;
 
@@ -134,6 +135,19 @@ namespace My9GAG.Views.CustomViews.VideoPlayer
         {
             private set { SetValue(TimeToEndPropertyKey, value); }
             get { return (TimeSpan)GetValue(TimeToEndProperty); }
+        }
+
+        #endregion
+
+        #region IsMuted
+
+        public static readonly BindableProperty IsMutedProperty =
+            BindableProperty.Create(nameof(IsMuted), typeof(bool), typeof(VideoPlayerControl), true);
+
+        public bool IsMuted
+        {
+            set { SetValue(IsMutedProperty, value); }
+            get { return (bool)GetValue(IsMutedProperty); }
         }
 
         #endregion
@@ -146,12 +160,10 @@ namespace My9GAG.Views.CustomViews.VideoPlayer
         {
             PlayRequested?.Invoke(this, EventArgs.Empty);
         }
-
         public void Pause()
         {
             PauseRequested?.Invoke(this, EventArgs.Empty);
         }
-
         public void Stop()
         {
             StopRequested?.Invoke(this, EventArgs.Empty);

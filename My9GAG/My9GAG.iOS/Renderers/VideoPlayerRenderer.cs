@@ -1,22 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using AVFoundation;
+﻿using AVFoundation;
 using AVKit;
 using CoreMedia;
 using Foundation;
 using My9GAG.Views.CustomViews.VideoPlayer;
+using System;
+using System.ComponentModel;
 using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
 
-[assembly: ExportRenderer(typeof(VideoPlayer), typeof(My9GAG.iOS.Renderers.VideoPlayerRenderer))]
+[assembly: ExportRenderer(typeof(VideoPlayerControl), typeof(My9GAG.iOS.Renderers.VideoPlayerRenderer))]
 
 namespace My9GAG.iOS.Renderers
 {
-    public class VideoPlayerRenderer : ViewRenderer<VideoPlayer, UIView>
+    public class VideoPlayerRenderer : ViewRenderer<VideoPlayerControl, UIView>
     {
         #region Properties
 
@@ -26,7 +23,7 @@ namespace My9GAG.iOS.Renderers
 
         #region Handlers
 
-        protected override void OnElementChanged(ElementChangedEventArgs<VideoPlayer> args)
+        protected override void OnElementChanged(ElementChangedEventArgs<VideoPlayerControl> args)
         {
             base.OnElementChanged(args);
 
@@ -41,6 +38,7 @@ namespace My9GAG.iOS.Renderers
                     SetNativeControl(_playerViewController.View);
                 }
 
+                SetIsMuted();
                 SetAreTransportControlsEnabled();
                 SetSource();
 
@@ -63,15 +61,15 @@ namespace My9GAG.iOS.Renderers
         {
             base.OnElementPropertyChanged(sender, args);
 
-            if (args.PropertyName == VideoPlayer.AreTransportControlsEnabledProperty.PropertyName)
+            if (args.PropertyName == VideoPlayerControl.AreTransportControlsEnabledProperty.PropertyName)
             {
                 SetAreTransportControlsEnabled();
             }
-            else if (args.PropertyName == VideoPlayer.SourceProperty.PropertyName)
+            else if (args.PropertyName == VideoPlayerControl.SourceProperty.PropertyName)
             {
                 SetSource();
             }
-            else if (args.PropertyName == VideoPlayer.PositionProperty.PropertyName)
+            else if (args.PropertyName == VideoPlayerControl.PositionProperty.PropertyName)
             {
                 TimeSpan controlPosition = ConvertTime(_player.CurrentTime);
 
@@ -79,6 +77,10 @@ namespace My9GAG.iOS.Renderers
                 {
                     _player.Seek(CMTime.FromSeconds(Element.Position.TotalSeconds, 1));
                 }
+            }
+            else if (args.PropertyName == VideoPlayerControl.IsMutedProperty.PropertyName)
+            {
+                SetIsMuted();
             }
         }
 
@@ -107,20 +109,17 @@ namespace My9GAG.iOS.Renderers
             if (_playerItem != null)
             {
                 ((IVideoPlayer)Element).Duration = ConvertTime(_playerItem.Duration);
-                ((IElementController)Element).SetValueFromRenderer(VideoPlayer.PositionProperty, ConvertTime(_playerItem.CurrentTime));
+                ((IElementController)Element).SetValueFromRenderer(VideoPlayerControl.PositionProperty, ConvertTime(_playerItem.CurrentTime));
             }
         }
-
         private void OnPlayRequested(object sender, EventArgs args)
         {
             _player.Play();
         }
-
         private void OnPauseRequested(object sender, EventArgs args)
         {
             _player.Pause();
         }
-
         private void OnStopRequested(object sender, EventArgs args)
         {
             _player.Pause();
@@ -141,11 +140,14 @@ namespace My9GAG.iOS.Renderers
             }
         }
 
+        private void SetIsMuted()
+        {
+            _player.Muted = Element.IsMuted;
+        }
         private void SetAreTransportControlsEnabled()
         {
             ((AVPlayerViewController)ViewController).ShowsPlaybackControls = Element.AreTransportControlsEnabled;
         }
-
         private void SetSource()
         {
             AVAsset asset = null;

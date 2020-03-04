@@ -24,6 +24,8 @@ namespace My9GAG.iOS
 
             LoadApplication(new App());
 
+            NSUserDefaults.StandardUserDefaults.RegisterDefaults(new NSDictionary("UserAgent", "Mozilla/5.0 Google"));
+
             return base.FinishedLaunching(app, options);
         }
     }
