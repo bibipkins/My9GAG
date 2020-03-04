@@ -11,7 +11,7 @@
     <AssemblyName>My9GAG.UWP</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
-    <TargetPlatformVersion>10.0.17763.0</TargetPlatformVersion>
+    <TargetPlatformVersion>10.0.18362.0</TargetPlatformVersion>
     <TargetPlatformMinVersion>10.0.16299.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <EnableDotNetNativeCompatibleProfile>true</EnableDotNetNativeCompatibleProfile>
@@ -199,24 +199,19 @@
     <Content Include="Images\likes.scale-400.png" />
     <Content Include="Images\pause.scale-100.png" />
     <Content Include="Images\pause.scale-200.png" />
-    <Content Include="Images\pause.scale-300.png" />
     <Content Include="Images\play.scale-100.png" />
     <Content Include="Images\play.scale-200.png" />
-    <Content Include="Images\play.scale-300.png" />
     <Content Include="Images\stop.scale-100.png" />
     <Content Include="Images\stop.scale-200.png" />
-    <Content Include="Images\stop.scale-300.png" />
     <Content Include="Images\trending.scale-100.png" />
     <Content Include="Images\trending.scale-125.png" />
     <Content Include="Images\trending.scale-150.png" />
     <Content Include="Images\trending.scale-200.png" />
     <Content Include="Images\trending.scale-400.png" />
-    <Content Include="Images\volume_muted.scale-100.png" />
-    <Content Include="Images\volume_muted.scale-200.png" />
-    <Content Include="Images\volume_muted.scale-300.png" />
+    <Content Include="Images\volume_off.scale-100.png" />
+    <Content Include="Images\volume_off.scale-200.png" />
     <Content Include="Images\volume_on.scale-100.png" />
     <Content Include="Images\volume_on.scale-200.png" />
-    <Content Include="Images\volume_on.scale-300.png" />
     <Content Include="Properties\Default.rd.xml" />
   </ItemGroup>
   <ItemGroup>
@@ -242,7 +237,7 @@
     <PackageReference Include="Plugin.Permissions">
       <Version>3.0.0.12</Version>
     </PackageReference>
-    <PackageReference Include="Xamarin.Forms" Version="4.5.0.282-pre4" />
+    <PackageReference Include="Xamarin.Forms" Version="4.5.0.356" />
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.2.9" />
   </ItemGroup>
   <ItemGroup>

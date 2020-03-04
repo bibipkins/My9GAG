@@ -125,7 +125,7 @@
     <PackageReference Include="Plugin.Permissions">
       <Version>3.0.0.12</Version>
     </PackageReference>
-    <PackageReference Include="Xamarin.Forms" Version="4.5.0.282-pre4" />
+    <PackageReference Include="Xamarin.Forms" Version="4.5.0.356" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
@@ -160,5 +160,53 @@
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\trending%403x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\comments.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\comments%402x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\comments%403x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\likes.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\likes%402x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\likes%403x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\pause.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\pause%402x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\play.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\play%402x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\stop.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\stop%402x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\volume_off.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\volume_off%402x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\volume_on.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\volume_on%402x.png" />
   </ItemGroup>
 </Project>

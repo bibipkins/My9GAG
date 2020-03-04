@@ -119,6 +119,7 @@ namespace My9GAG.ViewModels
                     {
                         Posts.Clear();
                         Posts = new ObservableCollection<Post>(_clientService.Posts);
+                        CurrentPost = Posts.FirstOrDefault();
                     });
 
                     await Task.Delay(ViewModelConstants.GET_POSTS_DELAY);
@@ -131,7 +132,6 @@ namespace My9GAG.ViewModels
                 }
             });
 
-            CurrentPost = Posts.First();
             ArePostsLoading = false;
 
             StopWorkIndication();
