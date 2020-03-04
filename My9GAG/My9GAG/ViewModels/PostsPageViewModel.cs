@@ -351,7 +351,7 @@ namespace My9GAG.ViewModels
             string title = post.Title.Trim().Replace(' ', '-').ToLower();
             string name = title.Length > MAX_FILE_NAME_LENGTH ? title.Substring(0, MAX_FILE_NAME_LENGTH) : title;
             string extention = post.PostMedia.Url.Split('.').Last();
-            return $"123.{extention}";//$"{name}.{extention}";
+            return $"{name}.{extention}";
         }
 
         #endregion
