@@ -17,15 +17,19 @@ namespace My9GAG.NineGagApiClient
 {
     public class ApiClient : IApiClient, IDisposable
     {
+        private readonly NineGagOptions _nineGagOptions;
         private readonly HttpClient _httpClient;
         public AuthenticationInfo AuthenticationInfo { get; protected set; }
 
-        public ApiClient() : this(new HttpClient())
+        public ApiClient() : this(new HttpClient(), nineGagOptionsBuilder: null)
         {
         }
 
-        public ApiClient(HttpClient httpClient)
+        public ApiClient(HttpClient httpClient, Action<NineGagOptions> nineGagOptionsBuilder)
         {
+            _nineGagOptions = NineGagOptions.CreateDefaultOptions();
+            nineGagOptionsBuilder?.Invoke(_nineGagOptions);
+
             _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
             AuthenticationInfo = CreateAuthenticationInfo();
         }
@@ -50,7 +54,7 @@ namespace My9GAG.NineGagApiClient
             }
 
             var posts = new List<SimplePost>();
-            var request = FormRequest(RequestUtils.API, RequestUtils.POSTS_PATH, args);
+            var request = FormRequest(_nineGagOptions.ApiUrl, RequestUtils.POSTS_PATH, args);
             await ExecuteRequestAsync(request, responseText =>
             {
                 var jsonData = JObject.Parse(responseText);
@@ -83,7 +87,7 @@ namespace My9GAG.NineGagApiClient
                 "&pretty=0";
 
             var comments = new List<Comment>();
-            var request = FormRequest(RequestUtils.COMMENT_CDN, path, new Dictionary<string, string>());
+            var request = FormRequest(_nineGagOptions.CommentCdnUrl, path, new Dictionary<string, string>());
             await ExecuteRequestAsync(request, responseText =>
             {
                 var jsonData = JObject.Parse(responseText);
@@ -167,7 +171,7 @@ namespace My9GAG.NineGagApiClient
 
         protected async Task LoginAsync(Dictionary<string, string> args, AuthenticationType authenticationType)
         {
-            var request = FormRequest(RequestUtils.API, RequestUtils.LOGIN_PATH, args);
+            var request = FormRequest(_nineGagOptions.ApiUrl, RequestUtils.LOGIN_PATH, args);
             await ExecuteRequestAsync(request, responseText =>
             {
                 var jsonData = JObject.Parse(responseText);

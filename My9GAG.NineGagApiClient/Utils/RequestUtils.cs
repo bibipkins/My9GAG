@@ -71,13 +71,6 @@ namespace My9GAG.NineGagApiClient.Utils
 
         #region Constants
 
-        public static string API = "http://api.9gag.com";
-        public static string COMMENT_CDN = "http://comment-cdn.9gag.com";
-        public static string COMMENT = "http://comment.9gag.com";
-        public static string NOTIFY = "http://notify.9gag.com";
-        public static string AD = "http://ad.9gag.com";
-        public static string ADMIN = "http://admin.9gag.com";
-
         public static string LOGIN_PATH = "v2/user-token";
         public static string POSTS_PATH = "v2/post-list";
         public static string GROUPS_PATH = "v2/group-list";
