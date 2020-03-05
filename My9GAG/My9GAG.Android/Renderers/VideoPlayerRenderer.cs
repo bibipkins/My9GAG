@@ -1,17 +1,19 @@
 ﻿using Android.Content;
+using Android.Media;
 using Android.Widget;
 using My9GAG.Views.CustomViews.VideoPlayer;
 using System;
 using System.ComponentModel;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
+using static Android.Media.MediaPlayer;
 using ARelativeLayout = Android.Widget.RelativeLayout;
 
-[assembly: ExportRenderer(typeof(VideoPlayer), typeof(My9GAG.Droid.Renderers.VideoPlayerRenderer))]
+[assembly: ExportRenderer(typeof(VideoPlayerControl), typeof(My9GAG.Droid.Renderers.VideoPlayerRenderer))]
 
 namespace My9GAG.Droid.Renderers
 {
-    public class VideoPlayerRenderer : ViewRenderer<VideoPlayer, ARelativeLayout>
+    public class VideoPlayerRenderer : ViewRenderer<VideoPlayerControl, ARelativeLayout>, IOnPreparedListener
     {
         #region Constructors
 
@@ -24,7 +26,15 @@ namespace My9GAG.Droid.Renderers
 
         #region Handlers
 
-        protected override void OnElementChanged(ElementChangedEventArgs<VideoPlayer> args)
+        public void OnPrepared(MediaPlayer mediaPlayer)
+        {
+            _mediaPlayer = mediaPlayer;
+            _isPrepared = true;
+
+            ((IVideoPlayer)Element).Duration = TimeSpan.FromMilliseconds(_videoView.Duration);
+        }
+
+        protected override void OnElementChanged(ElementChangedEventArgs<VideoPlayerControl> args)
         {
             base.OnElementChanged(args);
 
@@ -33,16 +43,14 @@ namespace My9GAG.Droid.Renderers
                 if (Control == null)
                 {
                     _videoView = new VideoView(Context);
+                    _videoView.SetOnPreparedListener(this);
 
-                    ARelativeLayout relativeLayout = new ARelativeLayout(Context);
+                    var relativeLayout = new ARelativeLayout(Context);
                     relativeLayout.AddView(_videoView);
 
-                    ARelativeLayout.LayoutParams layoutParams =
-                        new ARelativeLayout.LayoutParams(LayoutParams.MatchParent, LayoutParams.MatchParent);
+                    var layoutParams = new ARelativeLayout.LayoutParams(LayoutParams.MatchParent, LayoutParams.MatchParent);
                     layoutParams.AddRule(LayoutRules.CenterInParent);
                     _videoView.LayoutParameters = layoutParams;
-
-                    _videoView.Prepared += OnVideoViewPrepared;
 
                     SetNativeControl(relativeLayout);
                 }
@@ -64,35 +72,39 @@ namespace My9GAG.Droid.Renderers
                 args.OldElement.StopRequested -= OnStopRequested;
             }
         }
-
         protected override void OnElementPropertyChanged(object sender, PropertyChangedEventArgs args)
         {
             base.OnElementPropertyChanged(sender, args);
 
-            if (args.PropertyName == VideoPlayer.AreTransportControlsEnabledProperty.PropertyName)
+            if (args.PropertyName == VideoPlayerControl.AreTransportControlsEnabledProperty.PropertyName)
             {
                 SetAreTransportControlsEnabled();
             }
-            else if (args.PropertyName == VideoPlayer.SourceProperty.PropertyName)
+            else if (args.PropertyName == VideoPlayerControl.SourceProperty.PropertyName)
             {
                 SetSource();
             }
-            else if (args.PropertyName == VideoPlayer.PositionProperty.PropertyName)
+            else if (args.PropertyName == VideoPlayerControl.PositionProperty.PropertyName)
             {
                 if (Math.Abs(_videoView.CurrentPosition - Element.Position.TotalMilliseconds) > 1000)
                 {
                     _videoView.SeekTo((int)Element.Position.TotalMilliseconds);
                 }
             }
+            else if (args.PropertyName == VideoPlayerControl.IsMutedProperty.PropertyName)
+            {
+                if (Element.IsMuted)
+                {
+                    SetVolume(0);
+                }
+                else
+                {
+                    SetVolume(100);
+                }
+            }
         }
 
-        void OnVideoViewPrepared(object sender, EventArgs args)
-        {
-            _isPrepared = true;
-            ((IVideoPlayer)Element).Duration = TimeSpan.FromMilliseconds(_videoView.Duration);
-        }
-
-        void OnUpdateStatus(object sender, EventArgs args)
+        private void OnUpdateStatus(object sender, EventArgs args)
         {
             VideoPlayerStatus status = VideoPlayerStatus.Loading;
 
@@ -102,22 +114,18 @@ namespace My9GAG.Droid.Renderers
             }
 
             ((IVideoPlayer)Element).Status = status;
-
             TimeSpan timeSpan = TimeSpan.FromMilliseconds(_videoView.CurrentPosition);
-            ((IElementController)Element).SetValueFromRenderer(VideoPlayer.PositionProperty, timeSpan);
+            ((IElementController)Element).SetValueFromRenderer(VideoPlayerControl.PositionProperty, timeSpan);
         }
-
-        void OnPlayRequested(object sender, EventArgs args)
+        private void OnPlayRequested(object sender, EventArgs args)
         {
             _videoView.Start();
         }
-
-        void OnPauseRequested(object sender, EventArgs args)
+        private void OnPauseRequested(object sender, EventArgs args)
         {
             _videoView.Pause();
         }
-
-        void OnStopRequested(object sender, EventArgs args)
+        private void OnStopRequested(object sender, EventArgs args)
         {
             _videoView.StopPlayback();
         }
@@ -128,10 +136,6 @@ namespace My9GAG.Droid.Renderers
 
         protected override void Dispose(bool disposing)
         {
-            if (Control != null && _videoView != null)
-            {
-                _videoView.Prepared -= OnVideoViewPrepared;
-            }
             if (Element != null)
             {
                 Element.UpdateStatus -= OnUpdateStatus;
@@ -140,6 +144,14 @@ namespace My9GAG.Droid.Renderers
             base.Dispose(disposing);
         }
 
+        private void SetVolume(int amount)
+        {
+            int max = 100;
+            double numerator = max - amount > 0 ? Math.Log(max - amount) : 0;
+            float volume = (float)(1 - (numerator / Math.Log(max)));
+
+            _mediaPlayer.SetVolume(volume, volume);
+        }
         private void SetAreTransportControlsEnabled()
         {
             if (Element.AreTransportControlsEnabled)
@@ -159,11 +171,9 @@ namespace My9GAG.Droid.Renderers
                 }
             }
         }
-
         private void SetSource()
         {
             _isPrepared = false;
-            bool hasSetSource = false;
 
             if (Element.Source is UriVideoSource)
             {
@@ -172,13 +182,12 @@ namespace My9GAG.Droid.Renderers
                 if (!string.IsNullOrWhiteSpace(uri))
                 {
                     _videoView.SetVideoURI(Android.Net.Uri.Parse(uri));
-                    hasSetSource = true;
-                }
-            }
 
-            if (hasSetSource && Element.AutoPlay)
-            {
-                _videoView.Start();
+                    if (Element.AutoPlay)
+                    {
+                        _videoView.Start();
+                    }
+                }
             }
         }
 
@@ -188,6 +197,7 @@ namespace My9GAG.Droid.Renderers
 
         private VideoView _videoView;
         private MediaController _mediaController;
+        private MediaPlayer _mediaPlayer;
         private bool _isPrepared;
 
         #endregion

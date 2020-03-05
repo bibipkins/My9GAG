@@ -6,17 +6,20 @@
              BackgroundColor="Black"
              Opacity="0.8">
 
-    <StackLayout Orientation="Vertical"
-                 VerticalOptions="CenterAndExpand">
-        <ActivityIndicator VerticalOptions="Center"
-                           Color="White"
-                           IsRunning="{Binding Source={x:Reference WorkIndication}, Path=IsVisible}"/>
-        <Label x:Name="label"
-               VerticalOptions="Center"
-               VerticalTextAlignment="Center"
-               HorizontalTextAlignment="Center"
-               TextColor="White"
-               FontSize="Large"
-               Margin="0,10,0,0"/>
+    <StackLayout
+        Orientation="Vertical"
+        VerticalOptions="CenterAndExpand">
+        <ActivityIndicator 
+            VerticalOptions="Center"
+            Color="White"
+            IsRunning="{Binding Source={x:Reference WorkIndication}, Path=IsVisible}"/>
+        <Label 
+            x:Name="label"
+            VerticalOptions="Center"
+            VerticalTextAlignment="Center"
+            HorizontalTextAlignment="Center"
+            TextColor="White"
+            FontSize="Large"
+            Margin="0,10,0,0"/>
     </StackLayout>
 </ContentView>

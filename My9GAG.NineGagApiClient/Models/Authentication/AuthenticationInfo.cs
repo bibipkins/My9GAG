@@ -72,6 +72,10 @@ namespace My9GAG.NineGagApiClient.Models.Authentication
         {
             get => !(string.IsNullOrEmpty(Token) || HasTokenExpired);
         }
+        public bool AreCredentialsPresent
+        {
+            get => !(string.IsNullOrEmpty(UserLogin) || string.IsNullOrEmpty(UserPassword));
+        }
 
         #endregion
 
@@ -81,6 +85,7 @@ namespace My9GAG.NineGagApiClient.Models.Authentication
         {
             Token = string.Empty;
             TokenWillExpireAt = DateTime.UtcNow;
+            LastAuthenticationType = AuthenticationType.None;
         }
 
         #endregion

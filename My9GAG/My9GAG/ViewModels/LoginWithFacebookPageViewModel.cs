@@ -108,9 +108,9 @@ namespace My9GAG.ViewModels
 
         #region Fields
 
-        private IFacebookAuthenticationService _facebookAuthenticationService;
-        private IClientService _clientService;
-        private IPageNavigator _pageNavigator;
+        private readonly IFacebookAuthenticationService _facebookAuthenticationService;
+        private readonly IClientService _clientService;
+        private readonly IPageNavigator _pageNavigator;
 
         private string _pageUrl;
         private string _state;
