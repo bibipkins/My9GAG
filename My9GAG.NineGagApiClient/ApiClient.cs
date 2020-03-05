@@ -19,14 +19,18 @@ namespace My9GAG.NineGagApiClient
     {
         private readonly NineGagOptions _nineGagOptions;
         private readonly HttpClient _httpClient;
+        private readonly bool _disposeHttpClient;
+
         public AuthenticationInfo AuthenticationInfo { get; protected set; }
 
         public ApiClient() : this(new HttpClient(), nineGagOptionsBuilder: null)
         {
+            _disposeHttpClient = true;
         }
 
         public ApiClient(HttpClient httpClient, Action<NineGagOptions> nineGagOptionsBuilder)
         {
+            _disposeHttpClient = false;
             _nineGagOptions = NineGagOptions.CreateDefaultOptions();
             nineGagOptionsBuilder?.Invoke(_nineGagOptions);
 
@@ -267,7 +271,10 @@ namespace My9GAG.NineGagApiClient
 
         public virtual void Dispose()
         {
-            _httpClient.Dispose();
+            if (_disposeHttpClient)
+            {
+                _httpClient.Dispose();
+            }
         }
         #endregion
     }
