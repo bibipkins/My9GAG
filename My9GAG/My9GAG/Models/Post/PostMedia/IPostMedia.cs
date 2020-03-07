@@ -2,19 +2,8 @@
 
 namespace My9GAG.Models.Post.Media
 {
-    public interface IPostMedia
+    public interface IPostMedia : ISimplePostMedia
     {
-        #region Properties
-
-        View View { get; }
-        PostType Type { get; }
-        string Url { get; set; }
-        double Width { get; set; }
-        double Height { get; set; }
-
-        #endregion
-
-        #region Methods
 
         void GenerateView();
         void Start();
@@ -23,6 +12,5 @@ namespace My9GAG.Models.Post.Media
         void Reload();
         void Unload();
 
-        #endregion
     }
 }

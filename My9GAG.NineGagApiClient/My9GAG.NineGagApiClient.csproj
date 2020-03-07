@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Authors>Bibipkins, Rora</Authors>
+    <Company />
+    <Description>A C# rest client for the (unofficial) rest api of 9gag.</Description>
+    <PackageProjectUrl>https://github.com/Rora/My9GAG</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Rora/My9GAG</RepositoryUrl>
+    <PackageTags>9gag api client rest</PackageTags>
+    <PackageReleaseNotes>First release, this is extracted from the My9GAG app, it was designed to not break My9GAG and be usuable by others as well.</PackageReleaseNotes>
+    <Copyright>2020 Bibipkins, Rora</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <AssemblyVersion>1.0.3.0</AssemblyVersion>
+    <FileVersion>1.0.3.0</FileVersion>
+    <Version>1.0.3</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+  </ItemGroup>
+
+</Project>

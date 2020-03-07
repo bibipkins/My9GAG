@@ -16,6 +16,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\My9GAG.NineGagApiClient\My9GAG.NineGagApiClient.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Update="Views\LoginWithGooglePage.xaml.cs">
       <DependentUpon>LoginWithGooglePage.xaml</DependentUpon>
     </Compile>
