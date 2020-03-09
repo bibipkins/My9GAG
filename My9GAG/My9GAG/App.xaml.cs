@@ -3,13 +3,13 @@ using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
 using My9GAG.Logic.Client;
-using My9GAG.Logic.FacebookAuthentication;
-using My9GAG.Logic.GoogleAuthentication;
 using My9GAG.Logic.Logger;
 using My9GAG.Logic.PageNavigator;
 using My9GAG.Logic.SecureStorage;
 using My9GAG.ViewModels;
 using My9GAG.Views;
+using NineGagApiClient.FacebookAuthentication;
+using NineGagApiClient.GoogleAuthentication;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -40,15 +40,6 @@ namespace My9GAG
             string iosSecret = "ios=aee2b868-4650-4d89-a6e2-bf7503dd97e8;";
 
             AppCenter.Start(uwpSecret + androidSecret + iosSecret, typeof(Analytics), typeof(Crashes));
-        }
-        protected override void OnSleep()
-        {
-            var clientService = _container.Resolve<IClientService>();
-            clientService.SaveState(Current.Properties);
-        }
-        protected override void OnResume()
-        {
-
         }
 
         #endregion
@@ -152,9 +143,6 @@ namespace My9GAG
             {
                 BindingContext = _container.Resolve<LoginPageViewModel>()
             });
-
-            var clientService = _container.Resolve<IClientService>();
-            clientService.RestoreState(Current.Properties);
         }
         private async Task GoToPage(ContentPage page, bool canGoBack)
         {

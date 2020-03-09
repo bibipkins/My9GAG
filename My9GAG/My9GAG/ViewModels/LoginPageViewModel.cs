@@ -1,6 +1,6 @@
 ﻿using My9GAG.Logic.Client;
 using My9GAG.Logic.PageNavigator;
-using My9GAG.Models.Authentication;
+using NineGagApiClient.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Input;

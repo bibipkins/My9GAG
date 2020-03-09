@@ -1,21 +1,22 @@
 ﻿using Xamarin.Forms;
 
-namespace My9GAG.Models.Post.Media
+namespace My9GAG.Models
 {
-    public class TextPostMedia : SimpleTextPostMedia, IPostMedia
+    public class TextPostView : PostView
     {
         #region Properties
-        public View View
+
+        public string Text
         {
             get;
-            protected set;
+            set;
         }
 
         #endregion
 
         #region Methods
 
-        public void GenerateView()
+        public override void GenerateView()
         {
             View = new Label()
             {
@@ -26,25 +27,13 @@ namespace My9GAG.Models.Post.Media
                 TextColor = Color.White
             };
         }
-        public void Pause()
+        public override void Load()
         {
-
+            // Does not hold any resources
         }
-        public void Reload()
+        public override void Unload()
         {
-
-        }
-        public void Start()
-        {
-
-        }
-        public void Stop()
-        {
-
-        }
-        public void Unload()
-        {
-
+            // Does not hold any resources
         }
 
         #endregion

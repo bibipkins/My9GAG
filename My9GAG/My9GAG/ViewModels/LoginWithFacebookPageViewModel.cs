@@ -1,8 +1,7 @@
 ﻿using My9GAG.Logic.Client;
-using My9GAG.Logic.FacebookAuthentication;
 using My9GAG.Logic.PageNavigator;
-using My9GAG.Logic.Request;
-using My9GAG.NineGagApiClient.Utils;
+using NineGagApiClient.FacebookAuthentication;
+using NineGagApiClient.Utils;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;

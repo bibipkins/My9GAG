@@ -1,8 +1,8 @@
 ﻿using My9GAG.Logic.Client;
 using My9GAG.Logic.DownloadManager;
 using My9GAG.Logic.PageNavigator;
-using My9GAG.Models.Comment;
-using My9GAG.Models.Post;
+using My9GAG.Models;
+using NineGagApiClient.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -25,7 +25,7 @@ namespace My9GAG.ViewModels
             _pageNavigator = pageNavigator;
             _currentCategory = PostCategory.Hot;
 
-            Posts = new ObservableCollection<Post>();
+            Posts = new ObservableCollection<PostView>();
 
             InitCommands();
 
@@ -36,7 +36,7 @@ namespace My9GAG.ViewModels
 
         #region Properties
 
-        public ObservableCollection<Post> Posts
+        public ObservableCollection<PostView> Posts
         {
             get { return _posts; }
             private set { SetProperty(ref _posts, value); }
@@ -57,21 +57,23 @@ namespace My9GAG.ViewModels
             get;
             set;
         }
-        public Post LastPost
+        public PostView LastPost
         {
             get { return _lastPost; }
             set { SetProperty(ref _lastPost, value); }
         }
-        public Post CurrentPost
+        public PostView CurrentPost
         {
             get { return _currentPost; }
             set
             {
-                LastPost?.PostMedia?.Pause();
-                LastPost = CurrentPost;
+                var oldCurrentPost = _currentPost;
 
                 if (SetProperty(ref _currentPost, value))
                 {
+                    LastPost = oldCurrentPost;
+                    LastPost?.Pause();
+
                     int currentPosition = Posts.IndexOf(value);
                     int postsLeft = Posts.Count - currentPosition - 1;
                     bool needToLoadMore = postsLeft <= NUMBER_OF_POSTS_BEFORE_LOADING_MORE;
@@ -118,7 +120,11 @@ namespace My9GAG.ViewModels
                     Device.BeginInvokeOnMainThread(() =>
                     {
                         Posts.Clear();
-                        Posts = new ObservableCollection<Post>(_clientService.Posts);
+                        Posts = new ObservableCollection<PostView>();
+
+                        _clientService.Posts.ToList().ForEach(post =>
+                            Posts.Add(PostViewFactory.CreatePostViewFromPost(post)));
+
                         CurrentPost = Posts.FirstOrDefault();
                     });
 
@@ -155,7 +161,8 @@ namespace My9GAG.ViewModels
                 if (requestStatus != null && requestStatus.IsSuccessful)
                 {
                     Device.BeginInvokeOnMainThread(() =>
-                        _clientService.Posts.ForEach(post => Posts.Add(post)));
+                        _clientService.Posts.ToList().ForEach(post => 
+                            Posts.Add(PostViewFactory.CreatePostViewFromPost(post))));
                 }
                 else
                 {
@@ -362,12 +369,12 @@ namespace My9GAG.ViewModels
         private readonly IPageNavigator _pageNavigator;
 
         private PostCategory _currentCategory;
-        private ObservableCollection<Post> _posts;
+        private ObservableCollection<PostView> _posts;
         private List<ICommand> _commands;
 
         private bool _isNotLoggedIn;
-        private Post _lastPost;
-        private Post _currentPost;
+        private PostView _lastPost;
+        private PostView _currentPost;
 
         #endregion
 
