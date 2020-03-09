@@ -1,7 +1,5 @@
 ﻿using My9GAG.Logic.SecureStorage;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace My9GAG.IntegrationTest.My9GAG

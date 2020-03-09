@@ -1,7 +1,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using My9GAG.Logic.Client;
+using NineGagApiClient.Models;
 using System;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -16,12 +16,12 @@ namespace My9GAG.IntegrationTest.My9GAG
         [TestMethod]
         public async Task GetPostsAsync_HappyFlow_ShouldReturnPosts()
         {
-            using var clientService = new ClientService(logger: null, new DictionarySecureStorage(), generatePostMediaOnLoad: false);
+            using var clientService = new ClientService(logger: null, new DictionarySecureStorage());
 
             var resp = await clientService.LoginWithCredentialsAsync(Username, Password);
             Assert.IsTrue(resp.IsSuccessful);
 
-            var result = await clientService.GetPostsAsync(Models.Post.PostCategory.Hot, 10);
+            var result = await clientService.GetPostsAsync(PostCategory.Hot, 10);
 
             if (!result.IsSuccessful)
             {
